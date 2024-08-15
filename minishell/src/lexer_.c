@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 12:22:19 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:58:17 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ void	lexer(t_data *d)
 		if (PIPE != current->id)
 		{
 			cut_quotes_subwords(&(current->list_sub_word), current->word);
-			// cut_variable_subwords(&(current->list_sub_word));
-			// evaluate_variable_subwords(d, &(current->list_sub_word));
-			// join_subwords(&(current->list_sub_word), &(current->word));
+			cut_variable_subwords(&(current->list_sub_word));
+			evaluate_variable_subwords(d, &(current->list_sub_word));
+			join_subwords(&(current->list_sub_word), &(current->word));
 		}
 		// found_cmd = mark_word_cmd_arg(current, found_cmd);
 		current = current->next;
@@ -69,17 +69,18 @@ void	cut_variable_subwords(t_sub_list **head)
 		{
 			tmp = ft_strdup(cur->sub_word);
 			free(cur->sub_word);
+			cur->sub_word = NULL;
 			cur->sub_id = UNPROCESSED;
 			while (NULL != tmp && (idx_var = ft_strchr(tmp, '$')))
 			{
-				if (tmp != idx_var || '\0' == idx_var[1] || ' ' == idx_var[1])
-					cur = cut_string_before_var(cur, &tmp, idx_var);
+				if (tmp != idx_var)
+					cut_string_before_var(&cur, &tmp, idx_var);
 				else if ('?' == idx_var[1])
-					cur = cut_var_exit(cur, &tmp, idx_var);
+					cut_var_exit(&cur, &tmp);
 				else if ('_' == idx_var[1] || ft_isalpha(idx_var[1]))
-					cur = cut_var(cur, &tmp, idx_var);
+					cut_var(&cur, &tmp, idx_var);
 				else
-					cut_invalid_var(&tmp, idx_var);
+					cut_invalid_var(&cur, &tmp, idx_var);
 			}
 			add_remaining_string(&cur, &tmp);
 		}

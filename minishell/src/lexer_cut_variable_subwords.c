@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:46:56 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 13:04:58 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/15 14:56:06 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,8 @@ advance the list.*/
 #include "../include/minishell.h"
 
 /*cut "non var string" before variable from '**tmp', write to node, id=STRING*/
-t_sub_list	*cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var)
+void	cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var)
 {
-	//split string and var
 	int		len_str;
 	char	*str_before;
 	char	*str_rest;
@@ -41,8 +40,8 @@ t_sub_list	*cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var)
 	}
 	else
 	{
-		insert_node_sub_word(cur, STRING, str_before);
-		cur = (*cur)->next;
+		insert_node_sub_word(*cur, STRING, str_before);
+		*cur = (*cur)->next;
 	}
 	str_rest = ft_strdup(&((*tmp)[len_str]));
 	free(*tmp);
@@ -50,74 +49,99 @@ t_sub_list	*cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var)
 }
 
 /*cut "$?" from '**tmp', write to node id=VAR_EXIT, sub_word=NULL*/
-t_sub_list	*cut_var_exit(t_sub_list *cur, char **tmp, char *idx_var)
+void	cut_var_exit(t_sub_list **cur, char **tmp)
 {
 	const int	LEN_EXIT_VAR = 2;
+	char		*str_var;
+	char		*str_rest;
 
-	cur->sub_word = NULL;
-	cur->sub_id = VAR_EXIT;
-	idx_var = ft_strdup(idx_var);
+	str_var = NULL;
+	if (UNPROCESSED == (*cur)->sub_id)
+	{
+		(*cur)->sub_id = VAR_EXIT;
+		(*cur)->sub_word = str_var;
+	}
+	else
+	{
+		insert_node_sub_word(*cur, VAR_EXIT, str_var);
+		*cur = (*cur)->next;
+	}
+	str_rest = ft_strdup(&((*tmp)[LEN_EXIT_VAR]));
 	free(*tmp);
-	*tmp = ft_strdup(&(idx_var[LEN_EXIT_VAR]));
-	free(idx_var);
-	insert_node_sub_word(cur, UNPROCESSED, NULL);
-	return (cur->next);
+	*tmp = str_rest;
 }
 
 /*cut variable name from '**tmp', id=VAR*/
-t_sub_list	*cut_var(t_sub_list *cur, char **tmp,  char *idx_var)
+void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var)
 {
-	int	len;
+	char		*str_var;
+	char		*str_rest;
+	int			len;
 
 	len = 2;
-	idx_var = ft_strdup(idx_var);
-	free(*tmp);
 	while ('_' == idx_var[len] || ft_isalnum(idx_var[len]))
 		len++;
-	cur->sub_word = ft_substr(idx_var, 1, len - 1);
-	cur->sub_id = VAR;
-	*tmp = ft_strdup(&(idx_var[len]));
-	free(idx_var);
-	insert_node_sub_word(cur, UNPROCESSED, NULL);
-	return (cur->next);
+	str_var = ft_substr(idx_var, 1, len - 1);
+	if (UNPROCESSED == (*cur)->sub_id)
+	{
+		(*cur)->sub_id = VAR;
+		(*cur)->sub_word = str_var;
+	}
+	else
+	{
+		insert_node_sub_word(*cur, VAR, str_var);
+		*cur = (*cur)->next;
+	}
+	str_rest = ft_strdup(&(idx_var[len]));
+	free(*tmp);
+	*tmp = str_rest;
 }
 
 /*cut invalid var name from '**tmp', e.g. "$5hello" cut "$5" leave "hello"*/
-void	cut_invalid_var(char **tmp,  char *idx_var)
+void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var)
 {
-	const int	LEN_INVALID_VAR = 2;
-	int         len;
+	int		idx_rest;
+	char	*word;
+	char	*str_rest;
 
-	printf("idx_var: |%s|\n", idx_var);
-	idx_var = ft_strdup(idx_var);
-	free(*tmp);
-	tmp = NULL;
-	len = ft_strlen(idx_var);
-	if (len > LEN_INVALID_VAR)
-		*tmp = ft_strdup(&(idx_var[LEN_INVALID_VAR]));
-	free(idx_var);
+	idx_rest = 1;
+	if (ft_isdigit((idx_var[1])))
+		idx_rest = 2;
+	else
+	{
+		word = ft_strdup("$");
+		if (UNPROCESSED == (*cur)->sub_id)
+		{
+			(*cur)->sub_id = STRING;
+			(*cur)->sub_word = word;
+		}
+		else
+		{
+			insert_node_sub_word(*cur, STRING, word);
+			*cur = (*cur)->next;
+		}
+	}
+		str_rest = ft_strdup(&(idx_var[idx_rest]));
+		free(*tmp);
+		*tmp = str_rest;
 }
 
 /*remaining str after last var is passed to sub_word, else node is removed*/
 void	add_remaining_string(t_sub_list **cur, char **tmp)
 {
-	// t_sub_list	*next;
-
 	if (*tmp && '\0' != (*tmp)[0])
 	{
-		(*cur)->sub_word = *tmp;
-		(*cur)->sub_id = STRING;
+		if (UNPROCESSED == (*cur)->sub_id)
+		{
+			(*cur)->sub_id = STRING;
+			(*cur)->sub_word = *tmp;
+		}
+		else
+		{
+			insert_node_sub_word(*cur, STRING, *tmp);
+			*cur = (*cur)->next;
+		}
 	}
 	else
-	{
-		// if ((*cur)->prev && (*cur)->next)
-		// {
-		//     (*cur)->prev->next = (*cur)->next;
-		//     next = (*cur)->next;
-		//     free(*cur);
-		//     *cur = next;
-		// }
 		free(*tmp);
-		*tmp = NULL;
-	}
 }
