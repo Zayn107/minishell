@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:55:25 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/12 19:31:31 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/15 18:18:04 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,3 +107,30 @@ void	free_all_except_env(t_data *d)
 // 		current = NULL;
 // 	}
 // }
+
+// ### TEST FREE
+void	free_cmd_list(t_cmd *head)
+{
+	t_cmd	*node;
+	t_cmd	*tmp;
+	int		idx;
+
+	node = head;
+	while (node)
+	{
+		idx = 0;
+		while (node->cmd_arg[idx])
+		{
+			free(node->cmd_arg[idx]);
+			node->cmd_arg[idx] = NULL;
+			idx++;
+		}
+		free(node->cmd_arg);
+		node->cmd_arg = NULL;
+		free(node->f_in);
+		free(node->f_out);
+		tmp = node;
+		node = node->next;
+		free(tmp);
+	}
+}

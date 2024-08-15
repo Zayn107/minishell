@@ -97,13 +97,14 @@ typedef struct s_cmd
 	int				fd_f_in;
 	int				fd_f_out;
 	bool			is_tmp_file_in;	// true, remove file after use
-	char			*f_in;		// for debugging only
-	char			*f_out;		// for debugging only
+	char			*f_in;		// MALLOC!! for debugging only
+	char			*f_out;		// MALLOC!! for debugging only
 	//char			*out_file;		// name of "last" output file (create prev) (handle append)
 
 	// if out_file is NULL, pass stream to next cmd, otherwise no
 	//char			*in_file;		// name of "last" input file (heredoc)
 	// if in_file is NULL, take stream from previous cmd, otherwise from file
+	struct s_cmd	*prev;			// previous node in the list
 	struct s_cmd	*next;			// next node in the list
 }	t_cmd;
 
@@ -159,7 +160,6 @@ void	cut_variable_subwords(t_sub_list **head);
 void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word);
 void	add_remaining_string(t_sub_list **cur, char **tmp);
 void	evaluate_variable_subwords(t_data *d, t_sub_list **head);
-void	join_subwords(t_sub_list **head, char **word);
 void	insert_before_node_sub_word(t_sub_list *node, int sub_id, char *sub_word);
 bool	mark_word_cmd_arg(t_token *current, bool found_cmd);
 // char	*rest_from_input(t_data *d, int rest_start);
@@ -192,5 +192,14 @@ void	cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var);
 void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var);
 void	cut_var_exit(t_sub_list **cur, char **tmp);
 void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var);
+void	remove_token_node(t_token **node, t_data **d);
+// void	join_subwords(t_sub_list **head, char **word);
+void	join_subwords(t_sub_list **head, t_token **node, t_data *d);
 // void	p_color();
+
+
+
+// TEST PIPE
+void	TEST_add_node(char *cmd_arg, char *f_in, char *f_out, t_data *d);
+void	free_cmd_list(t_cmd *head);
 #endif

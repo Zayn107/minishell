@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 12:10:07 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/15 17:36:57 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word)
 	}
 }
 
+
 /*add node after*/
 void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word)
 {
@@ -116,6 +117,7 @@ t_cmd	*add_node_cmd(t_data *d)
 	new_node->is_tmp_file_in = false;
 	new_node->f_in = NULL;
 	new_node->f_out = NULL;
+	// new_node->prev = NULL;
 	new_node->next = NULL;
 	if (d->list_cmd == NULL)
 		d->list_cmd = new_node;
@@ -124,7 +126,25 @@ t_cmd	*add_node_cmd(t_data *d)
 		current = d->list_cmd;
 		while (current->next != NULL)
 			current = current->next;
+		// new_node->prev = current;
 		current->next = new_node;
 	}
 	return (new_node);
+}
+
+void	remove_token_node(t_token **node, t_data **d)
+{
+	if (NULL == (*node)->prev)
+	{
+		(*d)->list_token = (*node)->next;
+		(*node)->next->prev = NULL;
+	}
+	else
+	{
+		(*node)->next->prev = (*node)->prev;
+		(*node)->prev->next = (*node)->next;
+	}
+	free((*node)->word);
+	free_list_sub_word((*node)->list_sub_word);
+	free((*node));
 }
