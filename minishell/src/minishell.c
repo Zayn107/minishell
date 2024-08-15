@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 13:05:01 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/15 13:28:36 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("> out1 >> app1 cmd arg < file_new arg << E");
 	// d->user_input = ft_strdup(" >> append");
 	// d->user_input = ft_strdup("< heredod\"$HOME\"$ cmd arg arg | new_cmd '$?'");
+	// make some change
 	
 	// print user input
 	printf("user_input: |%s|\n", d->user_input);
