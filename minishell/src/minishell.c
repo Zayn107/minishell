@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 15:29:39 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/16 15:46:13 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,21 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
-	TEST_add_node("./path", "cmd,arg1,arg2,arg3,arg4", "file_in", "file_out", d);
-	// TEST_add_node("cmd2,arg1,arg2,arg3,arg4", "file_in2", "file_out2", d);
+	// TEST_add_node("./path", "cmd,arg1,arg2,arg3,arg4", "file_in", "file_out", d);
+	TEST_add_node("/usr/bin/ls", "ls,-l,-a", "file_in", "file_out", d);
 
 
 	// WRITE PIPE BELOW
 
 
 	print_cmd_list(d->list_cmd); //print each node of the cmd_list structure
+	execute_node_from_cmd_list(d->list_cmd);
 	free_cmd_list(d->list_cmd);
 	return (false); // run only once
+}
+
+/*Tales over process, anything after this func is not executed!!*/
+void	execute_node_from_cmd_list(t_cmd *node)
+{
+	execve(node->cmd_path, node->cmd_arg, NULL);
 }
