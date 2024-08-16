@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:38:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 16:40:29 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/16 14:40:12 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -240,13 +240,20 @@ bool	invalid_token(t_data *d)
 	t_token	*current;
 	char	*e_word;
 	bool	invalid;
+	char	*buffer;
 
 	current = d->list_token;
 	invalid = false;
 	while (current && !invalid)
 	{
-		if (PIPE == current->id && NULL == current->prev)
+		if (PIPE == current->id && \
+			(NULL == current->prev || NULL == current->next->word))
 			invalid = !bash_msg1("`|'", "syntax error near unexpected token ");
+		else if (PIPE == current->id && NULL == current->next)
+		{
+			buffer = get_next_line(STDIN_FILENO);
+			printf("print buffer: %s|\n", buffer);
+		}
 		else if (PIPE != current->id && NULL == current->word)
 		{
 			e_word = next_meta_character_or_new_line(current);
@@ -257,6 +264,31 @@ bool	invalid_token(t_data *d)
 		current = current->next;
 	}
 	return (invalid);
+}
+
+/*trim user input from white space, if pipe is last character then prompt for
+input as long user enters none white space and | is not last, join all strs*/
+void	prompt_if_pipe_last(t_data *d)
+{
+	char	*buf;
+
+	buf = NULL;
+	if ('|' == d->user_input[ft_strlen(d->user_input) - 1])
+	{
+		while (NULL == buf)
+		{
+			buf = get_next_line(STDIN_FILENO);
+			trim_str(&buf, "\n ");
+			if (0 == ft_strlen(buf))
+			{
+				free(buf);
+				buf = NULL;
+			}
+			else if ('|' == buf[ft_strlen(buf) - 1])
+				d->user_input = join_free(&(d->user_input), true, &buf, true);
+		}
+		d->user_input = join_free(&(d->user_input), true, &buf, true);
+	}
 }
 
 char	*next_meta_character_or_new_line(t_token *current)

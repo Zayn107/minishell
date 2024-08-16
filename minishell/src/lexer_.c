@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 16:25:03 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/16 14:01:06 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	lexer(t_data *d)
 	bool	found_cmd;
 
 	found_cmd = false;
+	trim_str(&(d->user_input), " ");
+	prompt_if_pipe_last(d);
 	while (d->user_input)
 		cut_user_input(d);
 	current = d->list_token;
@@ -140,14 +142,4 @@ void	join_subwords(t_sub_list **head, t_token **node, t_data *d)
 		free((*node)->word);
 		(*node)->word = join;
 	}
-}
-
-/*cut the characters from "cut_str from "str" beginning and end*/
-void	trim_str(char **str, char *cut_str)
-{
-	char	*trimmed;
-
-	trimmed = ft_strtrim(*str, cut_str);
-	free(*str);
-	*str = trimmed;
 }

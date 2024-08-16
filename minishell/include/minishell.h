@@ -195,6 +195,8 @@ void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var);
 void	remove_token_node(t_token **node, t_data **d);
 // void	join_subwords(t_sub_list **head, char **word);
 void	join_subwords(t_sub_list **head, t_token **node, t_data *d);
+void	prompt_if_pipe_last(t_data *d);
+char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 // void	p_color();
 
 

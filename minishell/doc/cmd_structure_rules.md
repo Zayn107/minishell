@@ -42,7 +42,7 @@ There are 3 types of variables:
 
 ## Bash Syntax Errors
 The shell throws an error and prompts the user for a new input. All mallocs are freed but the "variable table" remains. No commands are executed!
-### Missing Word after "Meta Character" (*see `|` below*)
+### Missing Word after "Meta Character" (*for `|`, see below*)
 - **There must be always a word after a "meta character" !**  
 If there is none or an invalid command, then the error occurs later when the command is executed.  
 1. Non of the commands are executed, even if they come before the error.  
@@ -60,9 +60,12 @@ If there is none or an invalid command, then the error occurs later when the com
 ![missing word before pipe](./img/bash_syntax_error_missing_word_pipe_before.webp)  
 It is actually a command which is needed before `|` but the invalid command error is coming later when the pipe is executed not when the syntax is checked.  
 ![command needed, error later](./img/bash_syntax_error_missing_word_pipe_need_cmd.webp)  
-2. Word is missing **after** `|`, prompt is waiting for input of the missing word (*command*), ...  
+2. Word is missing **after** `|`, prompt is waiting for input of the missing word, can not end with pipe again and white space is ignored  
 ![missing word after pipe](./img/bash_syntax_error_missing_word_pipe_after.webp)  
-...which if valid will execute the command.
+3. Syntax error, if no word between two pipes.  
+![two pipes space](./img/bash_syntax_error_2_pipes_space.png)  
+(*Note that `||` is one character in bash, in minishell they are two `|` `|` because `||` is not part of the scop.*)  
+![two pipes no space](./img/bash_no_syntax_error_2_pipes_no_space.png)  
 
 ---
 <details>
