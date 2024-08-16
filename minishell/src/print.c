@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:09:36 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 11:38:15 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/16 15:32:25 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,9 @@ void	print_cmd_list(t_cmd *head)
 	print_line(180, '#');
 	while (node)
 	{
-		p_color(3,0,6, "CMD|");
+		p_color(3,0,5, "PATH|");
+		p_color(1,1,5, node->cmd_path);
+		p_color(3,0,6, " CMD|");
 		p_color(1,1,6, node->cmd_arg[0]);
 		p_color(3,0,4, " ARG|");
 		idx = 0;

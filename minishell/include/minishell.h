@@ -92,7 +92,7 @@ typedef struct s_cmd
 {
 	ptr_builtin		builtin_fun;	// function pointer for builtin
 	// cmd[0] => path + cmd, cmd[1] => arg, cmd[2] => NULL
-	//char			*cmd_path;		// MALLOC!! path + /cmd (one string)
+	char			*cmd_path;		// MALLOC!! path + /cmd (one string)
 	char			**cmd_arg;		// MALLOC!! tab[0]=cmd; tab[1]=args; tab[2]=NULL
 	int				fd_f_in;
 	int				fd_f_out;
@@ -202,6 +202,6 @@ char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 
 
 // TEST PIPE
-void	TEST_add_node(char *cmd_arg, char *f_in, char *f_out, t_data *d);
+void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d);
 void	free_cmd_list(t_cmd *head);
 #endif

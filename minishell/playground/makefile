@@ -1,5 +1,5 @@
 EXE		=	add_history chdir dir fstat getcwd getenv rl_on_new_line \
-			rl_replace_line stat unlink init_env open_dir substr
+			rl_replace_line stat unlink init_env open_dir substr execev
 FLAG	=	-Werror -Wextra -Wall
 LIB		= -L./../libft -lft
 

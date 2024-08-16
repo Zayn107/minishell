@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 17:36:57 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/16 15:26:24 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ t_cmd	*add_node_cmd(t_data *d)
 	new_node = (t_cmd *) malloc(sizeof(t_cmd));
 	new_node->builtin_fun = NULL;
 	new_node->cmd_arg = (char **) malloc(sizeof(char *) * 2);
+	new_node->cmd_path = NULL;
 	new_node->cmd_arg[0] = NULL;
 	new_node->cmd_arg[1] = NULL;
 	new_node->fd_f_in = FD_NONE;
