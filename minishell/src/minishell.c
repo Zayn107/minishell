@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 15:46:13 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/16 15:51:05 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
-	// TEST_add_node("./path", "cmd,arg1,arg2,arg3,arg4", "file_in", "file_out", d);
 	TEST_add_node("/usr/bin/ls", "ls,-l,-a", "file_in", "file_out", d);
 
 
