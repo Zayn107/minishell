@@ -4,14 +4,7 @@ HEADER			= include/minishell.h
 # SOURCE
 SRC_DIR			= src/
 SRC				= $(addprefix $(SRC_DIR), \
-				minishell.c print.c free.c error.c env.c \
-				lexer_.c \
-				lexer_cut_quotes_subwords.c \
-				lexer_cut_user_input.c \
-				lexer_cut_variable_subwords.c \
-				struct.c \
-				parser.c \
-				unsorted_fun.c TEST_func.c helper.c)
+				minishell.c TEST_func.c)
 # OBJECTS
 OBJ_DIR			= obj/
 OBJ				= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
