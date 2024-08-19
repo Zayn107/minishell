@@ -39,12 +39,13 @@ There are 3 types of variables:
 |`$?` exit status variable|`VAR_EXIT`|`NULL`|The "word" is replaced with the exit status value from the structure `d.exit_status`.|
 |`$`+ NAME variable|`VAR`|*same as name but without* `$`|-> 2nd character must be `_` or an alphabetic character from the english alphabet (*minimum requirement*) <br>-> numeric character can also be used after the 2nd character<br>-> the name ends when this rules are broken.|
 | `$` + invalid variable name|*no id*|*no value*|Names which not confirm with the above rules are removed from the string.<br><br>-> **REMOVED**:<br>`$2` (*2nd number*), `$!` (*2nd nonalbhabetic or* `_` *or* `?`*. NOTE: the "bash shell" does interpret those as "special variables" but the subject requires only "meta characters" to be "interpreted".* )<br><br>-> **REMAIN AS CHARACTERS**:<br>If `$` is on the **end of a word**. This is the case if "white space", a "meta character", "closed double or single quotes" follow.|  
-![var evaluation](img/variable_processing_minishell.jpg) 
+
+![var evaluation](img/variable_processing_minishell.webp)  
 - bash input:  
 `echo $ $? $?txt $HOME $HOME"str"txt $not_exist $6txt $! '$?' str"$HOME" $` 
 - bash output:  
 `$ 0 0txt /home/zkepes /home/zkepesstrtxt txt $? str/home/zkepes $`
-- minishell: (*print_token_list()*) 
+- minishell output:  
 ![minishell var evaluation](img/minishell_var_evaluation.webp)
 
 ## Bash Syntax Errors

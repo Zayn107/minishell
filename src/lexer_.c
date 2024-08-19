@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 14:01:06 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/19 19:48:09 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	lexer(t_data *d)
 			cut_quotes_subwords(&(current->list_sub_word), current->word);
 			cut_variable_subwords(&(current->list_sub_word));
 			evaluate_variable_subwords(d, &(current->list_sub_word));
+			// print_token_list(d->list_token, true);
 			join_subwords(&(current->list_sub_word), &current, d);
 		}
 		found_cmd = mark_word_cmd_arg(current, found_cmd);

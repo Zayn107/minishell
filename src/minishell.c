@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/19 18:11:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/19 19:47:58 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ bool	prompt_user(t_data *d)
 	// prompt input
 	// d->user_input = readline("MINISHELL=> ");
 	// TEST VAR
-	d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
+	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
-	// d->user_input = ft_strdup(">");
+	d->user_input = ft_strdup("txt >"); // last is meta character
 	// TEST PIPE
 	// d->user_input = ft_strdup(">out1 cat>out2 <<doc1|wc >>app1 -l");
 	// TEST INVALID INPUT
@@ -48,9 +48,7 @@ bool	prompt_user(t_data *d)
 	// make some change
 	
 	// print user input
-	// printf("user_input: |%s|\n", d->user_input);
 	print_user_input(d->user_input);
-	// trim_str(&(d->user_input), " ");
 	if (invalid_user_input(d->user_input))
 		return true;  // TODO: add free all to return
 	lexer(d);
