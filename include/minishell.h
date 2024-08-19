@@ -13,7 +13,7 @@
 # define BLUE 4
 # define MAGENTA 5
 # define CYAN 6
-# define WHITE 7
+# define WHITE 8
 # define STOP "\033[0m"
 //style for p_color
 # define NORMALE 0
@@ -205,4 +205,5 @@ char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d);
 void	execute_node_from_cmd_list(t_cmd *node);
 void	free_cmd_list(t_cmd *head);
+void	print_user_input(char *input);
 #endif

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:46:56 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 14:56:06 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/19 17:57:29 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,11 +104,9 @@ void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var)
 	char	*word;
 	char	*str_rest;
 
-	idx_rest = 1;
-	if (ft_isdigit((idx_var[1])))
-		idx_rest = 2;
-	else
+	if (' ' == idx_var[1] || '\0' == idx_var[1])
 	{
+		idx_rest = 1;
 		word = ft_strdup("$");
 		if (UNPROCESSED == (*cur)->sub_id)
 		{
@@ -121,9 +119,11 @@ void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var)
 			*cur = (*cur)->next;
 		}
 	}
-		str_rest = ft_strdup(&(idx_var[idx_rest]));
-		free(*tmp);
-		*tmp = str_rest;
+	else
+		idx_rest = 2;
+	str_rest = ft_strdup(&(idx_var[idx_rest]));
+	free(*tmp);
+	*tmp = str_rest;
 }
 
 /*remaining str after last var is passed to sub_word, else node is removed*/

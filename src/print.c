@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:09:36 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 15:32:25 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/19 18:42:21 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,21 @@ void	read_from_fd(int fd)
 void	print_token_list(t_token *start, bool subword)
 {
 	int 		width = 180;
+	const char *TITLE = "- TOKEN list ";
+	const char *TITLE_EXTENT = "with SUB WORDS ";
+	int 		len_title;
 	t_token		*current;
 	t_sub_list 	*cur_sub;
 
 	current = start;
-	while (width--)
+	p_color(3,false,8, TITLE);
+	len_title = ft_strlen(TITLE);
+	if (subword)
+	{
+		p_color(3,false,8, TITLE_EXTENT);
+		len_title += ft_strlen(TITLE_EXTENT);
+	}
+	while (width-- - len_title)
 		printf("-");
 	printf("\n");
 	while (current)
@@ -129,10 +139,12 @@ void	print_token_list(t_token *start, bool subword)
 void	print_cmd_list(t_cmd *head)
 {
 	t_cmd	*node;
+	const char *TITLE = "# COMMAND list ";
 	int		idx;
 
 	node = head;
-	print_line(180, '#');
+	p_color(3,false,8, TITLE);
+	print_line(180 - ft_strlen(TITLE), '#');
 	while (node)
 	{
 		p_color(3,0,5, "PATH|");
@@ -147,15 +159,9 @@ void	print_cmd_list(t_cmd *head)
 			printf(" ");
 		}
 		p_color(3,0,3, " FILE_IN|");
-		// if (node->file_in)
-			p_color(1,1,3, node->f_in);
-		// // p_color(3,0,3, " FD FILE_IN|");
-		// // p_color(1,1,3, node->fd_file_in);
+		p_color(1,1,3, node->f_in);
 		p_color(3,0,2, " FILE_OUT|");
-		// if (node->file_in)
-			p_color(1,1,2, node->f_out);
-		// // p_color(3,0,2, " FD FILE_OUT|");
-		// // p_color(1,1,2, node->fd_f_out);
+		p_color(1,1,2, node->f_out);
 		printf("\n");
 		print_line(180, '-');
 		node = node->next;
@@ -202,7 +208,7 @@ void	p_color(int weight, bool background, int color, const char *str)
 }
 
 /*returns/updates  the color code for printf as string (str), len str >= 7 and not malloc weight: 0=normal 1=bold 3=italic 4=underline
-color: 0=black 1=red 2=green 3=yellow 4=blue 5=magenta 6=cyan 7=white*/
+color: 0=black 1=red 2=green 3=yellow 4=blue 5=magenta 6=cyan 8=white*/
 char	*ret_col(int weight, bool background, int color, char *str)
 {
 	char	style[] = "\033[0;30m";
@@ -218,4 +224,16 @@ char	*ret_col(int weight, bool background, int color, char *str)
 	len = ft_strlen(style);
 	printf("len: %d\n", len);
 	return (ft_memcpy(str, style, len));
+}
+
+void	print_user_input(char *input)
+{
+	int	width = 180;
+	const char *TITLE = "= user input =>";
+
+	p_color(3, false, 8, TITLE);
+	p_color(0,true,0, input);
+	while (width-- - ft_strlen(TITLE) - ft_strlen(input))
+		p_color(0, false, 8, "=");
+	printf("\n");
 }
