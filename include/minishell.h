@@ -148,7 +148,7 @@ void	insert_node_token_struct(t_token *current, int token, char *word);
 
 // refactor tokenize V2
 void	cut_word(t_token *current);
-int		match_quote_idx(const char *str);
+int		matching_quote_len(const char *str);
 void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word);
 bool	invalid_user_input(char *user_input);
 void	cut_user_input(t_data *d);
@@ -199,6 +199,7 @@ void	prompt_if_pipe_last(t_data *d);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 void	remove_token_node_update(t_token **node, t_data **d);
 bool	is_direction(int id);
+char	*cut_str(char *str, int start);
 // void	p_color();
 
 

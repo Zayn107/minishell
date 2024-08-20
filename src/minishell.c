@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 13:24:09 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 19:49:44 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,22 @@ bool	prompt_user(t_data *d)
 	// prompt input
 	// d->user_input = readline("MINISHELL=> ");
 	// TEST VAR
-	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
+	d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
 	// d->user_input = ft_strdup("cmd >"); // word missing after meta char
 	// HEREDOC
 	// d->user_input = ft_strdup("<< E"); // prompt for heredoc input, write file 'tmp_heredoc_'
-	d->user_input = ft_strdup("<<"); // prompt for heredoc input, write file 'tmp_heredoc_'
+	// d->user_input = ft_strdup("<<"); // prompt for heredoc input, write file 'tmp_heredoc_'
 	// TEST PIPE
 	// d->user_input = ft_strdup(">out1 cat>out2 <<doc1|wc >>app1 -l");
 	// d->user_input = ft_strdup("|wc >>app1 -l"); //no word preceding pipe
 	// d->user_input = ft_strdup("wc >>app1 -l|"); //no word after pipe
 	// TEST INVALID INPUT
 	// d->user_input = ft_strdup("| wc"); //missing word before pipe
+	// TESTING
+	// d->user_input = ft_strdup("'quote1'word2'quote2'word3'quote3'last"); // prompt for heredoc input, 
+	// write file 
+	// d->user_input = ft_strdup("word1'quote'");
 
 	// d->user_input = ft_strdup("echo text |"); //missing word after pipe, prompt user
 	// d->user_input = ft_strdup("$< <file_in>file_\"out\" arg$HOME>>append arg$|cmd$? arg$_not_valid");

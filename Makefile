@@ -11,7 +11,8 @@ SRC				= $(addprefix $(SRC_DIR), \
 				lexer_cut_variable_subwords.c \
 				struct.c \
 				parser.c \
-				unsorted_fun.c TEST_func.c helper.c)
+				unsorted_fun.c TEST_func.c helper.c \
+				help_str.c )
 # OBJECTS
 OBJ_DIR			= obj/
 OBJ				= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)

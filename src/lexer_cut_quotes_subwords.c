@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:47:44 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/15 10:16:59 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 19:52:39 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,29 +15,27 @@
 void	cut_quotes_subwords(t_sub_list **node_s, char *word)
 {
 	int		idx;
-	int		idx_start;
-	int		len_quote;
-	bool	word_before_quote;
+	int		end_last_word;
+	int		len_q;
 
 	idx = 0;
-	idx_start = 0;
-	word_before_quote = true;
+	end_last_word = 0;
 	while (word[idx])
 	{
-		if ((len_quote = match_quote_idx(&(word[idx]))))
+		if ((len_q = matching_quote_len(&(word[idx]))))
 		{
-			if (0 < idx && word_before_quote)
-				add_str_node_s_word(word, node_s, idx_start, idx);
-			word_before_quote = false;
-			add_quo_node_s_word(word, node_s, idx, len_quote - 1);
-			idx_start = idx + len_quote;
-			idx += len_quote;
+			if (end_last_word < idx)
+				add_str_node_s_word(\
+					word, node_s, end_last_word, idx - end_last_word);
+			add_quo_node_s_word(word, node_s, idx, len_q - 1);
+			idx += len_q;
+			end_last_word = idx;
 		}
 		else
 			idx++;
 	}
-	if (idx_start != idx)
-		add_str_node_s_word(word, node_s, idx_start, idx - idx_start);
+	if (word[end_last_word])
+		add_str_node_s_word(word, node_s, end_last_word, idx);
 }
 
 void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int len)
