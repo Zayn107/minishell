@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 15:26:24 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 12:21:43 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +140,31 @@ void	remove_token_node(t_token **node, t_data **d)
 		(*d)->list_token = (*node)->next;
 		(*node)->next->prev = NULL;
 	}
-	else
+	else if ((*node)->next)
 	{
 		(*node)->next->prev = (*node)->prev;
 		(*node)->prev->next = (*node)->next;
+	}
+	free((*node)->word);
+	free_list_sub_word((*node)->list_sub_word);
+	free((*node));
+}
+
+void	remove_token_node_update(t_token **node, t_data **d)
+{
+	if ((*d)->list_token == *node)		// is first node?
+	{
+		(*d)->list_token = (*node)->next;
+		(*node)->next->prev = NULL;
+	}
+	else if (NULL == (*node)->next)		// is last node?
+	{
+		(*node)->prev->next = NULL;
+	}
+	else								// is between node
+	{
+		(*node)->prev->next = (*node)->next;
+		(*node)->next->prev = (*node)->prev;
 	}
 	free((*node)->word);
 	free_list_sub_word((*node)->list_sub_word);

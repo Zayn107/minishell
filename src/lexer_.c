@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/19 19:48:09 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 12:59:30 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	lexer(t_data *d)
 		if (PIPE != current->id)
 		{
 			cut_quotes_subwords(&(current->list_sub_word), current->word);
+			// print_token_list(d->list_token, true);
 			cut_variable_subwords(&(current->list_sub_word));
 			evaluate_variable_subwords(d, &(current->list_sub_word));
-			// print_token_list(d->list_token, true);
 			join_subwords(&(current->list_sub_word), &current, d);
 		}
 		found_cmd = mark_word_cmd_arg(current, found_cmd);
@@ -136,11 +136,18 @@ void	join_subwords(t_sub_list **head, t_token **node, t_data *d)
 		}
 		cur = cur->next;
 	}
-	if (NULL == join)
-		remove_token_node(node, &d);
+	if (NULL == join && !is_direction((*node)->id))
+		remove_token_node_update(node, &d);
 	else
 	{
 		free((*node)->word);
 		(*node)->word = join;
 	}
+}
+
+bool	is_direction(int id)
+{
+	if (FILE_OUT == id || FILE_APPEND == id || FILE_IN == id || HEREDOC == id )
+		return (true);
+	return (false);
 }

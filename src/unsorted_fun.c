@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:38:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 14:40:12 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 13:21:15 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token)
 		return e_msg("Failed to open file in 'get_heredoc_input'");
 	while (true)
 	{
+		write(1, "> ", 2);
 		buffer = get_next_line(STDIN_FILENO);
 		if (0 == ft_strncmp(buffer, delimiter, ft_strlen(delimiter)))
 			break ;
@@ -277,6 +278,7 @@ void	prompt_if_pipe_last(t_data *d)
 	{
 		while (NULL == buf)
 		{
+			write(1, "> ", 2);
 			buf = get_next_line(STDIN_FILENO);
 			trim_str(&buf, "\n ");
 			if (0 == ft_strlen(buf))

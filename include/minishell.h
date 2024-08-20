@@ -197,6 +197,8 @@ void	remove_token_node(t_token **node, t_data **d);
 void	join_subwords(t_sub_list **head, t_token **node, t_data *d);
 void	prompt_if_pipe_last(t_data *d);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
+void	remove_token_node_update(t_token **node, t_data **d);
+bool	is_direction(int id);
 // void	p_color();
 
 

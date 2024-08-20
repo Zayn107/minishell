@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/19 19:47:58 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 13:24:09 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,14 @@ bool	prompt_user(t_data *d)
 	// TEST VAR
 	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
-	d->user_input = ft_strdup("txt >"); // last is meta character
+	// d->user_input = ft_strdup("cmd >"); // word missing after meta char
+	// HEREDOC
+	// d->user_input = ft_strdup("<< E"); // prompt for heredoc input, write file 'tmp_heredoc_'
+	d->user_input = ft_strdup("<<"); // prompt for heredoc input, write file 'tmp_heredoc_'
 	// TEST PIPE
 	// d->user_input = ft_strdup(">out1 cat>out2 <<doc1|wc >>app1 -l");
+	// d->user_input = ft_strdup("|wc >>app1 -l"); //no word preceding pipe
+	// d->user_input = ft_strdup("wc >>app1 -l|"); //no word after pipe
 	// TEST INVALID INPUT
 	// d->user_input = ft_strdup("| wc"); //missing word before pipe
 
@@ -52,15 +57,16 @@ bool	prompt_user(t_data *d)
 	if (invalid_user_input(d->user_input))
 		return true;  // TODO: add free all to return
 	lexer(d);
+	print_token_list(d->list_token, true);
 	if (invalid_token(d))
 		return false; //TODO change later to return true, restart loop
 	cmd_list_from_token(d, true);
 
 
 	// print_tab(d->env);
-	print_token_list(d->list_token, true);
 	print_cmd_list(d->list_cmd);
 	free_list_token_and_subword(d->list_token);
+	free_cmd_list(d->list_cmd);
 	return (false);
 }
 

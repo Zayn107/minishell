@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:09:36 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/19 18:42:21 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/20 10:23:30 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,10 +229,10 @@ char	*ret_col(int weight, bool background, int color, char *str)
 void	print_user_input(char *input)
 {
 	int	width = 180;
-	const char *TITLE = "= user input =>";
+	const char *TITLE = "= user input ==";
 
 	p_color(3, false, 8, TITLE);
-	p_color(0,true,0, input);
+	p_color(0,true,1, input);
 	while (width-- - ft_strlen(TITLE) - ft_strlen(input))
 		p_color(0, false, 8, "=");
 	printf("\n");
