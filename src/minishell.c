@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 19:49:44 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/21 12:08:04 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("> out1 >> app1 cmd arg < file_new arg << E");
 	// d->user_input = ft_strdup(" >> append");
 	// d->user_input = ft_strdup("< heredod\"$HOME\"$ cmd arg arg | new_cmd '$?'");
+	// d->user_input = ft_strdup("one_line $not_exist");
 	// make some change
 	
 	// print user input

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 12:21:43 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/21 11:19:09 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,5 +168,5 @@ void	remove_token_node_update(t_token **node, t_data **d)
 	}
 	free((*node)->word);
 	free_list_sub_word((*node)->list_sub_word);
-	free((*node));
+	free(*node);
 }

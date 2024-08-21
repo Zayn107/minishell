@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 19:58:31 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/21 12:19:37 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void	lexer(t_data *d)
 		if (PIPE != current->id)
 		{
 			cut_quotes_subwords(&(current->list_sub_word), current->word);
-			// print_token_list(d->list_token, true);
 			cut_variable_subwords(&(current->list_sub_word));
 			evaluate_variable_subwords(d, &(current->list_sub_word));
-			join_subwords(&(current->list_sub_word), &current, d);
+			join_subwords(&(current->list_sub_word), &current);
 		}
+		// print_token_list(d->list_token, true);
 		found_cmd = mark_word_cmd_arg(current, found_cmd);
 		current = current->next;
 	}
@@ -106,6 +106,9 @@ void	evaluate_variable_subwords(t_data *d, t_sub_list **head)
 		{
 			tmp = cur->sub_word;
 			cur->sub_word = env_value(d, tmp);
+			if (cur->sub_word == NULL)
+				cur->sub_id = INV_VAR;
+				// printf("tmp: %s\n", tmp);
 			free(tmp);
 		}
 		cur = cur->next;
@@ -113,11 +116,10 @@ void	evaluate_variable_subwords(t_data *d, t_sub_list **head)
 }
 
 /*join subwords to words, does not change the "word id" nor free subwords*/
-void	join_subwords(t_sub_list **head, t_token **node, t_data *d)
+void	join_subwords(t_sub_list **head, t_token **node)
 {
 	t_sub_list	*cur;
 	char		*join;
-	char		*tmp;
 
 	cur = *head;
 	join = NULL;
@@ -128,26 +130,15 @@ void	join_subwords(t_sub_list **head, t_token **node, t_data *d)
 			if (NULL == join)
 				join = ft_strdup(cur->sub_word);
 			else
-			{
-				tmp = join;
-				join = ft_strjoin(tmp, cur->sub_word);
-				free(tmp);
-			}
+				join = join_free(&join, true, &(cur->sub_word), false);
 		}
 		cur = cur->next;
 	}
-	if (NULL == join && !is_direction((*node)->id))
-		remove_token_node_update(node, &d);
-	else
+	if (join)
 	{
 		free((*node)->word);
 		(*node)->word = join;
 	}
-}
-
-bool	is_direction(int id)
-{
-	if (FILE_OUT == id || FILE_APPEND == id || FILE_IN == id || HEREDOC == id )
-		return (true);
-	return (false);
+	else
+		(*node)->id = INV_WORD;
 }
