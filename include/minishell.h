@@ -166,7 +166,7 @@ bool	mark_word_cmd_arg(t_token *current, bool found_cmd);
 // char	*rest_from_input(t_data *d, int rest_start);
 void	cut_input_add_list(t_data *d, int token, int skip);
 char	*rest_from_input(t_data *d, int id, const char *word);
-char	*word_from_input(t_data *d, int token);
+char	*word_after_skip(t_data *d, int token);
 void	create_direct_out_files_if_not_exist(t_data *d);
 bool	invalid_token(t_data *d);
 char	*next_meta_character_or_new_line(t_token *current);

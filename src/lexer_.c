@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/21 12:19:37 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/21 13:39:56 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,21 @@ void	lexer(t_data *d)
 	prompt_if_pipe_last(d);
 	while (d->user_input)
 		cut_user_input(d);
+			printf("ok\n");
 	current = d->list_token;
 	while (current)
 	{
-		if (PIPE != current->id)
+		if (PIPE != current->id && NULL != current->word)
 		{
 			cut_quotes_subwords(&(current->list_sub_word), current->word);
 			cut_variable_subwords(&(current->list_sub_word));
 			evaluate_variable_subwords(d, &(current->list_sub_word));
 			join_subwords(&(current->list_sub_word), &current);
 		}
-		// print_token_list(d->list_token, true);
 		found_cmd = mark_word_cmd_arg(current, found_cmd);
 		current = current->next;
 	}
+			// print_token_list(d->list_token, true);
 }
 
 bool	mark_word_cmd_arg(t_token *current, bool found_cmd)
@@ -139,6 +140,12 @@ void	join_subwords(t_sub_list **head, t_token **node)
 		free((*node)->word);
 		(*node)->word = join;
 	}
-	else
+	else if (WORD == (*node)->id)
 		(*node)->id = INV_WORD;
+	// else if (!ft_strlen(join))
+	// {
+	// 	free((*node)->word);
+	// 	(*node)->word = NULL;
+	// 	free(join);
+	// }
 }

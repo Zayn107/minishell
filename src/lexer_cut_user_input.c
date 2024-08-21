@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:40:39 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 16:31:16 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/21 13:35:42 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	cut_input_add_list(t_data *d, int id, int skip)
 	free(d->user_input);
 	d->user_input = tmp;
 	trim_str(&(d->user_input), " ");
-	word = word_from_input(d, id);
+	word = word_after_skip(d, id);
 	add_node_token(d, id, word);
 	d->user_input = rest_from_input(d, id, word);
 }
@@ -48,7 +48,7 @@ char	*rest_from_input(t_data *d, int id, const char *word)
 
 	if (PIPE == id)
 		word_rest = d->user_input;
-	else
+	else if (word)
 		word_rest = &(d->user_input[ft_strlen(word)]);
 	word_rest = ft_strdup(word_rest);
 	trim_str(&word_rest, " ");
@@ -61,7 +61,7 @@ char	*rest_from_input(t_data *d, int id, const char *word)
 	return (word_rest);
 }
 
-char	*word_from_input(t_data *d, int id)
+char	*word_after_skip(t_data *d, int id)
 {
 	int 	len;
 	int		len_quote;
@@ -78,8 +78,11 @@ char	*word_from_input(t_data *d, int id)
 	}
 	if (PIPE == id)
 		word = NULL;
+	else if (!len)
+		word = NULL;
 	else
 		word = ft_substr(d->user_input, 0, len);
+	// printf("word: |%s| id: %d\n", word, id);
 	return (word);
 }
 

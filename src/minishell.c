@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/21 12:08:04 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/21 13:41:40 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	prompt_user(t_data *d)
 	// TEST VAR
 	d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
-	// d->user_input = ft_strdup("cmd >"); // word missing after meta char
+	// d->user_input = ft_strdup("cmd > str"); // word missing after meta char
 	// HEREDOC
 	// d->user_input = ft_strdup("<< E"); // prompt for heredoc input, write file 'tmp_heredoc_'
 	// d->user_input = ft_strdup("<<"); // prompt for heredoc input, write file 'tmp_heredoc_'
