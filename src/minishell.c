@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 10:55:02 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 12:18:46 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ bool	prompt_user(t_data *d)
 	// TEST VAR
 	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
-	d->user_input = ft_strdup("cmd >> TEST_NO/file_x"); // word missing after meta char
+	d->user_input = ft_strdup("ls -l -a >> TEST_NO/file_x"); // word missing after meta char
 	// HEREDOC
 	// d->user_input = ft_strdup("<< E"); // prompt for heredoc input, write file 'tmp_heredoc_'
 	// d->user_input = ft_strdup("<<"); // prompt for heredoc input, write file 'tmp_heredoc_'
@@ -66,7 +66,6 @@ bool	prompt_user(t_data *d)
 	if (invalid_token(d))
 		return false; //TODO change later to return true, restart loop
 	cmd_list_from_token(d, true);
-
 
 	// print_tab(d->env);
 	print_cmd_list(d->list_cmd);

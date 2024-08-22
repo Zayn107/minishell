@@ -200,6 +200,8 @@ void	prompt_if_pipe_last(t_data *d);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 void	remove_token_node_update(t_token **node, t_data **d);
 char	*cut_str(char *str, int start);
+char	*find_cmd_path(t_data *d, char *cmd);
+void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
 // void	p_color();
 
 

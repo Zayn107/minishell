@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:38:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 10:56:07 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 12:15:43 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,10 @@ bool	cmd_list_from_token(t_data *d, bool success)
 	{
 		if (PIPE == cur_tok->id)
 			cur_cmd = add_node_cmd(d);
+		// else if (COMMAND == cur_tok->id)
+		// 	cur_cmd->cmd_arg[0] = ft_strdup(cur_tok->word);
 		else if (COMMAND == cur_tok->id)
-			cur_cmd->cmd_arg[0] = ft_strdup(cur_tok->word);
+			assign_cmd(d, cur_cmd, cur_tok->word);
 		else if (ARGUMENT == cur_tok->id)
 			assign_arg(&(cur_cmd->cmd_arg), cur_tok->word);
 		else if (FILE_IN == cur_tok->id)
@@ -38,6 +40,13 @@ bool	cmd_list_from_token(t_data *d, bool success)
 		cur_tok = cur_tok->next;
 	}
 	return (success);
+}
+
+/*assign command to structure*/
+void	assign_cmd(t_data *d, t_cmd *node, char *cmd)
+{
+	node->cmd_arg[0] = ft_strdup(cmd);
+	node->cmd_path = find_cmd_path(d, cmd);
 }
 
 bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token)
@@ -351,4 +360,36 @@ void	init_data(t_data *d)
 	d->last_cmd = false;
 	d->exit_status = 0;
 	errno = 0;
+}
+
+char	*find_cmd_path(t_data *d, char *cmd)
+{
+	char	*env_path;
+	char	*cmd_path;
+	char	*slash;
+	char	**env_tab;
+	int		idx;
+
+	if ((NULL != ft_strrchr(cmd, '/')))
+		return (ft_strdup(cmd));
+	env_path = env_value(d, "PATH");
+	if (NULL == env_path)
+		return (NULL);
+	env_tab = ft_split(env_path, ':');
+	free(env_path);
+	slash = ft_strdup("/");
+	idx = 0;
+	while (env_tab[idx])
+	{
+		cmd_path = join_free(&(env_tab[idx]), false, &slash, false);
+		cmd_path = join_free(&(cmd_path), true, &(cmd), false);
+		if ((0 == access(cmd_path, F_OK)))
+			break;
+		free(cmd_path);
+		cmd_path = NULL;
+		idx++;
+	}
+	free(slash);
+	free_tab(env_tab);
+	return (cmd_path);
 }
