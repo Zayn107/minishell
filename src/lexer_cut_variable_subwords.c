@@ -6,21 +6,9 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:46:56 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/19 17:57:29 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 13:51:20 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*All functions are part of the "cut_variable_subwords()", its purpose is to
-break the "sub words" further into variables. There are 3 types of variables:
-1. "exit variables '$?'" id=VAR_EXIT, sub_word=NULL ('$?' removed from string);
-2. "variables '$' followed by '_' or alphabetic character, can after 2nd char
-contain also numbers" id=VAR, sub_word=(var name without '$');
-3. "invalid variable names" are removed from the string, they are not marked.
-The original sub_word string is saved in "char **tmp" and gets updated when a
-variable is removed which is marked by "char *idx_var". NOTE: both pointers
-point to the same malloc but at different addresses. The extracted informaiton
-is saved to "t_sub_list *cur", a new node is added which is then returned to
-advance the list.*/
 
 #include "../include/minishell.h"
 

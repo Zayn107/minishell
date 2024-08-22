@@ -6,12 +6,13 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:47:44 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 19:52:39 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 13:48:49 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+//cut word into subwords, matching quotes, strings, space is not removed
 void	cut_quotes_subwords(t_sub_list **node_s, char *word)
 {
 	int		idx;
@@ -38,6 +39,7 @@ void	cut_quotes_subwords(t_sub_list **node_s, char *word)
 		add_str_node_s_word(word, node_s, end_last_word, idx);
 }
 
+//create and add a new node to subword list with the ID of WORD
 void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int len)
 {
 	char	*sub_word;
@@ -48,6 +50,7 @@ void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int len)
 	add_node_sub_word(node_s, id, sub_word);
 }
 
+//create and add a new node to subword list with ID QUOTE_SINGLE / QUOTE_DOUBLE
 void	add_quo_node_s_word(char *word, t_sub_list **node_s, int start, int len)
 {
 	char	*sub_word;

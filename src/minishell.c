@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 12:57:07 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 13:34:52 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
-	d->user_input = readline("MINISHELL=> ");
+	// d->user_input = readline("MINISHELL=> ");
 
 	// TESTING /////////////////////////////////////////////////////////////////
 	// TEST VAR
-	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
+	d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
 	// d->user_input = ft_strdup("ls -l -a >> TEST_NO/file_x"); // word missing after meta char
 	// HEREDOC
@@ -58,13 +58,13 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("one_line $not_exist");
 	
 	// PRINT USER INPUT STRING
-	// print_user_input(d->user_input); //print user input, for debugging //////
+	print_user_input(d->user_input); //print user input, for debugging //////
 	
 	if (invalid_user_input(d, d->user_input))
-		return true;
+		return false;  //set to false for testing
 	lexer(d);
 	if (invalid_token(d))
-		return true;
+		return false;  //set to false for testing
 	cmd_list_from_token(d, true);
 
 	// PRINT STATEMENTS FOR DEBUGGING
@@ -73,7 +73,7 @@ bool	prompt_user(t_data *d)
 	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	
 	free_all_except_env(d);
-	return (true);
+	return (false);  //set to false for testing
 }
 
 // // ### TEST ###############################################################

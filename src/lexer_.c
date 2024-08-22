@@ -6,14 +6,15 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 10:21:03 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 13:54:16 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 /*The Lexer is breaking the user input into its smallest building blocks,
-1. meta characters: '<', '<<', '|', '>>', '>' ' ' ;
+1. redirections: '<', '<<', '|', '>>', '>';
 2. words:			strings, quotes, variable.
-Words are further broken down into subwords (to evaluate variables, remove quotes) and after joined back together.*/
+Words are further broken down into subwords (to evaluate variables,
+remove quotes) and after joined back together.*/
 
 #include "../include/minishell.h"
 
@@ -27,7 +28,7 @@ void	lexer(t_data *d)
 	trim_str(&(d->user_input), " ");
 	prompt_if_pipe_last(d);
 	while (d->user_input)
-		cut_user_input(d);
+		cut_user_input_into_token(d);
 	current = d->list_token;
 	while (current)
 	{
@@ -41,24 +42,9 @@ void	lexer(t_data *d)
 		found_cmd = mark_word_cmd_arg(current, found_cmd);
 		current = current->next;
 	}
-			// print_token_list(d->list_token, true);
 }
 
-bool	mark_word_cmd_arg(t_token *current, bool found_cmd)
-{
-	if (PIPE == current->id)
-		found_cmd = false;
-	else if (!found_cmd && WORD == current->id)
-	{
-		current->id = COMMAND;
-		found_cmd = true;
-	}
-	else if (found_cmd && WORD == current->id)
-		current->id = ARGUMENT;
-	return (found_cmd);
-}
-
-/*Cut subwords further into variables, remove if not valid name*/
+//cut subwords further into variables, remove if not valid name, except HEREDOC
 void	cut_variable_subwords(t_sub_list **head,  int id_token)
 {
 	t_sub_list	*cur;
@@ -108,7 +94,6 @@ void	evaluate_variable_subwords(t_data *d, t_sub_list **head)
 			cur->sub_word = env_value(d, tmp);
 			if (cur->sub_word == NULL)
 				cur->sub_id = INV_VAR;
-				// printf("tmp: %s\n", tmp);
 			free(tmp);
 		}
 		cur = cur->next;
@@ -141,10 +126,19 @@ void	join_subwords(t_sub_list **head, t_token **node)
 	}
 	else if (WORD == (*node)->id)
 		(*node)->id = INV_WORD;
-	// else if (!ft_strlen(join))
-	// {
-	// 	free((*node)->word);
-	// 	(*node)->word = NULL;
-	// 	free(join);
-	// }
+}
+
+//changes id of first word which has ID WORD to COMMAND if "found_cmd" false
+bool	mark_word_cmd_arg(t_token *current, bool found_cmd)
+{
+	if (PIPE == current->id)
+		found_cmd = false;
+	else if (!found_cmd && WORD == current->id)
+	{
+		current->id = COMMAND;
+		found_cmd = true;
+	}
+	else if (found_cmd && WORD == current->id)
+		current->id = ARGUMENT;
+	return (found_cmd);
 }

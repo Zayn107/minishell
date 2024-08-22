@@ -7,11 +7,11 @@ SRC				= $(addprefix $(SRC_DIR), \
 				minishell.c print.c free.c error.c env.c \
 				lexer_.c \
 				lexer_cut_quotes_subwords.c \
-				lexer_cut_user_input.c \
+				lexer_cut_user_input_into_token.c \
 				lexer_cut_variable_subwords.c \
 				struct.c \
 				parser.c \
-				unsorted_fun.c TEST_func.c helper.c \
+				unsorted_fun.c TEST_func.c \
 				help_str.c )
 # OBJECTS
 OBJ_DIR			= obj/
