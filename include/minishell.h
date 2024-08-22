@@ -85,7 +85,10 @@ typedef struct s_sub_list
 	struct s_sub_list	*next;
 }	t_sub_list;
 
-typedef void (*ptr_builtin)(char *arg);	// definition for function pointer, builtin
+
+typedef struct s_data t_data;
+typedef struct s_cmd t_cmd;
+typedef void (*ptr_builtin)(t_data *d, t_cmd *node);	// definition for function pointer, builtin
 
 typedef struct s_cmd
 {
@@ -197,6 +200,11 @@ int		matching_quote_len(const char *str);
 void	trim_str(char **str, char *cut_str);
 char	*cut_str(char *str, int start);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
+
+//BUILTIN
+void	builtin_echo(t_data *d, t_cmd *node);
+void	assign_builtin(t_cmd *head);
+void	call_builtin(t_data *d);
 
 //TEST PIPE
 void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d);

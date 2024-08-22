@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 15:52:22 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 17:53:17 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("wc >>app1 -l|"); //no word after pipe
 	// d->user_input = ft_strdup("wc >>app1 -l||end"); //no word between pipes
 
-	d->user_input = ft_strdup("wc>fout<fin>>app<<E"); //redirection without word
+	d->user_input = ft_strdup("echo hello world :)"); //redirection without word
 	// TEST INVALID INPUT
 	// d->user_input = ft_strdup("| wc"); //missing word before pipe
 	// d->user_input = ft_strdup("> file cat | >"); //missing word before pipe
@@ -70,6 +70,8 @@ bool	prompt_user(t_data *d)
 	if (invalid_token(d))
 		return false;  //set to false for testing
 	parser(d, true);
+	assign_builtin(d->list_cmd);
+	call_builtin(d);
 
 	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////
 	// print_tab(d->env); //print (at start) copied environment table //////////
@@ -79,6 +81,64 @@ bool	prompt_user(t_data *d)
 	free_all_except_env(d);
 	return (false);  //set to false for testing
 }
+
+void	assign_builtin(t_cmd *head)
+{
+	t_cmd	*current;
+
+	current = head;
+	while (current)
+	{
+		// if (current->cmd_arg[0] == "pwd")
+		if ((0 == ft_strncmp(current->cmd_arg[0], "echo", 4)))
+			current->builtin_fun = builtin_echo;
+		current = current->next;
+	}
+}
+
+void	call_builtin(t_data *d)
+{
+	t_cmd	*current;
+
+	current = d->list_cmd;
+	while (current)
+	{
+		if (current->builtin_fun)
+			current->builtin_fun(d, current);
+		current = current->next;
+	}
+}
+
+void	builtin_echo(t_data *d, t_cmd *node)
+{
+	int	idx;
+
+	(void) d;
+	idx = 1;
+	if (NULL == node->f_out && NULL == node->next)
+		node->fd_f_out = STDOUT_FILENO;
+	while (node->cmd_arg[idx])
+	{
+		if (idx > 1)
+			write(node->fd_f_out, " ", 1);
+		write(node->fd_f_out, node->cmd_arg[idx], ft_strlen(node->cmd_arg[idx]));
+		idx++;
+	}
+	write(node->fd_f_out, "\n", 1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // // ### TEST ###############################################################
 // bool	prompt_user(t_data *d)
