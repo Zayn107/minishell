@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 12:40:14 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 12:57:07 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
-	// prompt input
 	d->user_input = readline("MINISHELL=> ");
+
+	// TESTING /////////////////////////////////////////////////////////////////
 	// TEST VAR
 	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
@@ -55,23 +56,24 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup(" >> append");
 	// d->user_input = ft_strdup("< heredod\"$HOME\"$ cmd arg arg | new_cmd '$?'");
 	// d->user_input = ft_strdup("one_line $not_exist");
-	// make some change
 	
-	// print user input, for debugging
-	// print_user_input(d->user_input);
+	// PRINT USER INPUT STRING
+	// print_user_input(d->user_input); //print user input, for debugging //////
+	
 	if (invalid_user_input(d, d->user_input))
-		return true;  // TODO: add free all to return
+		return true;
 	lexer(d);
-	print_token_list(d->list_token, true);
 	if (invalid_token(d))
-		return false; //TODO: change later to return true, restart loop
+		return true;
 	cmd_list_from_token(d, true);
 
-	// print_tab(d->env);
-	print_cmd_list(d->list_cmd);
-	free_list_token_and_subword(d->list_token);
-	free_cmd_list(d->list_cmd);
-	return (false);
+	// PRINT STATEMENTS FOR DEBUGGING
+	// print_tab(d->env); //print (at start) copied environment table //////////
+	// print_token_list(d->list_token, true); //print token list, true: subword
+	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
+	
+	free_all_except_env(d);
+	return (true);
 }
 
 // // ### TEST ###############################################################
