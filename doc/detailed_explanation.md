@@ -73,7 +73,7 @@ typedef struct s_sub_list
 ---
 ## Bash file creation
 ### When are files created?
-- After `>` or `>>`, only the first file name is used, even if the command(s) are invalid.  
+- After `>` or `>>`, only the first file name is used (*"file2" is an argument to echo*), even if the command(s) are invalid.  
 *e.g.* `xxx echo > file1 file2 > file3` *output->* `command 'xxx' not found` but the files `file1` and `file3` are created if they not already exist.
 ### What if the directory dose not exist?
-- All files which can be created are created regardless, the shell throws an error and waits for new user input. `bash: `...`: No such file or directory`
+- All files which can be created are created before the file path with the invalid directory. No files are created after the invalid directory. The shell throws an error and waits for new user input. `bash: `...`: No such file or directory`

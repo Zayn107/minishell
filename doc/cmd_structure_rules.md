@@ -37,7 +37,7 @@ There are 3 types of variables:
 |variable type|id|value|description|
 |---|---|---|---|
 |`$?` exit status variable|`VAR_EXIT`|`NULL`|The "word" is replaced with the exit status value from the structure `d.exit_status`.|
-|`$`+ NAME variable|`VAR`|*same as name but without* `$`|-> 2nd character must be `_` or an alphabetic character from the english alphabet (*minimum requirement*) <br>-> numeric character can also be used after the 2nd character<br>-> the name ends when this rules are broken.|
+|`$` + NAME variable|`VAR`|*same as name but without* `$`|-> 2nd character must be `_` or an alphabetic character from the english alphabet (*minimum requirement*) <br>-> numeric character can also be used after the 2nd character<br>-> the name ends when this rules are broken.|
 | `$` + invalid variable name|*no id*|*no value*|Names which not confirm with the above rules are removed from the string.<br><br>-> **REMOVED**:<br>`$2` (*2nd number*), `$!` (*2nd nonalbhabetic or* `_` *or* `?`*. NOTE: the "bash shell" does interpret those as "special variables" but the subject requires only "meta characters" to be "interpreted".* )<br><br>-> **REMAIN AS CHARACTERS**:<br>If `$` is on the **end of a word**. This is the case if "white space", a "meta character", "closed double or single quotes" follow.|  
 
 ![var evaluation](img/variable_processing_minishell.webp)  
@@ -47,6 +47,14 @@ There are 3 types of variables:
 `$ 0 0txt /home/zkepes /home/zkepesstrtxt txt $? str/home/zkepes $`
 - minishell output:  
 ![minishell var evaluation](img/minishell_var_evaluation.webp)
+
+### Heredoc Delimiter Variable / Quotations
+- Variables are not expanded if they are preceded by a Heredoc.  
+`<< $?` =*does not expand to the exit status variable, the delimiter is*=> `$?`  
+- Matching quotations ( `" "`, `' '` ) are removed.  
+`<< "$?"` =*quotations are removed but var not expanded*=> `$?`  
+- This is also true for combinations.  
+`<< "STOP"$?'$var'` =*the delimiter is*=> `STOP$?$var`
 
 ## Bash Syntax Errors
 The shell throws an error and prompts the user for a new input. All mallocs are freed but the "variable table" remains. No commands are executed!
@@ -76,6 +84,4 @@ It is actually a command which is needed before `|` but the invalid command erro
 ![two pipes no space](./img/bash_no_syntax_error_2_pipes_no_space.png)  
 
 ---
-<details>
-something
-</details>
+

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:38:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/20 13:21:15 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 10:56:07 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,26 +160,35 @@ bool	get_append(t_cmd *c_node, t_token *t_node)
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
 		c_node->f_out = ft_strdup(t_node->word);
+	c_node->fd_f_out = open(t_node->word, O_CREAT | O_APPEND, 0664);
 	if (0 == access(c_node->f_out, F_OK))
+	{
 		if (-1 == access(c_node->f_out, W_OK | R_OK))
 			return bash_msg(c_node->f_out, ": Permission denied");
-	c_node->fd_f_out = open(t_node->word, O_CREAT | O_APPEND, 0664);
+	}
+	else
+		return bash_msg(c_node->f_out, ": No such file or directory");
 	if (-1 == errno)
 		return e_msg("Failed to open file in 'get_append'");
 	return (true);
 }
 
 /*if file exist, check if read ok and open with fd flag 'read only', otherwise
-return false, else if not exist, create file with fd 'read only' flag*/
+return false, else if not exist, create file with fd 'read only' flag. Unless
+directory in the path dose not exist.*/
 bool	get_file_out(t_cmd *c_node, t_token *t_node)
 {
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
 		c_node->f_out = ft_strdup(t_node->word);
+	c_node->fd_f_out = open(t_node->word, O_CREAT | O_WRONLY, 0664);
 	if (0 == access(c_node->f_out, F_OK))
+	{
 		if (-1 == access(c_node->f_out, W_OK))
 			return bash_msg(c_node->f_out, ": Permission denied");
-	c_node->fd_f_out = open(t_node->word, O_CREAT | O_WRONLY, 0664);
+	}
+	else
+		return bash_msg(c_node->f_out, ": No such file or directory");
 	if (-1 == errno)
 		return e_msg("Failed to open file in 'get_file_out'");
 	return (true);
