@@ -151,7 +151,7 @@ void	insert_node_token_struct(t_token *current, int token, char *word);
 void	cut_word(t_token *current);
 int		matching_quote_len(const char *str);
 void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word);
-bool	invalid_user_input(char *user_input);
+bool	invalid_user_input(t_data *d, char *user_input);
 void	cut_user_input(t_data *d);
 void	trim_str(char **str, char *cut_str);
 void	cut_quotes_subwords(t_sub_list **node, char *word);

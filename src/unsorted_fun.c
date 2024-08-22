@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 16:38:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 12:15:43 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 12:41:50 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,12 +343,20 @@ void	create_direct_out_files_if_not_exist(t_data *d)
 	}
 }
 
-/*check if user input is empty*/
-bool	invalid_user_input(char *user_input)
+/*check if user input is empty, if true, free all, return true*/
+bool	invalid_user_input(t_data *d, char *user_input)
 {
-	if ('\0' == user_input[0])
-		return true;
-	return false;
+	int	idx;
+
+	idx = 0;
+	while (user_input[idx])
+	{
+		if (' ' != user_input[idx])
+			return (false);
+		idx++;
+	}
+	free_all_except_env(d);
+	return true;
 }
 
 void	init_data(t_data *d)

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:55:25 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 15:30:12 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 12:38:37 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,9 @@ void	free_list_sub_word(t_sub_list *head)
 void	free_all_except_env(t_data *d)
 {
 	free(d->user_input);
+	d->user_input = NULL;
 	free_list_token_and_subword(d->list_token);
+	free_cmd_list(d->list_cmd);
 }
 
 /*free a list where the end is marked with an NULL pointer*/
