@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:06:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/21 13:39:56 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 10:21:03 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,13 @@ void	lexer(t_data *d)
 	prompt_if_pipe_last(d);
 	while (d->user_input)
 		cut_user_input(d);
-			printf("ok\n");
 	current = d->list_token;
 	while (current)
 	{
 		if (PIPE != current->id && NULL != current->word)
 		{
 			cut_quotes_subwords(&(current->list_sub_word), current->word);
-			cut_variable_subwords(&(current->list_sub_word));
+			cut_variable_subwords(&(current->list_sub_word), current->id);
 			evaluate_variable_subwords(d, &(current->list_sub_word));
 			join_subwords(&(current->list_sub_word), &current);
 		}
@@ -60,14 +59,14 @@ bool	mark_word_cmd_arg(t_token *current, bool found_cmd)
 }
 
 /*Cut subwords further into variables, remove if not valid name*/
-void	cut_variable_subwords(t_sub_list **head)
+void	cut_variable_subwords(t_sub_list **head,  int id_token)
 {
 	t_sub_list	*cur;
 	char		*tmp;
 	char		*idx_var;
 
 	cur = *head;
-	while (cur)
+	while (cur && HEREDOC != id_token)
 	{
 		if (QUOTE_DOUBLE == cur->sub_id || STRING == cur->sub_id)
 		{

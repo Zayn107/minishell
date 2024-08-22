@@ -157,7 +157,7 @@ void	trim_str(char **str, char *cut_str);
 void	cut_quotes_subwords(t_sub_list **node, char *word);
 void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int len);
 void	add_quo_node_s_word(char *word, t_sub_list **node_s, int start, int len);
-void	cut_variable_subwords(t_sub_list **head);
+void	cut_variable_subwords(t_sub_list **head, int id_token);
 void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word);
 void	add_remaining_string(t_sub_list **cur, char **tmp);
 void	evaluate_variable_subwords(t_data *d, t_sub_list **head);
