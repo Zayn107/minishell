@@ -26,17 +26,15 @@
 # define E_BAC 0
 # define E_COL 1
 
-
+//Word ID
 # define UNPROCESSED 0
-
 # define NO_QUOTES 1
 # define QUOTE_SINGLE 2
 # define QUOTE_DOUBLE 3
-
 # define COMMAND 4
 # define ARGUMENT 5
 # define FILE_IN 6
-# define HEREDOC 7					//use ; to mark heredoc file
+# define HEREDOC 7
 # define FILE_OUT 8
 # define FILE_APPEND 9
 # define PIPE 10
@@ -116,99 +114,91 @@ typedef struct s_data
 	int				exit_status;	// replace with the last, do not reset
 	struct s_cmd	*list_cmd;		// MALLOC!! list of commands
 	struct s_token	*list_token;	// MALLOC!! list of tokens
-
-	int				n_cmd;			// number of commands
 	int				pip_out[2];		// fd for pipe to be used for child output
 	int				pip_in[2];		// fd for pipe to be used for child input
 	// char			**tab_env_cmd_path; // MALLOC!! table with all env path variables
 	struct s_env	*list_env;		// MALLOC!! list of env variables
-	bool			last_cmd;	
 } t_data;
+
+
 
 bool	prompt_user(t_data *data);
 void	init_data(t_data *data);
+
+//ENV
 void	copy_env(t_data *data, char *arge[]);
-
-// env
 char	*env_value(t_data *d, char *var_name);
-void	print_tab(char **tab);
-void	print_pipe(int fd);
-void	print_token_list(t_token *start, bool subword);
-void	free_tab(char **tab);
-void	free_list_token_and_subword(t_token *head);
-void	free_list_sub_word(t_sub_list *head);
-// error
-void	error_exit(char *msg);
-// testing
-void	read_from_fd(int fd);
+
+//LEXER
 void	lexer(t_data *d);
-
-// structure
-void	add_node_token(t_data *d, int id, char *word);
-void	insert_node_token_struct(t_token *current, int token, char *word);
-
-// refactor tokenize V2
-void	cut_word(t_token *current);
-int		matching_quote_len(const char *str);
-void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word);
-bool	invalid_user_input(t_data *d, char *user_input);
+void	prompt_if_pipe_last(t_data *d);
 void	cut_user_input_into_token(t_data *d);
-void	trim_str(char **str, char *cut_str);
 void	cut_quotes_subwords(t_sub_list **node, char *word);
+void	cut_input_add_list_token(t_data *d, int token, int skip);
 void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int len);
 void	add_quo_node_s_word(char *word, t_sub_list **node_s, int start, int len);
+void	cut_var_exit(t_sub_list **cur, char **tmp);
 void	cut_variable_subwords(t_sub_list **head, int id_token);
+void	join_subwords(t_sub_list **head, t_token **node);
+void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var);
+void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var);
+void	cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var);
 void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word);
 void	add_remaining_string(t_sub_list **cur, char **tmp);
 void	evaluate_variable_subwords(t_data *d, t_sub_list **head);
-void	insert_before_node_sub_word(t_sub_list *node, int sub_id, char *sub_word);
-bool	mark_word_cmd_arg(t_token *current, bool found_cmd);
-// char	*rest_from_input(t_data *d, int rest_start);
-void	cut_input_add_list_token(t_data *d, int token, int skip);
-char	*rest_from_input(t_data *d, int id, const char *word);
 char	*word_after_skip(t_data *d, int token);
-void	create_direct_out_files_if_not_exist(t_data *d);
-bool	invalid_token(t_data *d);
-char	*next_meta_character_or_new_line(t_token *current);
-void	free_all_except_env(t_data *d);
+char	*rest_from_input(t_data *d, const char *word);
+bool	mark_word_cmd_arg(t_token *current, bool found_cmd);
+
+//PARSER
+bool	parser(t_data *d, bool success);
+void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
+char	*find_cmd_path(t_data *d, char *cmd);
+void	assign_arg(char ***cmd_arg, char *new_arg);
+bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token);
+char	*create_heredoc_fname(bool *is_tmp_file_in);
+bool	get_append(t_cmd *c_node, t_token *t_node);
+bool	get_file_in(t_cmd *cur_cmd, t_token *cur_tok);
+bool	get_file_out(t_cmd *c_node, t_token *t_node);
+void	free_old_direction(t_cmd *node, int id);
+
+//PRINT
+void	print_user_input(char *input);
+void	print_token_list(t_token *start, bool subword);
+void	print_cmd_list(t_cmd *head);
+void	print_line(int width, char line_char);
+void	print_tab(char **tab);
 void	p_color(int weight, bool background, int color, const char *str);
 char	*ret_col(int weight, bool background, int color, char *str);
-bool	create_file_if_not_exist(t_token *head);
-t_cmd	*add_node_cmd(t_data *d);
-bool	cmd_list_from_token(t_data *d, bool success);
-void	assign_arg(char ***cmd_arg, char *new_arg);
-void	print_line(int width, char line_char);
-void	print_cmd_list(t_cmd *head);
-bool	get_file_in(t_cmd *cur_cmd, t_token *cur_tok);
-bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token);
-void	print_fd(int fd);
-void	free_old_direction(t_cmd *node, int id);
-char	*create_heredoc_fname(bool *is_tmp_file_in);
-bool	e_msg(const char *e_message);
+
+//FREE
+void	free_tab(char **tab);
+void	free_list_token_and_subword(t_token *head);
+void	free_list_sub_word(t_sub_list *head);
+void	free_cmd_list(t_cmd *head);
+void	free_all_except_env(t_data *d);
+
+//ERROR
+void	error_exit(char *msg);
 bool	bash_msg(const char *word, const char *e_msg);
 bool	bash_msg1(const char *word, const char *e_msg);
-bool	get_append(t_cmd *c_node, t_token *t_node);
-bool	get_file_out(t_cmd *c_node, t_token *t_node);
-void	cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var);
-void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var);
-void	cut_var_exit(t_sub_list **cur, char **tmp);
-void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var);
-void	remove_token_node(t_token **node, t_data **d);
-// void	join_subwords(t_sub_list **head, char **word);
-void	join_subwords(t_sub_list **head, t_token **node);
-void	prompt_if_pipe_last(t_data *d);
-char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
-void	remove_token_node_update(t_token **node, t_data **d);
+bool	e_msg(const char *e_message);
+bool	invalid_user_input(t_data *d, char *user_input);
+bool	invalid_token(t_data *d);
+char	*next_direction_character_or_new_line(t_token *current);
+
+//STRUCTURE
+void	add_node_token(t_data *d, int id, char *word);
+void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word);
+t_cmd	*add_node_cmd(t_data *d);
+
+//HELP
+int		matching_quote_len(const char *str);
+void	trim_str(char **str, char *cut_str);
 char	*cut_str(char *str, int start);
-char	*find_cmd_path(t_data *d, char *cmd);
-void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
-// void	p_color();
+char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 
-
-
-// TEST PIPE
+//TEST PIPE
 void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d);
 void	execute_node_from_cmd_list(t_cmd *node);
-void	free_cmd_list(t_cmd *head);
-void	print_user_input(char *input);
 #endif

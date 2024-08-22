@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/21 11:19:09 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 16:04:33 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,6 @@ void	add_node_token(t_data *d, int id, char *word)
 	}
 }
 
-// void	insert_node_token_struct(t_token *current, int id, char *word)
-// {
-// 	t_token	*new_node;
-
-// 	new_node = (t_token *) malloc(sizeof(t_token));
-// 	new_node->id = id;
-// 	new_node->word = word;
-// 	new_node->list_sub_word = NULL;
-// 	new_node->next = current->next;
-// 	current->next = new_node;
-// }
-
 void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word)
 {
 	t_sub_list	*new_node;
@@ -71,7 +59,6 @@ void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word)
 	}
 }
 
-
 /*add node after*/
 void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word)
 {
@@ -85,20 +72,6 @@ void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word)
 		node->next->prev = new_node;
 	new_node->next = node->next;
 	node->next = new_node;
-}
-
-void	insert_before_node_sub_word(t_sub_list *node, int sub_id, char *sub_word)
-{
-	t_sub_list	*new_node;
-
-	new_node = (t_sub_list *) malloc(sizeof(t_sub_list));
-	new_node->sub_word = sub_word;
-	new_node->sub_id = sub_id;
-	new_node->prev = node->prev;
-	new_node->next = node;
-	if (node->prev)
-		node->prev->next = new_node;
-	node->prev = new_node;
 }
 
 /*add a new node at the end of the "cmd list" */
@@ -131,42 +104,4 @@ t_cmd	*add_node_cmd(t_data *d)
 		current->next = new_node;
 	}
 	return (new_node);
-}
-
-void	remove_token_node(t_token **node, t_data **d)
-{
-	if (NULL == (*node)->prev)
-	{
-		(*d)->list_token = (*node)->next;
-		(*node)->next->prev = NULL;
-	}
-	else if ((*node)->next)
-	{
-		(*node)->next->prev = (*node)->prev;
-		(*node)->prev->next = (*node)->next;
-	}
-	free((*node)->word);
-	free_list_sub_word((*node)->list_sub_word);
-	free((*node));
-}
-
-void	remove_token_node_update(t_token **node, t_data **d)
-{
-	if ((*d)->list_token == *node)		// is first node?
-	{
-		(*d)->list_token = (*node)->next;
-		(*node)->next->prev = NULL;
-	}
-	else if (NULL == (*node)->next)		// is last node?
-	{
-		(*node)->prev->next = NULL;
-	}
-	else								// is between node
-	{
-		(*node)->prev->next = (*node)->next;
-		(*node)->next->prev = (*node)->prev;
-	}
-	free((*node)->word);
-	free_list_sub_word((*node)->list_sub_word);
-	free(*node);
 }

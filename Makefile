@@ -10,8 +10,10 @@ SRC				= $(addprefix $(SRC_DIR), \
 				lexer_cut_user_input_into_token.c \
 				lexer_cut_variable_subwords.c \
 				struct.c \
-				parser.c \
-				unsorted_fun.c TEST_func.c \
+				validate.c \
+				parser_.c \
+				parser_get_direct_files.c \
+				TEST_func.c \
 				help_str.c )
 # OBJECTS
 OBJ_DIR			= obj/

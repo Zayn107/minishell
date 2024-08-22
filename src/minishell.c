@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 13:34:52 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 15:52:22 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool	prompt_user(t_data *d)
 
 	// TESTING /////////////////////////////////////////////////////////////////
 	// TEST VAR
-	d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
+	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
 	// REDIRECT
 	// d->user_input = ft_strdup("ls -l -a >> TEST_NO/file_x"); // word missing after meta char
 	// HEREDOC
@@ -43,8 +43,12 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup(">out1 cat>out2 <<doc1|wc >>app1 -l");
 	// d->user_input = ft_strdup("|wc >>app1 -l"); //no word preceding pipe
 	// d->user_input = ft_strdup("wc >>app1 -l|"); //no word after pipe
+	// d->user_input = ft_strdup("wc >>app1 -l||end"); //no word between pipes
+
+	d->user_input = ft_strdup("wc>fout<fin>>app<<E"); //redirection without word
 	// TEST INVALID INPUT
 	// d->user_input = ft_strdup("| wc"); //missing word before pipe
+	// d->user_input = ft_strdup("> file cat | >"); //missing word before pipe
 	// TESTING
 	// d->user_input = ft_strdup("'quote1'word2'quote2'word3'quote3'last"); // prompt for heredoc input, 
 	// write file 
@@ -57,17 +61,17 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("< heredod\"$HOME\"$ cmd arg arg | new_cmd '$?'");
 	// d->user_input = ft_strdup("one_line $not_exist");
 	
-	// PRINT USER INPUT STRING
+	// PRINT USER INPUT STRING /////////////////////////////////////////////////
 	print_user_input(d->user_input); //print user input, for debugging //////
-	
+
 	if (invalid_user_input(d, d->user_input))
 		return false;  //set to false for testing
 	lexer(d);
 	if (invalid_token(d))
 		return false;  //set to false for testing
-	cmd_list_from_token(d, true);
+	parser(d, true);
 
-	// PRINT STATEMENTS FOR DEBUGGING
+	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////
 	// print_tab(d->env); //print (at start) copied environment table //////////
 	// print_token_list(d->list_token, true); //print token list, true: subword
 	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////

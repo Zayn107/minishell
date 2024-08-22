@@ -6,19 +6,11 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:55:25 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 12:38:37 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 16:05:20 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-// void	free_all(t_data *d)
-// {
-// 	// free_tab(d->tab_env_cmd_path);
-// 	free_list(d->list_cmd);
-// 	free(d->user_input);
-// 	d->user_input = NULL;
-// }
 
 void	free_tab(char **tab)
 {
@@ -29,7 +21,6 @@ void	free_tab(char **tab)
 	{
 		while (tab[idx])
 		{
-			// printf("free: %s\n", tab[idx]);
 			free(tab[idx]);
 			tab[idx] = NULL;
 			idx++;
@@ -83,34 +74,6 @@ void	free_all_except_env(t_data *d)
 	free_cmd_list(d->list_cmd);
 }
 
-/*free a list where the end is marked with an NULL pointer*/
-// void	free_list(t_cmd *list_cmd)
-// {
-// 	t_cmd	*current;
-// 	t_cmd	*tmp;
-
-// 	if (list_cmd)
-// 	{
-// 		current = list_cmd;
-// 		while (current->next != NULL)
-// 		{
-// 			tmp = current;
-// 			current = current->next;
-// 			free(tmp->cmd_path);
-// 			tmp->cmd_path = NULL;
-// 			free_tab(tmp->cmd_arg);
-// 			free(tmp);
-// 			tmp = NULL;
-// 		}
-// 		free(current->cmd_path);
-// 		current->cmd_path = NULL;
-// 		free_tab(current->cmd_arg);
-// 		free(current);
-// 		current = NULL;
-// 	}
-// }
-
-// ### TEST FREE
 void	free_cmd_list(t_cmd *head)
 {
 	t_cmd	*node;

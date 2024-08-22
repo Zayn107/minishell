@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:19:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 13:43:28 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/22 15:14:22 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,27 +38,7 @@ void	cut_input_add_list_token(t_data *d, int id, int skip)
 	trim_str(&(d->user_input), " ");
 	word = word_after_skip(d, id);
 	add_node_token(d, id, word);
-	d->user_input = rest_from_input(d, id, word);
-}
-
-//subtract "word" from input, trim input, if nothing left free and set to NULL
-char	*rest_from_input(t_data *d, int id, const char *word)
-{
-	char	*word_rest;
-
-	if (PIPE == id)
-		word_rest = d->user_input;
-	else if (word)
-		word_rest = &(d->user_input[ft_strlen(word)]);
-	word_rest = ft_strdup(word_rest);
-	trim_str(&word_rest, " ");
-	if ('\0' == word_rest[0])
-	{
-		free(word_rest);
-		word_rest = NULL;
-	}
-	free(d->user_input);
-	return (word_rest);
+	d->user_input = rest_from_input(d, word);
 }
 
 //mallocs str word (matching quotes), NULL if ID PIPE or len 0 to next delimiter
@@ -77,11 +57,32 @@ char	*word_after_skip(t_data *d, int id)
 		else
 			len++;
 	}
-	if (PIPE == id)
-		word = NULL;
-	else if (!len)
+	if (PIPE == id || !len)
 		word = NULL;
 	else
 		word = ft_substr(d->user_input, 0, len);
 	return (word);
+}
+
+//subtract "word" from input, trim input, if nothing left free and set to NULL
+char	*rest_from_input(t_data *d, const char *word)
+{
+	char	*word_rest;
+
+	if (NULL == word)
+	{
+		if (ft_strlen(d->user_input))
+			return (d->user_input);
+		else
+			free(d->user_input);
+	}
+	else
+	{
+		word_rest = cut_str(d->user_input, ft_strlen(word));
+		trim_str(&word_rest, " ");
+		if (ft_strlen(word_rest))
+			return (word_rest);
+		free(word_rest);
+	}
+	return (NULL);
 }
