@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:43:15 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 16:11:36 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/23 16:12:18 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,23 +83,23 @@ void	free_old_direction(t_cmd *node, int id)
 {
 	if (HEREDOC == id || FILE_IN == id)
 	{
-		if (FD_NONE != node->fd_f_in)
-			close(node->fd_f_in);
-		node->fd_f_in = FD_NONE;
+		if (FD_NONE != node->fd_in)
+			close(node->fd_in);
+		node->fd_in = FD_NONE;
 		if (node->is_tmp_file_in)
-			if (unlink(node->f_in))
+			if (unlink(node->file_in))
 				perror("unlink() error");
 		node->is_tmp_file_in = false;
-		free(node->f_in);
-		node->f_in = NULL;
+		free(node->file_in);
+		node->file_in = NULL;
 	}
 	else if (FILE_APPEND == id || FILE_OUT == id)
 	{
-		if (FD_NONE != node->fd_f_out)
-			close(node->fd_f_out);
-		node->fd_f_out = FD_NONE;
-		free(node->f_out);
-		node->f_out = NULL;
+		if (FD_NONE != node->fd_out)
+			close(node->fd_out);
+		node->fd_out = FD_NONE;
+		free(node->file_out);
+		node->file_out = NULL;
 	}
 }
 

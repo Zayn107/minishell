@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:09:36 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 16:13:54 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/23 11:29:46 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,9 +128,9 @@ void	print_cmd_list(t_cmd *head)
 			printf(" ");
 		}
 		p_color(3,0,3, " FILE_IN|");
-		p_color(1,1,3, node->f_in);
+		p_color(1,1,3, node->file_in);
 		p_color(3,0,2, " FILE_OUT|");
-		p_color(1,1,2, node->f_out);
+		p_color(1,1,2, node->file_out);
 		printf("\n");
 		print_line(180, '-');
 		node = node->next;

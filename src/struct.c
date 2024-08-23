@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 16:04:33 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/23 16:26:30 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,18 +81,22 @@ t_cmd	*add_node_cmd(t_data *d)
 	t_cmd	*current;
 
 	new_node = (t_cmd *) malloc(sizeof(t_cmd));
-	new_node->builtin_fun = NULL;
+	new_node->builtin_fun = original_cmd;
 	new_node->cmd_arg = (char **) malloc(sizeof(char *) * 2);
 	new_node->cmd_path = NULL;
 	new_node->cmd_arg[0] = NULL;
 	new_node->cmd_arg[1] = NULL;
-	new_node->fd_f_in = FD_NONE;
-	new_node->fd_f_out = FD_NONE;
+	new_node->fd_in = FD_NONE;
+	new_node->fd_out = FD_NONE;
 	new_node->is_tmp_file_in = false;
-	new_node->f_in = NULL;
-	new_node->f_out = NULL;
-	// new_node->prev = NULL;
+	new_node->file_in = NULL;
+	new_node->file_out = NULL;
+	new_node->prev = NULL; //
 	new_node->next = NULL;
+	new_node->sleep = false;
+	new_node->execute = true;
+	pipe(new_node->pip_in);
+	pipe(new_node->pip_out);
 	if (d->list_cmd == NULL)
 		d->list_cmd = new_node;
 	else
@@ -100,7 +104,7 @@ t_cmd	*add_node_cmd(t_data *d)
 		current = d->list_cmd;
 		while (current->next != NULL)
 			current = current->next;
-		// new_node->prev = current;
+		new_node->prev = current; //
 		current->next = new_node;
 	}
 	return (new_node);

@@ -6,13 +6,13 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 18:41:06 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/16 15:28:29 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/23 11:29:46 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d)
+void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d)
 {
 	t_cmd	*node;
 	const char	*TEST_DIR = "TEST/";
@@ -40,8 +40,8 @@ void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d
 	free(tab);
 	node->cmd_arg[idx] = NULL;
 	node->cmd_path = ft_strdup(path);
-	node->f_in = ft_strjoin(TEST_DIR, f_in);
-	node->f_out = ft_strjoin(TEST_DIR, f_out);
-	node->fd_f_in = open(node->f_in, O_CREAT | O_RDWR, 0777);
-	node->fd_f_out = open(node->f_out, O_CREAT | O_RDWR, 0777);
+	node->file_in = ft_strjoin(TEST_DIR, file_in);
+	node->file_out = ft_strjoin(TEST_DIR, file_out);
+	node->fd_in = open(node->file_in, O_CREAT | O_RDWR, 0777);
+	node->fd_out = open(node->file_out, O_CREAT | O_RDWR, 0777);
 }

@@ -96,11 +96,16 @@ typedef struct s_cmd
 	// cmd[0] => path + cmd, cmd[1] => arg, cmd[2] => NULL
 	char			*cmd_path;		// MALLOC!! path + /cmd (one string)
 	char			**cmd_arg;		// MALLOC!! tab[0]=cmd; tab[1]=args; tab[2]=NULL
-	int				fd_f_in;
-	int				fd_f_out;
+	int				fd_in;
+	int				fd_out;
 	bool			is_tmp_file_in;	// true, remove file after use
-	char			*f_in;		// MALLOC!! for debugging only
-	char			*f_out;		// MALLOC!! for debugging only
+	char			*file_in;		// MALLOC!! for debugging only
+	char			*file_out;		// MALLOC!! for debugging only
+	int				pip_in[2];
+	int				pip_out[2];
+	pid_t			pid;			// process id
+	bool			sleep;
+	bool			execute;
 	//char			*out_file;		// name of "last" output file (create prev) (handle append)
 
 	// if out_file is NULL, pass stream to next cmd, otherwise no
@@ -207,6 +212,13 @@ void	assign_builtin(t_cmd *head);
 void	call_builtin(t_data *d);
 
 //TEST PIPE
-void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d);
+void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d);
 void	execute_node_from_cmd_list(t_cmd *node);
+bool	nobody_is_sleeping(t_cmd *head);
+
+//PIPING
+void	close_all_pipes(t_cmd *head);
+void	original_cmd(t_data *d, t_cmd *node);
+void	execute_cmds(t_data *d);
+
 #endif

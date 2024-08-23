@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:55:25 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 16:05:20 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/23 11:29:46 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ void	free_cmd_list(t_cmd *head)
 		free(node->cmd_arg);
 		node->cmd_arg = NULL;
 		free(node->cmd_path);
-		free(node->f_in);
-		free(node->f_out);
+		free(node->file_in);
+		free(node->file_out);
 		tmp = node;
 		node = node->next;
 		free(tmp);
