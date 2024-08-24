@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:09:36 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/23 11:29:46 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/24 16:07:58 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,4 +205,21 @@ void	print_user_input(char *input)
 	while (width-- - ft_strlen(TITLE) - ft_strlen(input))
 		p_color(0, false, 8, "=");
 	printf("\n");
+}
+
+void	copy_pipe_content(int from_fd, int to_fd, bool close_pipe)
+{
+	char	*buffer;
+	while (true)
+	{
+		buffer = get_next_line(from_fd);
+		if (NULL == buffer)
+		{
+			if (close_pipe)
+				close(from_fd);
+			break;
+		}
+		write(to_fd, buffer, ft_strlen(buffer));
+		free(buffer);
+	}
 }

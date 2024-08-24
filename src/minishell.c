@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/23 17:13:38 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/24 17:18:03 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ bool	prompt_user(t_data *d)
 
 	// d->user_input = ft_strdup("echo hello world :) > fout"); //redirection without word
 	d->user_input = ft_strdup("cat | ls | wc"); //piping
+	// d->user_input = ft_strdup("echo hello world | wc | cat > echo.txt | cat echo.txt"); //piping
+	// d->user_input = ft_strdup("cat | cat | ls"); //piping
 	// TEST INVALID INPUT
 	// d->user_input = ft_strdup("| wc"); //missing word before pipe
 	// d->user_input = ft_strdup("> file cat | >"); //missing word before pipe
@@ -74,7 +76,6 @@ bool	prompt_user(t_data *d)
 
 	// assign_builtin(d->list_cmd);
 	// call_builtin(d);
-	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	execute_cmds(d);
 
 	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////
@@ -95,7 +96,7 @@ void	assign_builtin(t_cmd *head)
 	{
 		// if (current->cmd_arg[0] == "pwd")
 		if ((0 == ft_strncmp(current->cmd_arg[0], "echo", 4)))
-			current->builtin_fun = builtin_echo;
+			current->process_child = builtin_echo;
 		current = current->next;
 	}
 }
@@ -107,8 +108,8 @@ void	call_builtin(t_data *d)
 	current = d->list_cmd;
 	while (current)
 	{
-		if (current->builtin_fun)
-			current->builtin_fun(d, current);
+		if (current->process_child)
+			current->process_child(d, current);
 		current = current->next;
 	}
 }
@@ -134,122 +135,142 @@ void	builtin_echo(t_data *d, t_cmd *node)
 void	execute_cmds(t_data *d)
 {
 	t_cmd	*cmd_node;
-	int		status;
+
 	cmd_node = d->list_cmd;
 	while (true)
 	{
-		if (cmd_node->execute)
+		if (cmd_node)
 		{
+			create_pipes(d, cmd_node);
 			cmd_node->pid = fork();
-			if (!cmd_node->pid)		// CHILD
-				original_cmd(d, cmd_node);
-			else					// PARENT
-			{
-				cmd_node->execute = false;
-				if ((0 == waitpid(cmd_node->pid, &status, WNOHANG)))
-				{
-					printf("pid: %d\n", cmd_node->pid);
-					cmd_node->sleep = true;
-				}
-				if (NULL != cmd_node->next)
-					cmd_node = cmd_node->next;
-			}
+			if (CHILD_PROCESS == cmd_node->pid)
+				cmd_node->process_child(d, cmd_node);
+			else
+				cmd_node = process_parent(d, cmd_node);
 		}
 		else
+		{
+			copy_pipe_content(d->pip_out[READ], WRITE, false);
 			if (nobody_is_sleeping(d->list_cmd))
 				break;
+		}
 	}
+}
+
+void	create_pipes(t_data *d, t_cmd *cmd_node)
+{
+	pipe(d->pip_in);
+	if (cmd_node->prev && !cmd_node->sleep)
+		copy_pipe_content(d->pip_out[READ], d->pip_in[WRITE], false);
+	close(d->pip_out[READ]);
+	pipe(d->pip_out);
+}
+
+t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
+{
+	close(d->pip_in[READ]);
+	close(d->pip_in[WRITE]);
+	close(d->pip_out[WRITE]);
+	// cmd_node->execute = false;
+	if (!(cmd_node->sleep = are_you_sleeping(cmd_node->pid)))
+		wait(NULL);
+	else
+		close(d->pip_out[READ]);
+	return (cmd_node->next);
+}
+
+bool	are_you_sleeping(pid_t pid)
+{
+	char	*path;
+	char	*str_pid;
+	char	*buffer;
+	int		fd;
+	bool	is_sleeping;
+
+	is_sleeping = false;
+	str_pid = ft_itoa(pid);
+	buffer = ft_strdup("/proc/");
+	path = join_free(&buffer,  true, &str_pid, true);
+	buffer = ft_strdup("/status");
+	path = join_free(&path, true, &buffer, true);
+	fd = open(path, O_RDONLY);
+	free(path);
+	buffer = get_next_line(fd);
+	while (buffer)
+	{
+		if (ft_strnstr(buffer, "S (sleeping)", ft_strlen(buffer)))
+			is_sleeping = true;
+		free(buffer);
+		buffer = get_next_line(fd);
+	}
+	close(fd);
+	return (is_sleeping);
 }
 
 bool	nobody_is_sleeping(t_cmd *head)
 {
 	t_cmd	*cmd_node;
-	int		status;
-	int		wpid;
 
 	cmd_node = head;
 	while (cmd_node)
 	{	
-		printf("sleep %d %s pid: %d\n", cmd_node->sleep, cmd_node->cmd_arg[0], cmd_node->pid);
 		if (cmd_node->sleep)
 		{
-			if ((wpid = waitpid(cmd_node->pid, &status, WNOHANG)))
-				cmd_node->sleep = false;
-			else
-			{
-				printf("nobody is sleeping: status: %d wpid: %d pid: %d\n", status, wpid, cmd_node->pid);
+			cmd_node->sleep = are_you_sleeping(cmd_node->pid);
+			if (cmd_node->sleep)
 				return (false);
-			}
 		}
 		cmd_node = cmd_node->next;
 	}
 	return (true);
 }
 
-// void	close_all_pipes(t_cmd *head)
-// {
-// 	t_cmd	*cmd_node;
-
-// 	cmd_node = head;
-// 	while (cmd_node)
-// 	{
-
-// 		cmd_node = cmd_node->next;
-// 	}
-// }
-
 void	original_cmd(t_data *d, t_cmd *node)
 {
-	(void) d;
-	if (node->prev && node->prev->sleep == true)
-		printf("not sleeping before\n");
+	close(d->pip_in[WRITE]);
+	close(d->pip_out[READ]);
 	if (node->fd_in != FD_NONE)
 	{
-		printf("fd_in is true, fd:%d cmd: %s \n", node->fd_in, node->cmd_arg[0]);
+		// printf("fd_in is true, fd:%d cmd: %s \n", node->fd_in, node->cmd_arg[0]);
 		dup2(node->fd_in, STDIN_FILENO);
 	}
 	else if (node->prev && !(node->prev->sleep))
 	{
-		printf("pipe in read, cmd: %s \n", node->cmd_arg[0]);
-		dup2(node->pip_in[READ], STDIN_FILENO);
+		// printf("pipe in read, cmd: %s \n", node->cmd_arg[0]);
+		dup2(d->pip_in[READ], STDIN_FILENO);
 	}
 	if (node->fd_out != FD_NONE)
 	{
-		printf("fd_out, fd:%d cmd: %s \n", node->fd_out, node->cmd_arg[0]);
+		// printf("fd_out, fd:%d cmd: %s \n", node->fd_out, node->cmd_arg[0]);
 		dup2(node->fd_out, STDOUT_FILENO);
 	}
 	else
 	{
-		printf("pipe out, cmd: %s \n", node->cmd_arg[0]);
-		dup2(node->pip_out[WRITE], STDOUT_FILENO);
+		// printf("pipe out, cmd: %s \n", node->cmd_arg[0]);
+		dup2(d->pip_out[WRITE], STDOUT_FILENO);
 	}
-	printf("close befor\n");
-	close_all_pipes(d->list_cmd);
-	printf("close after\n");
+	close(d->pip_in[READ]);
+	close(d->pip_out[WRITE]);
 	if ((execve(node->cmd_path, node->cmd_arg, NULL) == -1))
-	{
-		// write(1, "error\n", 6);
 		perror("execve");
-	}
-	exit(1); // not needed for real cmd
 }
 
-void	close_all_pipes(t_cmd *head)
-{
-	t_cmd	*current;
+// void	close_all_pipes(t_cmd *head)
+// {
+// 	t_cmd	*current;
 
-	current = head;
-	while (current)
-	{
-		close(current->pip_in[READ]);
-		close(current->pip_in[WRITE]);
-		close(current->pip_out[READ]);
-		close(current->pip_out[WRITE]);
-		// close(current->fd_in);
-		// close(current->fd_out);
-		current = current->next;
-	}
-}
+// 	current = head;
+// 	while (current)
+// 	{
+// 		close(current->pip_in[READ]);
+// 		close(current->pip_in[WRITE]);
+// 		close(current->pip_out[READ]);
+// 		close(current->pip_out[WRITE]);
+// 		// close(current->fd_in);
+// 		// close(current->fd_out);
+// 		current = current->next;
+// 	}
+// }
 
 
 

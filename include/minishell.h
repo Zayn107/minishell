@@ -88,11 +88,11 @@ typedef struct s_sub_list
 
 typedef struct s_data t_data;
 typedef struct s_cmd t_cmd;
-typedef void (*ptr_builtin)(t_data *d, t_cmd *node);	// definition for function pointer, builtin
+typedef void (*ptr_process_f)(t_data *d, t_cmd *node);	// definition for function pointer, builtin
 
 typedef struct s_cmd
 {
-	ptr_builtin		builtin_fun;	// function pointer for builtin
+	ptr_process_f	process_child;	// function pointer for builtin
 	// cmd[0] => path + cmd, cmd[1] => arg, cmd[2] => NULL
 	char			*cmd_path;		// MALLOC!! path + /cmd (one string)
 	char			**cmd_arg;		// MALLOC!! tab[0]=cmd; tab[1]=args; tab[2]=NULL
@@ -101,16 +101,8 @@ typedef struct s_cmd
 	bool			is_tmp_file_in;	// true, remove file after use
 	char			*file_in;		// MALLOC!! for debugging only
 	char			*file_out;		// MALLOC!! for debugging only
-	int				pip_in[2];
-	int				pip_out[2];
 	pid_t			pid;			// process id
 	bool			sleep;
-	bool			execute;
-	//char			*out_file;		// name of "last" output file (create prev) (handle append)
-
-	// if out_file is NULL, pass stream to next cmd, otherwise no
-	//char			*in_file;		// name of "last" input file (heredoc)
-	// if in_file is NULL, take stream from previous cmd, otherwise from file
 	struct s_cmd	*prev;			// previous node in the list
 	struct s_cmd	*next;			// next node in the list
 }	t_cmd;
@@ -220,5 +212,9 @@ bool	nobody_is_sleeping(t_cmd *head);
 void	close_all_pipes(t_cmd *head);
 void	original_cmd(t_data *d, t_cmd *node);
 void	execute_cmds(t_data *d);
+bool	are_you_sleeping(pid_t pid);
+void	copy_pipe_content(int from_fd, int to_fd, bool close_pipe);
+t_cmd	*process_parent(t_data *d, t_cmd *cmd_node);
+void	create_pipes(t_data *d, t_cmd *cmd_node);
 
 #endif
