@@ -209,12 +209,13 @@ void	execute_node_from_cmd_list(t_cmd *node);
 bool	nobody_is_sleeping(t_cmd *head);
 
 //PIPING
-void	close_all_pipes(t_cmd *head);
+// void	close_all_pipes(t_cmd *head);
 void	original_cmd(t_data *d, t_cmd *node);
 void	execute_cmds(t_data *d);
 bool	are_you_sleeping(pid_t pid);
 void	copy_pipe_content(int from_fd, int to_fd, bool close_pipe);
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node);
 void	create_pipes(t_data *d, t_cmd *cmd_node);
+void	organize_fds_according_list(t_data *d, t_cmd *node);
 
 #endif

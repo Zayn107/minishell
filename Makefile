@@ -13,6 +13,10 @@ SRC				= $(addprefix $(SRC_DIR), \
 				validate.c \
 				parser_.c \
 				parser_get_direct_files.c \
+				execute_cmds_.c \
+				execute_cmds_builtin_1.c \
+				execute_cmds_fun_ptr.c \
+				execute_cmds_pipes.c \
 				TEST_func.c \
 				help_str.c )
 # OBJECTS
