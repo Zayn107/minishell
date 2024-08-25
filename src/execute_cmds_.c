@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 17:52:52 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/25 15:59:56 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ void	execute_cmds(t_data *d)
 			create_pipes(d, cmd_node);
 			cmd_node->pid = fork();
 			if (CHILD_PROCESS == cmd_node->pid)
+			{
+				// printf("pid: %d, cmd: %s\n", getpid(), cmd_node->cmd_arg[0]);
 				cmd_node->process_child(d, cmd_node);
+			}
 			else
 				cmd_node = process_parent(d, cmd_node);
 		}
@@ -39,11 +42,16 @@ void	execute_cmds(t_data *d)
 
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 {
+	int	status;
+
 	close(d->pip_in[READ]);
 	close(d->pip_in[WRITE]);
 	close(d->pip_out[WRITE]);
 	if (!(cmd_node->sleep = are_you_sleeping(cmd_node->pid)))
-		wait(NULL);
+	{
+		wait(&status);
+		d->exit_status = WEXITSTATUS(status);
+	}
 	else
 		close(d->pip_out[READ]);
 	return (cmd_node->next);

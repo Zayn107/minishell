@@ -66,6 +66,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <limits.h>
+#include <sys/ioctl.h>
 #include <fcntl.h>			// for open()
 
 typedef struct s_token
@@ -182,6 +183,7 @@ void	free_all_except_env(t_data *d);
 void	error_exit(char *msg);
 bool	bash_msg(const char *word, const char *e_msg);
 bool	bash_msg1(const char *word, const char *e_msg);
+bool	bash_msg2(const char *word, const char *e_msg);
 bool	e_msg(const char *e_message);
 bool	invalid_user_input(t_data *d, char *user_input);
 bool	invalid_token(t_data *d);

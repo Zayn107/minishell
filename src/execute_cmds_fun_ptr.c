@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:58:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 18:06:37 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/24 19:17:15 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,11 @@ void	original_cmd(t_data *d, t_cmd *node)
 {
 	organize_fds_according_list(d, node);
 	if ((execve(node->cmd_path, node->cmd_arg, NULL) == -1))
-		perror("execve");
+	{
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		bash_msg2(node->cmd_arg[0], ": command not found");
+	}
+	exit(127);
 }
 
 // void	assign_builtin(t_cmd *head)

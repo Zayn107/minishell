@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 18:07:03 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/25 16:00:15 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
-	// d->user_input = readline("MINISHELL=> ");
+	d->user_input = readline("MINISHELL=> ");
 
 	// TESTING /////////////////////////////////////////////////////////////////
 	// TEST VAR
@@ -45,9 +45,10 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("wc >>app1 -l|"); //no word after pipe
 	// d->user_input = ft_strdup("wc >>app1 -l||end"); //no word between pipes
 
-	d->user_input = ft_strdup("echo hello world :) > fout | cat fout"); //redirection without word
+	// d->user_input = ft_strdup("echo hello world :) > fout | cat fout"); //redirection without word
 	// d->user_input = ft_strdup("cat | ls | wc"); //piping
 	// d->user_input = ft_strdup("echo hello world | wc | cat > echo.txt | cat echo.txt"); //piping
+	// d->user_input = ft_strdup("cat | echo hello"); //piping
 	// d->user_input = ft_strdup("cat | cat | ls"); //piping
 	// TEST INVALID INPUT
 	// d->user_input = ft_strdup("| wc"); //missing word before pipe
@@ -66,9 +67,9 @@ bool	prompt_user(t_data *d)
 	
 	// PRINT USER INPUT STRING /////////////////////////////////////////////////
 	// print_user_input(d->user_input); //print user input, for debugging //////
-
 	if (invalid_user_input(d, d->user_input))
 		return false;  //set to false for testing
+	add_history(d->user_input);
 	lexer(d);
 	if (invalid_token(d))
 		return false;  //set to false for testing
@@ -85,6 +86,8 @@ bool	prompt_user(t_data *d)
 	free_all_except_env(d);
 	return (false);  //set to false for testing
 }
+
+//TODO: bad file descriptor on cat cmd without arg, happened after initialising pipes with 0 in init data
 
 
 

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:43:15 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/23 16:12:18 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/24 20:31:05 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*find_cmd_path(t_data *d, char *cmd)
 		return (ft_strdup(cmd));
 	env_path = env_value(d, "PATH");
 	if (NULL == env_path)
-		return (NULL);
+		return (ft_strdup(cmd));
 	env_tab = ft_split(env_path, ':');
 	free(env_path);
 	slash = ft_strdup("/");
@@ -157,5 +157,9 @@ void	init_data(t_data *d)
 	d->list_token = NULL;
 	d->list_cmd = NULL;
 	d->exit_status = 0;
+	// d->pip_in[READ] = 0;
+	// d->pip_in[WRITE] = 0;
+	// d->pip_out[READ] = 0;
+	// d->pip_out[WRITE] = 0;
 	errno = 0;
 }
