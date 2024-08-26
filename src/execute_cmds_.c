@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/25 15:59:56 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/26 19:00:28 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,16 @@ void	execute_cmds(t_data *d)
 		if (cmd_node)
 		{
 			create_pipes(d, cmd_node);
-			cmd_node->pid = fork();
-			if (CHILD_PROCESS == cmd_node->pid)
-			{
-				// printf("pid: %d, cmd: %s\n", getpid(), cmd_node->cmd_arg[0]);
-				cmd_node->process_child(d, cmd_node);
-			}
+			if (cmd_node->process_child != shell_cmd)
+				cmd_node = process_builtin(d, cmd_node);
 			else
-				cmd_node = process_parent(d, cmd_node);
+			{
+				cmd_node->pid = fork();
+				if (CHILD_PROCESS == cmd_node->pid)
+					cmd_node->process_child(d, cmd_node);
+				else
+					cmd_node = process_parent(d, cmd_node);
+			}
 		}
 		else
 		{

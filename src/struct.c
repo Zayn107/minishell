@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 17:14:39 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/26 18:32:42 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_cmd	*add_node_cmd(t_data *d)
 	t_cmd	*current;
 
 	new_node = (t_cmd *) malloc(sizeof(t_cmd));
-	new_node->process_child = original_cmd;
+	new_node->process_child = shell_cmd;
 	new_node->cmd_arg = (char **) malloc(sizeof(char *) * 2);
 	new_node->cmd_path = NULL;
 	new_node->cmd_arg[0] = NULL;

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/25 18:29:07 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/26 18:07:36 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,7 @@ bool	prompt_user(t_data *d)
 	if (invalid_token(d))
 		return false;  //set to false for testing
 	parser(d, true);
-
-	// assign_builtin(d->list_cmd);
+	assign_builtin(d->list_cmd);
 	execute_cmds(d);
 
 	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////

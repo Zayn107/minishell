@@ -162,6 +162,10 @@ bool	get_append(t_cmd *c_node, t_token *t_node);
 bool	get_file_in(t_cmd *cur_cmd, t_token *cur_tok);
 bool	get_file_out(t_cmd *c_node, t_token *t_node);
 void	free_old_direction(t_cmd *node, int id);
+void	assign_builtin(t_cmd *node);
+
+//BUILTIN
+void	builtin_exit(t_data *d, t_cmd *node);
 
 //PRINT
 void	print_user_input(char *input);
@@ -184,6 +188,7 @@ void	error_exit(char *msg);
 bool	bash_msg(const char *word, const char *e_msg);
 bool	bash_msg1(const char *word, const char *e_msg);
 bool	bash_msg2(const char *word, const char *e_msg);
+bool 	bash_msg3(const char *s_start, const char *word, const char *s_end);
 bool	e_msg(const char *e_message);
 bool	invalid_user_input(t_data *d, char *user_input);
 bool	invalid_token(t_data *d);
@@ -199,11 +204,13 @@ int		matching_quote_len(const char *str);
 void	trim_str(char **str, char *cut_str);
 char	*cut_str(char *str, int start);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
+bool	is_digit(char *str);
 
 //BUILTIN
 void	builtin_echo(t_data *d, t_cmd *node);
 void	assign_builtin(t_cmd *head);
 void	call_builtin(t_data *d);
+t_cmd	*process_builtin(t_data *d, t_cmd *node);
 
 //TEST PIPE
 void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d);
@@ -212,7 +219,7 @@ bool	nobody_is_sleeping(t_cmd *head);
 
 //PIPING
 // void	close_all_pipes(t_cmd *head);
-void	original_cmd(t_data *d, t_cmd *node);
+void	shell_cmd(t_data *d, t_cmd *node);
 void	execute_cmds(t_data *d);
 bool	are_you_sleeping(pid_t pid);
 void	copy_pipe_content(int from_fd, int to_fd, bool close_pipe);

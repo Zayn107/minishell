@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 16:01:41 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 19:06:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/26 17:32:35 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,16 @@ bool	bash_msg2(const char *word, const char *e_msg)
 {
 	p_color(E_STY, E_BAC, E_COL, word);
 	p_color(E_STY, E_BAC, E_COL, e_msg);
+	printf("\n");
+	return (false);
+}
+
+/*return: 'false' s_start (beginning) + word (middle) + s_end (end)*/
+bool 	bash_msg3(const char *s_start, const char *word, const char *s_end)
+{
+	p_color(E_STY, E_BAC, E_COL, s_start);
+	p_color(E_STY, E_BAC, E_COL, word);
+	p_color(E_STY, E_BAC, E_COL, s_end);
 	printf("\n");
 	return (false);
 }

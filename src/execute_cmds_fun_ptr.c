@@ -6,13 +6,13 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:58:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 19:17:15 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/26 18:32:42 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	original_cmd(t_data *d, t_cmd *node)
+void	shell_cmd(t_data *d, t_cmd *node)
 {
 	organize_fds_according_list(d, node);
 	if ((execve(node->cmd_path, node->cmd_arg, NULL) == -1))
