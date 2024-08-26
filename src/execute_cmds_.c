@@ -6,39 +6,66 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/26 19:00:28 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/26 20:18:40 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+// void	execute_cmds(t_data *d)
+// {
+// 	t_cmd	*cmd_node;
+
+// 	cmd_node = d->list_cmd;
+// 	while (true)
+// 	{
+// 		if (cmd_node)
+// 		{
+// 			create_pipes(d, cmd_node);
+// 			if (cmd_node->process_child != shell_cmd)
+// 				cmd_node = process_builtin(d, cmd_node);
+// 			else
+// 			{
+// 				cmd_node->pid = fork();
+// 				if (CHILD_PROCESS == cmd_node->pid)
+// 					cmd_node->process_child(d, cmd_node);
+// 				else
+// 					cmd_node = process_parent(d, cmd_node);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			copy_pipe_content(d->pip_out[READ], WRITE, false);
+// 			if (nobody_is_sleeping(d->list_cmd))
+// 				break;
+// 		}
+// 	}
+// }
 
 void	execute_cmds(t_data *d)
 {
 	t_cmd	*cmd_node;
 
 	cmd_node = d->list_cmd;
-	while (true)
+	while (cmd_node)
 	{
-		if (cmd_node)
-		{
-			create_pipes(d, cmd_node);
-			if (cmd_node->process_child != shell_cmd)
-				cmd_node = process_builtin(d, cmd_node);
-			else
-			{
-				cmd_node->pid = fork();
-				if (CHILD_PROCESS == cmd_node->pid)
-					cmd_node->process_child(d, cmd_node);
-				else
-					cmd_node = process_parent(d, cmd_node);
-			}
-		}
+		create_pipes(d, cmd_node);
+		if (cmd_node->process_child != shell_cmd)
+			cmd_node = process_builtin(d, cmd_node);
 		else
 		{
-			copy_pipe_content(d->pip_out[READ], WRITE, false);
-			if (nobody_is_sleeping(d->list_cmd))
-				break;
+			cmd_node->pid = fork();
+			if (CHILD_PROCESS == cmd_node->pid)
+				cmd_node->process_child(d, cmd_node);
+			else
+				cmd_node = process_parent(d, cmd_node);
 		}
+	}
+	while(true)
+	{
+		copy_pipe_content(d->pip_out[READ], WRITE, false);
+		if (nobody_is_sleeping(d->list_cmd))
+			break;
 	}
 }
 
