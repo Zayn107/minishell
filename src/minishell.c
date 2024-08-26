@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/25 16:00:15 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/25 18:29:07 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,13 @@ bool	prompt_user(t_data *d)
 	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////
 	// print_tab(d->env); //print (at start) copied environment table //////////
 	// print_token_list(d->list_token, true); //print token list, true: subword
-	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
+	// print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	
 	free_all_except_env(d);
-	return (false);  //set to false for testing
+	return (true);  //set to false for testing
 }
 
 //TODO: bad file descriptor on cat cmd without arg, happened after initialising pipes with 0 in init data
-
 
 
 
