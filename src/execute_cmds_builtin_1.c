@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/26 19:27:30 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/27 14:00:31 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ void	assign_builtin(t_cmd *head)
 	{
 		if ((0 == ft_strncmp(current->cmd_arg[0], "exit", 4)))
 			current->process_child = builtin_exit;
+		else if ((0 == ft_strncmp(current->cmd_arg[0], "env", 3)))
+			current->process_child = builtin_env;
 		current = current->next;
 	}
 }
@@ -37,7 +39,8 @@ void	builtin_exit(t_data *d, t_cmd *node)
 	int exit_code;
 
 	exit_code = 0;
-	organize_fds_according_list(d, node);
+	// close(d->pip_in[READ]);
+	// close(d->pip_out[WRITE]);
 	if (node->cmd_arg[1])
 	{
 
@@ -54,6 +57,33 @@ void	builtin_exit(t_data *d, t_cmd *node)
 	free_tab(d->env);
 	exit(exit_code);
 }
+
+void	builtin_env(t_data *d, t_cmd *node)
+{
+	int	idx;
+	int	fd;
+
+	idx = 0;
+	// close(d->pip_in[READ]);
+	if (node->fd_out != FD_NONE)
+		fd = node->fd_out;
+	else if (node->next)
+		fd = d->pip_out[WRITE];
+	else
+		fd = STDOUT_FILENO;
+	while (d->env[idx])
+	{
+		if ((0 != ft_strncmp(d->env[idx], "!FREE!", 6)))
+		{
+			write(fd, d->env[idx], ft_strlen(d->env[idx]));
+			write(fd, "\n", 1);
+		}
+		idx++;
+	}
+	// close(d->pip_out[WRITE]);
+}
+
+
 // void	builtin_echo(t_data *d, t_cmd *node)
 // {
 // 	int	idx;

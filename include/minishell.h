@@ -208,6 +208,7 @@ bool	is_digit(char *str);
 
 //BUILTIN
 void	builtin_echo(t_data *d, t_cmd *node);
+void	builtin_env(t_data *d, t_cmd *node);
 void	assign_builtin(t_cmd *head);
 void	call_builtin(t_data *d);
 t_cmd	*process_builtin(t_data *d, t_cmd *node);
@@ -222,9 +223,9 @@ bool	nobody_is_sleeping(t_cmd *head);
 void	shell_cmd(t_data *d, t_cmd *node);
 void	execute_cmds(t_data *d);
 bool	are_you_sleeping(pid_t pid);
-void	copy_pipe_content(int from_fd, int to_fd, bool close_pipe);
+void	write_fd1_to_fd2(int fd_1, bool close_1, int fd_2, bool close_2);
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node);
 void	create_pipes(t_data *d, t_cmd *cmd_node);
-void	organize_fds_according_list(t_data *d, t_cmd *node);
+void	dup_close_fd_child(t_data *d, t_cmd *node);
 
 #endif

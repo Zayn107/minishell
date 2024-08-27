@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/23 11:29:46 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/27 16:20:09 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ bool	get_append(t_cmd *c_node, t_token *t_node)
 {
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
-		c_node->file_out = ft_strdup(t_node->word);
-	c_node->fd_out = open(t_node->word, O_CREAT | O_APPEND, 0664);
+	c_node->file_out = ft_strdup(t_node->word);
+	c_node->fd_out = open(t_node->word, O_CREAT | O_APPEND | O_RDWR, 0664);
 	if (0 == access(c_node->file_out, F_OK))
 	{
 		if (-1 == access(c_node->file_out, W_OK | R_OK))
@@ -107,7 +107,7 @@ bool	get_file_out(t_cmd *c_node, t_token *t_node)
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
 		c_node->file_out = ft_strdup(t_node->word);
-	c_node->fd_out = open(t_node->word, O_CREAT | O_WRONLY, 0664);
+	c_node->fd_out = open(t_node->word, O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	if (0 == access(c_node->file_out, F_OK))
 	{
 		if (-1 == access(c_node->file_out, W_OK))

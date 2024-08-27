@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/26 20:18:40 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/27 16:23:44 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 // 		}
 // 		else
 // 		{
-// 			copy_pipe_content(d->pip_out[READ], WRITE, false);
+// 			write_fd1_to_fd2(d->pip_out[READ], WRITE, false);
 // 			if (nobody_is_sleeping(d->list_cmd))
 // 				break;
 // 		}
@@ -60,10 +60,13 @@ void	execute_cmds(t_data *d)
 			else
 				cmd_node = process_parent(d, cmd_node);
 		}
+		if (NULL == cmd_node)
+			close(d->pip_out[READ]);
 	}
 	while(true)
 	{
-		copy_pipe_content(d->pip_out[READ], WRITE, false);
+		// write_fd1_to_fd2(d->pip_out[READ],false, WRITE, false);
+		// printf("is sleeping\n");
 		if (nobody_is_sleeping(d->list_cmd))
 			break;
 	}
@@ -74,7 +77,7 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 	int	status;
 
 	close(d->pip_in[READ]);
-	close(d->pip_in[WRITE]);
+	// close(d->pip_in[WRITE]);
 	close(d->pip_out[WRITE]);
 	if (!(cmd_node->sleep = are_you_sleeping(cmd_node->pid)))
 	{

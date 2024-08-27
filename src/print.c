@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:09:36 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 16:07:58 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/27 13:04:32 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,19 +207,20 @@ void	print_user_input(char *input)
 	printf("\n");
 }
 
-void	copy_pipe_content(int from_fd, int to_fd, bool close_pipe)
+//write from fd_1 to fd_2, close fd_1 if close_1 true, same fd_2 and close_2
+void	write_fd1_to_fd2(int fd_1, bool close_1, int fd_2, bool close_2)
 {
 	char	*buffer;
 	while (true)
 	{
-		buffer = get_next_line(from_fd);
+		buffer = get_next_line(fd_1);
 		if (NULL == buffer)
-		{
-			if (close_pipe)
-				close(from_fd);
 			break;
-		}
-		write(to_fd, buffer, ft_strlen(buffer));
+		write(fd_2, buffer, ft_strlen(buffer));
 		free(buffer);
 	}
+	if (close_1)
+		close(fd_1);
+	if (close_2)
+		close(fd_2);
 }
