@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/27 14:00:31 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/28 16:23:43 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ void	assign_builtin(t_cmd *head)
 			current->process_child = builtin_exit;
 		else if ((0 == ft_strncmp(current->cmd_arg[0], "env", 3)))
 			current->process_child = builtin_env;
+		else if ((0 == ft_strncmp(current->cmd_arg[0], "export", 6)))
+			current->process_child = builtin_export;
 		current = current->next;
 	}
 }
@@ -60,29 +62,116 @@ void	builtin_exit(t_data *d, t_cmd *node)
 
 void	builtin_env(t_data *d, t_cmd *node)
 {
-	int	idx;
-	int	fd;
+	int		idx;
+	int		fd;
+	bool	close_pipe_out;
 
 	idx = 0;
-	// close(d->pip_in[READ]);
+	close_pipe_out = true;
+	close(d->pip_in[READ]);
 	if (node->fd_out != FD_NONE)
 		fd = node->fd_out;
 	else if (node->next)
+	{
 		fd = d->pip_out[WRITE];
+		close_pipe_out = false;
+	}
 	else
 		fd = STDOUT_FILENO;
 	while (d->env[idx])
 	{
-		if ((0 != ft_strncmp(d->env[idx], "!FREE!", 6)))
-		{
-			write(fd, d->env[idx], ft_strlen(d->env[idx]));
-			write(fd, "\n", 1);
-		}
+		// if ((0 != ft_strncmp(d->env[idx], "!FREE!", 6)))
+		// {
+		// 	write(fd, d->env[idx], ft_strlen(d->env[idx]));
+		// 	write(fd, "\n", 1);
+		// }
+		write(fd, d->env[idx], ft_strlen(d->env[idx]));
+		write(fd, "\n", 1);
 		idx++;
 	}
-	// close(d->pip_out[WRITE]);
+	close(d->pip_out[WRITE]);
 }
 
+void	builtin_export(t_data *d, t_cmd *node)
+{
+	int		arg;
+	char	*identifier;
+	char	*pos_env_tab;
+	
+	close(d->pip_in[READ]);
+	close(d->pip_out[WRITE]);
+	arg = 1;
+	while (node->cmd_arg[arg])
+	{
+		// pos_env_tab = NULL;
+		// identifier = NULL;
+		identifier = get_identifier_name(node->cmd_arg[arg]);
+		if (identifier_is_invalid(node->cmd_arg[arg]))
+			bash_msg3(\
+			"bash: export: `", node->cmd_arg[arg], "': not a valid identifier");
+		else if (identifier)
+		{
+			if ((NULL != (pos_env_tab = get_env_tab_pos(identifier, d->env))))
+			{
+				// printf("inside pos env tab: |%s|\n", pos_env_tab);
+				replace_s1_with_s2(&pos_env_tab, node->cmd_arg[arg]);
+			}
+			else
+				add_to_env(d, node->cmd_arg[arg]);
+		}
+		// printf("identifier: %s\n", identifier);
+		
+		free(identifier);
+		arg++;
+	}
+}
+
+// char	*get_env_tab_pos(char *identifier, t_data *d)
+char	*get_env_tab_pos(char *identifier, char **env)
+{
+	int	row;
+
+	row = 0;
+	while (env[row])
+	{
+		if ((0 == ft_strncmp(env[row], identifier, ft_strlen(identifier))))
+			return (env[row]);
+		row++;
+	}
+	return (NULL);
+}
+
+//return NULL if no '=', else MALLOCED str with identifier
+char	*get_identifier_name(char *str)
+{
+	char	*ptr_equal;
+	// char	*ptr_last;
+
+	if ((NULL == (ptr_equal = ft_strchr(str, '='))))
+		return (NULL);
+	// ptr_last = &(str[ft_strlen(str) - 1]);
+	return (ft_substr(str, 0, ptr_equal - &(str[0])));
+}
+
+//valid if 1st= alphabetic or underscore, 2nd= can also be numeric
+bool	identifier_is_invalid(const char *str)
+{
+	int	idx;
+
+	idx = 0;
+	if (ft_isalpha(str[idx]) || '_' == str[idx])
+		idx++;
+	else
+		return (true);
+	while (str[idx] && '=' != str[idx])
+	{
+		if (ft_isalpha(str[idx]) || '_' == str[idx] || ft_isdigit(str[idx]))
+			idx++;
+		else
+			return (true);
+	}
+	return (false);
+}
 
 // void	builtin_echo(t_data *d, t_cmd *node)
 // {

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/27 14:15:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/28 16:40:53 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ bool	prompt_user(t_data *d)
 	// TESTING /////////////////////////////////////////////////////////////////
 	// TEST VAR
 	// d->user_input = ft_strdup("$ $? $?txt $HOME $HOME\"str\"txt $not_exist $6txt $! '$?' str\"$HOME\" $");
+	// d->user_input = ft_strdup("env | cat | exit");
 	// REDIRECT
 	// d->user_input = ft_strdup("ls -l -a >> TEST_NO/file_x"); // word missing after meta char
 	// HEREDOC
@@ -44,6 +45,11 @@ bool	prompt_user(t_data *d)
 	// d->user_input = ft_strdup("|wc >>app1 -l"); //no word preceding pipe
 	// d->user_input = ft_strdup("wc >>app1 -l|"); //no word after pipe
 	// d->user_input = ft_strdup("wc >>app1 -l||end"); //no word between pipes
+
+	//BUILTIN
+	//BUILTIN_export
+	// d->user_input = ft_strdup("export hello=var more=varr"); // is leaking
+	// d->user_input = ft_strdup("echo hello | wc ");
 
 	// d->user_input = ft_strdup("echo hello world :) > fout | cat fout"); //redirection without word
 	// d->user_input = ft_strdup("cat | ls | wc"); //piping
@@ -69,7 +75,7 @@ bool	prompt_user(t_data *d)
 	// print_user_input(d->user_input); //print user input, for debugging //////
 	if (invalid_user_input(d, d->user_input))
 		return false;  //set to false for testing
-	add_history(d->user_input);
+	add_history(d->user_input); //IS LEAKING (memory still reachable)!!!
 	lexer(d);
 	if (invalid_token(d))
 		return false;  //set to false for testing

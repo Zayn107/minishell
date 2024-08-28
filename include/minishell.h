@@ -205,6 +205,8 @@ void	trim_str(char **str, char *cut_str);
 char	*cut_str(char *str, int start);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 bool	is_digit(char *str);
+// 
+void	replace_s1_with_s2(char **str1, char *str2);
 
 //BUILTIN
 void	builtin_echo(t_data *d, t_cmd *node);
@@ -212,6 +214,11 @@ void	builtin_env(t_data *d, t_cmd *node);
 void	assign_builtin(t_cmd *head);
 void	call_builtin(t_data *d);
 t_cmd	*process_builtin(t_data *d, t_cmd *node);
+void	builtin_export(t_data *d, t_cmd *node);
+char	*get_env_tab_pos(char *identifier, char **env);
+char	*get_identifier_name(char *str);
+bool	identifier_is_invalid(const char *str);
+void	add_to_env(t_data *d, char *var);
 
 //TEST PIPE
 void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d);

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:24:54 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/26 19:22:44 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/28 15:36:26 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,10 @@ bool	is_digit(char *str)
 		idx++;
 	}
 	return (true);
+}
+
+void	replace_s1_with_s2(char **str1, char *str2)
+{
+	free(*str1);
+	*str1 = ft_strdup(str2);
 }
