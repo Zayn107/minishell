@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/30 17:23:51 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/30 18:21:28 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	assign_builtin(t_cmd *head)
 			current->process_child = builtin_unset;
 		else if ((0 == ft_strncmp(current->cmd_arg[0], "cd", 2)))
 			current->process_child = builtin_cd;
+		else if ((0 == ft_strncmp(current->cmd_arg[0], "pwd", 3)))
+			current->process_child = builtin_pwd;
 		current = current->next;
 	}
 }
@@ -235,4 +237,33 @@ void	builtin_cd(t_data *d, t_cmd *node)
 			bash_msg3(\
 			"bash: cd: ", node->cmd_arg[1], ": No such file or directory");
 	}
+}
+
+void	builtin_pwd(t_data *d, t_cmd *node)
+{
+	int		fd;
+	char	*buffer;
+	bool	close_pipe_out;
+
+	close_pipe_out = true;
+	close(d->pip_in[READ]);
+	if (node->fd_out != FD_NONE)
+		fd = node->fd_out;
+	else if (node->next)
+	{
+		fd = d->pip_out[WRITE];
+		close_pipe_out = false;
+	}
+	else
+		fd = STDOUT_FILENO;
+	buffer = getcwd(NULL, 0);
+	if (NULL != buffer)
+	{
+		write(fd, buffer, ft_strlen(buffer));
+		write(fd, "\n", 1);
+		free(buffer);
+	}
+	else
+		perror("getcwd() error");
+	close(d->pip_out[WRITE]);
 }
