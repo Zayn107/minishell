@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/30 17:20:43 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/30 17:23:51 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,6 @@ void	builtin_cd(t_data *d, t_cmd *node)
 
 	close(d->pip_in[READ]);
 	close(d->pip_out[WRITE]);
-	// path_home = env_value(d, "HOME");
 	if (NULL == node->cmd_arg[1])
 	{
 		if((path_home = env_value(d, "HOME")))
