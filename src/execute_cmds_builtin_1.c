@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/30 18:21:28 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/30 18:46:57 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,5 +265,39 @@ void	builtin_pwd(t_data *d, t_cmd *node)
 	}
 	else
 		perror("getcwd() error");
+	close(d->pip_out[WRITE]);
+}
+
+void	builtin_echo(t_data *d, t_cmd *node)
+{
+	int		fd;
+	int		arg;
+	bool	close_pipe_out;
+	bool	new_line;
+
+	arg = 1;
+	close_pipe_out = true;
+	new_line = true;
+	close(d->pip_in[READ]);
+	if (node->fd_out != FD_NONE)
+		fd = node->fd_out;
+	else if (node->next)
+	{
+		fd = d->pip_out[WRITE];
+		close_pipe_out = false;
+	}
+	else
+		fd = STDOUT_FILENO;
+	if (((0 == ft_strncmp(node->cmd_arg[1], "-n", 2)) && arg++))
+		new_line = false;
+	while(node->cmd_arg[arg])
+	{
+		write(fd, node->cmd_arg[arg], ft_strlen(node->cmd_arg[arg]));
+		if (node->cmd_arg[arg + 1])
+			write(fd, " ", 1);
+		else (new_line)
+			write(fd, "\n", 1);
+		arg++;
+	}
 	close(d->pip_out[WRITE]);
 }
