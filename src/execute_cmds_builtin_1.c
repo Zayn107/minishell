@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/28 16:23:43 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/30 16:04:39 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	assign_builtin(t_cmd *head)
 			current->process_child = builtin_env;
 		else if ((0 == ft_strncmp(current->cmd_arg[0], "export", 6)))
 			current->process_child = builtin_export;
+		else if ((0 == ft_strncmp(current->cmd_arg[0], "unset", 5)))
+			current->process_child = builtin_unset;
 		current = current->next;
 	}
 }
@@ -80,11 +82,6 @@ void	builtin_env(t_data *d, t_cmd *node)
 		fd = STDOUT_FILENO;
 	while (d->env[idx])
 	{
-		// if ((0 != ft_strncmp(d->env[idx], "!FREE!", 6)))
-		// {
-		// 	write(fd, d->env[idx], ft_strlen(d->env[idx]));
-		// 	write(fd, "\n", 1);
-		// }
 		write(fd, d->env[idx], ft_strlen(d->env[idx]));
 		write(fd, "\n", 1);
 		idx++;
@@ -103,8 +100,6 @@ void	builtin_export(t_data *d, t_cmd *node)
 	arg = 1;
 	while (node->cmd_arg[arg])
 	{
-		// pos_env_tab = NULL;
-		// identifier = NULL;
 		identifier = get_identifier_name(node->cmd_arg[arg]);
 		if (identifier_is_invalid(node->cmd_arg[arg]))
 			bash_msg3(\
@@ -112,15 +107,10 @@ void	builtin_export(t_data *d, t_cmd *node)
 		else if (identifier)
 		{
 			if ((NULL != (pos_env_tab = get_env_tab_pos(identifier, d->env))))
-			{
-				// printf("inside pos env tab: |%s|\n", pos_env_tab);
 				replace_s1_with_s2(&pos_env_tab, node->cmd_arg[arg]);
-			}
 			else
 				add_to_env(d, node->cmd_arg[arg]);
 		}
-		// printf("identifier: %s\n", identifier);
-		
 		free(identifier);
 		arg++;
 	}
@@ -173,20 +163,72 @@ bool	identifier_is_invalid(const char *str)
 	return (false);
 }
 
-// void	builtin_echo(t_data *d, t_cmd *node)
-// {
-// 	int	idx;
+void	builtin_unset(t_data *d, t_cmd *node)
+{
+	int		arg;
+	// int		len;
+	// int		idx;
+	// int		idx_new;
+	char	*pos_env_tab;
+	// char	**new_env_tab;
+	
+	close(d->pip_in[READ]);
+	close(d->pip_out[WRITE]);
+	arg = 1;
+	while (node->cmd_arg[arg])
+	{
+		if ((pos_env_tab = get_env_tab_pos(node->cmd_arg[arg], d->env)))
+		{
+		// 	len = 0;
+		// 	idx = 0;
+		// 	idx_new = 0;
+		// 	while (d->env[len])
+		// 		len++;
+		// 	new_env_tab = (char **) malloc(sizeof(char *) * len);
+		// 	while (d->env[idx])
+		// 	{
+		// 		if((0 == ft_strncmp(d->env[idx], pos_env_tab, ft_strlen(pos_env_tab))))
+		// 		{
+		// 			idx++;
+		// 			continue;
+		// 		}
+		// 		new_env_tab[idx_new] = d->env[idx];
+		// 		idx++;
+		// 		idx_new++;
+		// 	}
+		// 	new_env_tab[len - 1] = NULL;
+		// 	free(d->env);
+		// 	free(pos_env_tab);
+		// 	d->env = new_env_tab;
+		d->env = remove_entry_from_env(d->env, pos_env_tab);
+		}
+		arg++;
+	}
+}
 
-// 	(void) d;
-// 	idx = 1;
-// 	if (NULL == node->file_out && NULL == node->next)
-// 		node->fd_out = STDOUT_FILENO;
-// 	while (node->cmd_arg[idx])
-// 	{
-// 		if (idx > 1)
-// 			write(node->fd_out, " ", 1);
-// 		write(node->fd_out, node->cmd_arg[idx], ft_strlen(node->cmd_arg[idx]));
-// 		idx++;
-// 	}
-// 	write(node->fd_out, "\n", 1);
-// }
+char	**remove_entry_from_env(char **env, char *entry)
+{
+	int		len;
+	int		idx;
+	int		idx_new;
+	char	**new_env_tab;
+
+	len = 0;
+	idx = 0;
+	idx_new = 0;
+	while (env[len])
+		len++;
+	new_env_tab = (char **) malloc(sizeof(char *) * len);
+	while (env[idx])
+	{
+		if((0 == ft_strncmp(env[idx], entry, ft_strlen(entry))) && idx++)
+			continue;
+		new_env_tab[idx_new] = env[idx];
+		idx++;
+		idx_new++;
+	}
+	new_env_tab[len - 1] = NULL;
+	free(env);
+	free(entry);
+	return (new_env_tab);
+}
