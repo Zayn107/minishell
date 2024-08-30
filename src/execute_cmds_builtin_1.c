@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/30 16:04:39 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/08/30 17:20:43 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	assign_builtin(t_cmd *head)
 			current->process_child = builtin_export;
 		else if ((0 == ft_strncmp(current->cmd_arg[0], "unset", 5)))
 			current->process_child = builtin_unset;
+		else if ((0 == ft_strncmp(current->cmd_arg[0], "cd", 2)))
+			current->process_child = builtin_cd;
 		current = current->next;
 	}
 }
@@ -166,11 +168,7 @@ bool	identifier_is_invalid(const char *str)
 void	builtin_unset(t_data *d, t_cmd *node)
 {
 	int		arg;
-	// int		len;
-	// int		idx;
-	// int		idx_new;
 	char	*pos_env_tab;
-	// char	**new_env_tab;
 	
 	close(d->pip_in[READ]);
 	close(d->pip_out[WRITE]);
@@ -178,30 +176,7 @@ void	builtin_unset(t_data *d, t_cmd *node)
 	while (node->cmd_arg[arg])
 	{
 		if ((pos_env_tab = get_env_tab_pos(node->cmd_arg[arg], d->env)))
-		{
-		// 	len = 0;
-		// 	idx = 0;
-		// 	idx_new = 0;
-		// 	while (d->env[len])
-		// 		len++;
-		// 	new_env_tab = (char **) malloc(sizeof(char *) * len);
-		// 	while (d->env[idx])
-		// 	{
-		// 		if((0 == ft_strncmp(d->env[idx], pos_env_tab, ft_strlen(pos_env_tab))))
-		// 		{
-		// 			idx++;
-		// 			continue;
-		// 		}
-		// 		new_env_tab[idx_new] = d->env[idx];
-		// 		idx++;
-		// 		idx_new++;
-		// 	}
-		// 	new_env_tab[len - 1] = NULL;
-		// 	free(d->env);
-		// 	free(pos_env_tab);
-		// 	d->env = new_env_tab;
-		d->env = remove_entry_from_env(d->env, pos_env_tab);
-		}
+			d->env = remove_entry_from_env(d->env, pos_env_tab);
 		arg++;
 	}
 }
@@ -231,4 +206,34 @@ char	**remove_entry_from_env(char **env, char *entry)
 	free(env);
 	free(entry);
 	return (new_env_tab);
+}
+
+void	builtin_cd(t_data *d, t_cmd *node)
+{
+	char	*path_home;
+
+	close(d->pip_in[READ]);
+	close(d->pip_out[WRITE]);
+	// path_home = env_value(d, "HOME");
+	if (NULL == node->cmd_arg[1])
+	{
+		if((path_home = env_value(d, "HOME")))
+		{
+			chdir(path_home);
+			free(path_home);
+		}
+		else
+			bash_msg(node->cmd_arg[0], ": missing argument");
+	}
+	else if (NULL != node->cmd_arg[2])
+		bash_msg(node->cmd_arg[0], ": too many arguments");
+	else if (chdir(node->cmd_arg[1]))
+	{
+		if (EACCES == errno)
+			bash_msg3(\
+			"bash: cd: ", node->cmd_arg[1], ": Permission denied");
+		else if (ENOENT  == errno)
+			bash_msg3(\
+			"bash: cd: ", node->cmd_arg[1], ": No such file or directory");
+	}
 }

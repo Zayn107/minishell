@@ -221,6 +221,7 @@ bool	identifier_is_invalid(const char *str);
 void	add_to_env(t_data *d, char *var);
 void	builtin_unset(t_data *d, t_cmd *node);
 char	**remove_entry_from_env(char **env, char *entry);
+void	builtin_cd(t_data *d, t_cmd *node);
 
 //TEST PIPE
 void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d);
