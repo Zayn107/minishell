@@ -6,41 +6,11 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 11:13:25 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 15:58:53 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-// void	execute_cmds(t_data *d)
-// {
-// 	t_cmd	*cmd_node;
-
-// 	cmd_node = d->list_cmd;
-// 	while (true)
-// 	{
-// 		if (cmd_node)
-// 		{
-// 			create_pipes(d, cmd_node);
-// 			if (cmd_node->process_child != shell_cmd)
-// 				cmd_node = process_builtin(d, cmd_node);
-// 			else
-// 			{
-// 				cmd_node->pid = fork();
-// 				if (CHILD_PROCESS == cmd_node->pid)
-// 					cmd_node->process_child(d, cmd_node);
-// 				else
-// 					cmd_node = process_parent(d, cmd_node);
-// 			}
-// 		}
-// 		else
-// 		{
-// 			write_fd1_to_fd2(d->pip_out[READ], WRITE, false);
-// 			if (nobody_is_sleeping(d->list_cmd))
-// 				break;
-// 		}
-// 	}
-// }
 
 void	execute_cmds(t_data *d)
 {
@@ -68,9 +38,7 @@ void	execute_cmds(t_data *d)
 		if (NULL == cmd_node)
 			close(d->pip_out[READ]);
 	}
-	while(true)
-		if (nobody_is_sleeping(d->list_cmd))
-			break;
+	wait_while_process_is_sleeping(d->list_cmd);
 }
 
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
@@ -78,9 +46,9 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 	int	status;
 
 	close(d->pip_in[READ]);
-	// close(d->pip_in[WRITE]);
 	close(d->pip_out[WRITE]);
-	if (!(cmd_node->sleep = are_you_sleeping(cmd_node->pid)))
+	cmd_node->sleep = are_you_sleeping(cmd_node->pid);
+	if (!cmd_node->sleep)
 	{
 		wait(&status);
 		d->exit_status = WEXITSTATUS(status);
@@ -88,6 +56,34 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 	else
 		close(d->pip_out[READ]);
 	return (cmd_node->next);
+}
+
+void	shell_cmd(t_data *d, t_cmd *node)
+{
+	dup_close_fd_child(d, node);
+	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
+	{
+		dup2(STDERR_FILENO, STDOUT_FILENO);
+		bash_msg2(node->cmd_arg[0], ": command not found");
+	}
+	exit(127);
+}
+
+void	wait_while_process_is_sleeping(t_cmd *head)
+{
+	t_cmd	*cmd_node;
+
+	cmd_node = head;
+	while (cmd_node)
+	{
+		if (cmd_node->sleep)
+		{
+			cmd_node->sleep = are_you_sleeping(cmd_node->pid);
+			cmd_node = head;
+			continue ;
+		}
+		cmd_node = cmd_node->next;
+	}
 }
 
 bool	are_you_sleeping(pid_t pid)
@@ -101,7 +97,7 @@ bool	are_you_sleeping(pid_t pid)
 	is_sleeping = false;
 	str_pid = ft_itoa(pid);
 	buffer = ft_strdup("/proc/");
-	path = join_free(&buffer,  true, &str_pid, true);
+	path = join_free(&buffer, true, &str_pid, true);
 	buffer = ft_strdup("/status");
 	path = join_free(&path, true, &buffer, true);
 	fd = open(path, O_RDONLY);
@@ -116,22 +112,4 @@ bool	are_you_sleeping(pid_t pid)
 	}
 	close(fd);
 	return (is_sleeping);
-}
-
-bool	nobody_is_sleeping(t_cmd *head)
-{
-	t_cmd	*cmd_node;
-
-	cmd_node = head;
-	while (cmd_node)
-	{	
-		if (cmd_node->sleep)
-		{
-			cmd_node->sleep = are_you_sleeping(cmd_node->pid);
-			if (cmd_node->sleep)
-				return (false);
-		}
-		cmd_node = cmd_node->next;
-	}
-	return (true);
 }

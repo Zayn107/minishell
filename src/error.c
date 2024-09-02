@@ -6,18 +6,11 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 16:01:41 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/30 16:24:11 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 15:56:49 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-void	error_exit(char *msg)
-{
-	//TODO: implement free all
-	perror(msg);
-	exit(EXIT_FAILURE);
-}
 
 bool	e_msg(const char *e_message)
 {
@@ -55,7 +48,7 @@ bool	bash_msg2(const char *word, const char *e_msg)
 }
 
 /*return: 'false' s_start (beginning) + word (middle) + s_end (end)*/
-bool 	bash_msg3(const char *s_start, const char *word, const char *s_end)
+bool	bash_msg3(const char *s_start, const char *word, const char *s_end)
 {
 	p_color(E_STY, E_BAC, E_COL, s_start);
 	p_color(E_STY, E_BAC, E_COL, word);
@@ -63,11 +56,3 @@ bool 	bash_msg3(const char *s_start, const char *word, const char *s_end)
 	printf("\n");
 	return (false);
 }
-
-// /*return: 'false', just print msg*/
-// bool 	bash_msg4(const char *msg)
-// {
-// 	p_color(E_STY, E_BAC, E_COL, msg);
-// 	printf("\n");
-// 	return (false);
-// }

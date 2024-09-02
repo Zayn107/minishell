@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 18:24:54 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/28 15:36:26 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 16:00:52 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,18 +57,18 @@ int	matching_quote_len(const char *str)
 	int		idx;
 	char	quote;
 
-	idx= 1;
+	idx = 1;
 	if ('"' == *str || '\'' == *str)
 	{
 		quote = str[0];
 		while (str[idx])
 		{
 			if (str[idx] == quote)
-				return ++idx;
+				return (++idx);
 			idx++;
 		}
 	}
-	return 0;
+	return (0);
 }
 
 //true if the string contains only digits
@@ -84,10 +84,4 @@ bool	is_digit(char *str)
 		idx++;
 	}
 	return (true);
-}
-
-void	replace_s1_with_s2(char **str1, char *str2)
-{
-	free(*str1);
-	*str1 = ft_strdup(str2);
 }

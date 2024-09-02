@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:47:44 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 13:48:49 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 15:41:36 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	cut_quotes_subwords(t_sub_list **node_s, char *word)
 	end_last_word = 0;
 	while (word[idx])
 	{
-		if ((len_q = matching_quote_len(&(word[idx]))))
+		len_q = matching_quote_len(&(word[idx]));
+		if (len_q)
 		{
 			if (end_last_word < idx)
 				add_str_node_s_word(\

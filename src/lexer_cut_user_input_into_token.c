@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:19:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 15:14:22 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 15:42:38 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	cut_input_add_list_token(t_data *d, int id, int skip)
 //mallocs str word (matching quotes), NULL if ID PIPE or len 0 to next delimiter
 char	*word_after_skip(t_data *d, int id)
 {
-	int 	len;
+	int		len;
 	int		len_quote;
 	char	*word;
 

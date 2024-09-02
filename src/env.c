@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 14:12:43 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/28 16:21:17 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 14:50:22 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,19 @@
 void	copy_env(t_data *d, char *arge[])
 {
 	int	len;
-	// int	free_space;
 	int	idx;
-	
+
 	len = 0;
-	// free_space = 10;
 	idx = 0;
 	while (arge[len])
 		len++;
-	// d->env = (char **) malloc(sizeof(char *) * (len + free_space + 1));
 	d->env = (char **) malloc(sizeof(char *) * (len + 1));
-
-	// d->env = (char **) malloc(sizeof(char *) * (len + 1));
-	// d->env[len + free_space] = NULL;
 	d->env[len] = NULL;
-	// d->env[len] = NULL;
-	// while (arge[idx])
-	// {
-	// 	d->env[idx] = ft_strdup(arge[idx]);
-	// 	// printf("create env: |%s|\n", d->env[idx]);
-	// 	idx++;
-	// }
 	while (arge[idx])
 	{
 		d->env[idx] = ft_strdup(arge[idx]);
-		// printf("create env: |%s|\n", d->env[idx]);
 		idx++;
 	}
-	//was used to mark free space but design has changed
-	// while (free_space--)
-	// {
-	// 	d->env[idx] = ft_strdup("!FREE!");
-	// 	// printf("create env: |%s|\n", d->env[idx]);
-	// 	idx++;
-	// }
 }
 
 /*returns a pointer to the value of the "env variable name", if not exist
@@ -65,13 +44,11 @@ char	*env_value(t_data *d, char *var_name)
 		if (!ft_strncmp(d->env[idx], var_name, len_var)
 			&& d->env[idx][len_var] == '=')
 		{
-			// printf("inside env_vale: %s\n", &(d->env[idx][len_var + 1]));
-			return ft_strdup(&(d->env[idx][len_var + 1]));
-			// return &(d->env[idx][len_var + 1]);
+			return (ft_strdup(&(d->env[idx][len_var + 1])));
 		}
 		idx++;
 	}
-	return NULL;
+	return (NULL);
 }
 
 //malloc var and add to d->env
@@ -95,4 +72,45 @@ void	add_to_env(t_data *d, char *var)
 	new_env[idx + 1] = NULL;
 	free(d->env);
 	d->env = new_env;
+}
+
+char	**remove_entry_from_env(char **env, char *entry)
+{
+	int		len;
+	int		idx;
+	int		idx_new;
+	char	**new_env_tab;
+
+	len = 0;
+	idx = 0;
+	idx_new = 0;
+	while (env[len])
+		len++;
+	new_env_tab = (char **) malloc(sizeof(char *) * len);
+	while (env[idx])
+	{
+		if ((0 == ft_strncmp(env[idx], entry, ft_strlen(entry))) && idx++)
+			continue ;
+		new_env_tab[idx_new] = env[idx];
+		idx++;
+		idx_new++;
+	}
+	new_env_tab[len - 1] = NULL;
+	free(env);
+	free(entry);
+	return (new_env_tab);
+}
+
+char	*get_env_tab_pos(char *identifier, char **env)
+{
+	int	row;
+
+	row = 0;
+	while (env[row])
+	{
+		if ((0 == ft_strncmp(env[row], identifier, ft_strlen(identifier))))
+			return (env[row]);
+		row++;
+	}
+	return (NULL);
 }

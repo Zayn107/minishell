@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/12 11:46:56 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/22 13:51:20 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 16:20:30 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var)
 /*cut "$?" from '**tmp', write to node id=VAR_EXIT, sub_word=NULL*/
 void	cut_var_exit(t_sub_list **cur, char **tmp)
 {
-	const int	LEN_EXIT_VAR = 2;
+	const int	len_exit_var = 2;
 	char		*str_var;
 	char		*str_rest;
 
@@ -54,13 +54,13 @@ void	cut_var_exit(t_sub_list **cur, char **tmp)
 		insert_node_sub_word(*cur, VAR_EXIT, str_var);
 		*cur = (*cur)->next;
 	}
-	str_rest = ft_strdup(&((*tmp)[LEN_EXIT_VAR]));
+	str_rest = ft_strdup(&((*tmp)[len_exit_var]));
 	free(*tmp);
 	*tmp = str_rest;
 }
 
 /*cut variable name from '**tmp', id=VAR*/
-void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var)
+void	cut_var(t_sub_list **cur, char **tmp, char *idx_var)
 {
 	char		*str_var;
 	char		*str_rest;
@@ -86,7 +86,7 @@ void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var)
 }
 
 /*cut invalid var name from '**tmp', e.g. "$5hello" cut "$5" leave "hello"*/
-void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var)
+void	cut_invalid_var(t_sub_list **cur, char **tmp, char *idx_var)
 {
 	int		idx_rest;
 	char	*word;

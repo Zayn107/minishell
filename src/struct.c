@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/27 16:11:27 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 16:02:38 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	add_node_token(t_data *d, int id, char *word)
 	new_node->list_sub_word = NULL;
 	new_node->prev = NULL;
 	new_node->next = NULL;
-
 	if (d->list_token == NULL)
 		d->list_token = new_node;
 	else
@@ -83,6 +82,22 @@ t_cmd	*add_node_cmd(t_data *d)
 	new_node = (t_cmd *) malloc(sizeof(t_cmd));
 	new_node->process_child = shell_cmd;
 	new_node->cmd_arg = (char **) malloc(sizeof(char *) * 2);
+	init_new_node_cmd(new_node);
+	if (d->list_cmd == NULL)
+		d->list_cmd = new_node;
+	else
+	{
+		current = d->list_cmd;
+		while (current->next != NULL)
+			current = current->next;
+		new_node->prev = current;
+		current->next = new_node;
+	}
+	return (new_node);
+}
+
+void	init_new_node_cmd(t_cmd *new_node)
+{
 	new_node->cmd_path = NULL;
 	new_node->cmd_arg[0] = NULL;
 	new_node->cmd_arg[1] = NULL;
@@ -91,18 +106,7 @@ t_cmd	*add_node_cmd(t_data *d)
 	new_node->is_tmp_file_in = false;
 	new_node->file_in = NULL;
 	new_node->file_out = NULL;
-	new_node->prev = NULL; //
+	new_node->prev = NULL;
 	new_node->next = NULL;
 	new_node->sleep = false;
-	if (d->list_cmd == NULL)
-		d->list_cmd = new_node;
-	else
-	{
-		current = d->list_cmd;
-		while (current->next != NULL)
-			current = current->next;
-		new_node->prev = current; //
-		current->next = new_node;
-	}
-	return (new_node);
 }

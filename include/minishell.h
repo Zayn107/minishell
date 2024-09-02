@@ -52,7 +52,7 @@
 # define CHILD_PROCESS 0
 # define READ 0
 # define WRITE 1
-# define _GNU_SOURCE				// is needed for "struct sigaction"
+# define _GNU_SOURCE					// is needed for "struct sigaction"
 
 #include "../libft/libft.h"
 #include <stdio.h>
@@ -67,11 +67,11 @@
 #include <sys/wait.h>
 #include <limits.h>
 #include <sys/ioctl.h>
-#include <fcntl.h>			// for open()
+#include <fcntl.h>						// for open()
 
 typedef struct s_token
 {
-	int					id;			// use Macros to identify type
+	int					id;				// use Macros to identify type
 	char				*word;			// token data
 	struct s_sub_list	*list_sub_word;
 	struct s_token		*prev;
@@ -117,7 +117,6 @@ typedef struct s_data
 	struct s_token	*list_token;	// MALLOC!! list of tokens
 	int				pip_out[2];		// fd for pipe to be used for child output
 	int				pip_in[2];		// fd for pipe to be used for child input
-	// char			**tab_env_cmd_path; // MALLOC!! table with all env path variables
 	struct s_env	*list_env;		// MALLOC!! list of env variables
 } t_data;
 
@@ -150,13 +149,14 @@ void	evaluate_variable_subwords(t_data *d, t_sub_list **head);
 char	*word_after_skip(t_data *d, int token);
 char	*rest_from_input(t_data *d, const char *word);
 bool	mark_word_cmd_arg(t_token *current, bool found_cmd);
+void	find_variable(t_sub_list *cur);
 
 //PARSER
 bool	parser(t_data *d, bool success);
 void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
 char	*find_cmd_path(t_data *d, char *cmd);
 void	assign_arg(char ***cmd_arg, char *new_arg);
-bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token);
+bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token, char *delimiter);
 char	*create_heredoc_fname(bool *is_tmp_file_in);
 bool	get_append(t_cmd *c_node, t_token *t_node);
 bool	get_file_in(t_cmd *cur_cmd, t_token *cur_tok);
@@ -175,7 +175,7 @@ void	print_cmd_list(t_cmd *head);
 void	print_line(int width, char line_char);
 void	print_tab(char **tab);
 void	p_color(int weight, bool background, int color, const char *str);
-char	*ret_col(int weight, bool background, int color, char *str);
+char	*style_str(int weight, bool background, int color);
 
 //FREE
 void	free_tab(char **tab);
@@ -185,7 +185,6 @@ void	free_cmd_list(t_cmd *head);
 void	free_all_except_env(t_data *d);
 
 //ERROR
-void	error_exit(char *msg);
 bool	bash_msg(const char *word, const char *e_msg);
 bool	bash_msg1(const char *word, const char *e_msg);
 bool	bash_msg2(const char *word, const char *e_msg);
@@ -199,6 +198,7 @@ char	*next_direction_character_or_new_line(t_token *current);
 void	add_node_token(t_data *d, int id, char *word);
 void	add_node_sub_word(t_sub_list **node, int sub_id, char *sub_word);
 t_cmd	*add_node_cmd(t_data *d);
+void	init_new_node_cmd(t_cmd *new_node);
 
 //HELP
 int		matching_quote_len(const char *str);
@@ -214,7 +214,6 @@ void	remove_tmp_files(t_cmd *head);
 void	builtin_echo(t_data *d, t_cmd *node);
 void	builtin_env(t_data *d, t_cmd *node);
 void	assign_builtin(t_cmd *head);
-void	call_builtin(t_data *d);
 t_cmd	*process_builtin(t_data *d, t_cmd *node);
 void	builtin_export(t_data *d, t_cmd *node);
 char	*get_env_tab_pos(char *identifier, char **env);
@@ -226,14 +225,9 @@ char	**remove_entry_from_env(char **env, char *entry);
 void	builtin_cd(t_data *d, t_cmd *node);
 void	builtin_pwd(t_data *d, t_cmd *node);
 void	write_echo(char **argument, int fd, bool new_line);
-
-//TEST PIPE
-void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d);
-void	execute_node_from_cmd_list(t_cmd *node);
-bool	nobody_is_sleeping(t_cmd *head);
+void	wait_while_process_is_sleeping(t_cmd *head);
 
 //PIPING
-// void	close_all_pipes(t_cmd *head);
 void	shell_cmd(t_data *d, t_cmd *node);
 void	execute_cmds(t_data *d);
 bool	are_you_sleeping(pid_t pid);
