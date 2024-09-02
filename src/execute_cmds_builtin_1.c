@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/30 18:46:57 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 12:43:03 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,29 @@
 //overwrite "shell_cmd" function with builtin fun pointer if cmd is builtin
 void	assign_builtin(t_cmd *head)
 {
-	t_cmd	*current;
+	t_cmd		*current;
+	const int	CMD = 0;
 
 	current = head;
 	while(current)
 	{
-		if ((0 == ft_strncmp(current->cmd_arg[0], "exit", 4)))
-			current->process_child = builtin_exit;
-		else if ((0 == ft_strncmp(current->cmd_arg[0], "env", 3)))
-			current->process_child = builtin_env;
-		else if ((0 == ft_strncmp(current->cmd_arg[0], "export", 6)))
-			current->process_child = builtin_export;
-		else if ((0 == ft_strncmp(current->cmd_arg[0], "unset", 5)))
-			current->process_child = builtin_unset;
-		else if ((0 == ft_strncmp(current->cmd_arg[0], "cd", 2)))
-			current->process_child = builtin_cd;
-		else if ((0 == ft_strncmp(current->cmd_arg[0], "pwd", 3)))
-			current->process_child = builtin_pwd;
+		if (current->cmd_arg[CMD])
+		{
+			if ((0 == ft_strncmp(current->cmd_arg[CMD], "exit", 4)))
+				current->process_child = builtin_exit;
+			else if ((0 == ft_strncmp(current->cmd_arg[CMD], "env", 3)))
+				current->process_child = builtin_env;
+			else if ((0 == ft_strncmp(current->cmd_arg[CMD], "export", 6)))
+				current->process_child = builtin_export;
+			else if ((0 == ft_strncmp(current->cmd_arg[CMD], "unset", 5)))
+				current->process_child = builtin_unset;
+			else if ((0 == ft_strncmp(current->cmd_arg[CMD], "cd", 2)))
+				current->process_child = builtin_cd;
+			else if ((0 == ft_strncmp(current->cmd_arg[CMD], "pwd", 3)))
+				current->process_child = builtin_pwd;
+			else if ((0 == ft_strncmp(current->cmd_arg[CMD], "echo", 4)))
+				current->process_child = builtin_echo;
+		}
 		current = current->next;
 	}
 }
@@ -288,16 +294,25 @@ void	builtin_echo(t_data *d, t_cmd *node)
 	}
 	else
 		fd = STDOUT_FILENO;
-	if (((0 == ft_strncmp(node->cmd_arg[1], "-n", 2)) && arg++))
-		new_line = false;
-	while(node->cmd_arg[arg])
-	{
-		write(fd, node->cmd_arg[arg], ft_strlen(node->cmd_arg[arg]));
-		if (node->cmd_arg[arg + 1])
-			write(fd, " ", 1);
-		else (new_line)
-			write(fd, "\n", 1);
-		arg++;
-	}
+	if (node->cmd_arg[1])
+		if (((0 == ft_strncmp(node->cmd_arg[1], "-n", 2)) && arg++))
+			new_line = false;
+	write_echo(&(node->cmd_arg[arg]), fd, new_line);
 	close(d->pip_out[WRITE]);
+}
+
+void	write_echo(char **argument, int fd, bool new_line)
+{
+	int num;
+
+	num = 0;
+	while (argument[num])
+	{
+		write(fd, argument[num], ft_strlen(argument[num]));
+		if (argument[num + 1])
+			write(fd, " ", 1);
+		else if(new_line)
+			write(fd, "\n", 1);
+		num++;
+	}
 }

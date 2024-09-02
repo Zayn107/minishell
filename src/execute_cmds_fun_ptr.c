@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:58:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/28 12:42:00 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 10:25:01 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	shell_cmd(t_data *d, t_cmd *node)
 {
-	dup_close_fd_child(d, node);
 	// if ((execve(node->cmd_path, node->cmd_arg, NULL) == -1))
+	dup_close_fd_child(d, node);
 	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
 	{
 		dup2(STDERR_FILENO, STDOUT_FILENO);

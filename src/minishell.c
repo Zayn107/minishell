@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/28 16:40:53 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 11:16:48 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,14 @@ bool	prompt_user(t_data *d)
 	if (invalid_token(d))
 		return false;  //set to false for testing
 	parser(d, true);
+	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	assign_builtin(d->list_cmd);
 	execute_cmds(d);
 
 	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////
 	// print_tab(d->env); //print (at start) copied environment table //////////
 	// print_token_list(d->list_token, true); //print token list, true: subword
-	print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
+	// print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	
 	free_all_except_env(d);
 	return (true);  //set to false for testing

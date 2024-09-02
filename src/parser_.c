@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:43:15 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/24 20:31:05 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 12:26:31 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,7 @@ void	assign_cmd(t_data *d, t_cmd *node, char *cmd)
 char	*find_cmd_path(t_data *d, char *cmd)
 {
 	char	*env_path;
-	char	*cmd_path;
-	char	*slash;
 	char	**env_tab;
-	int		idx;
 
 	if ((NULL != ft_strrchr(cmd, '/')))
 		return (ft_strdup(cmd));
@@ -62,6 +59,15 @@ char	*find_cmd_path(t_data *d, char *cmd)
 		return (ft_strdup(cmd));
 	env_tab = ft_split(env_path, ':');
 	free(env_path);
+	return (validate_env_path(env_tab, cmd));
+}
+
+char	*validate_env_path(char **env_tab, char *cmd)
+{
+	char	*slash;
+	int		idx;
+	char	*cmd_path;
+
 	slash = ft_strdup("/");
 	idx = 0;
 	while (env_tab[idx])
@@ -76,6 +82,8 @@ char	*find_cmd_path(t_data *d, char *cmd)
 	}
 	free(slash);
 	free_tab(env_tab);
+	if (NULL == cmd_path)
+		return (ft_strdup(cmd));
 	return (cmd_path);
 }
 

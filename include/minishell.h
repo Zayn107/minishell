@@ -163,6 +163,7 @@ bool	get_file_in(t_cmd *cur_cmd, t_token *cur_tok);
 bool	get_file_out(t_cmd *c_node, t_token *t_node);
 void	free_old_direction(t_cmd *node, int id);
 void	assign_builtin(t_cmd *node);
+char	*validate_env_path(char **env_tab, char *cmd);
 
 //BUILTIN
 void	builtin_exit(t_data *d, t_cmd *node);
@@ -207,6 +208,7 @@ char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 bool	is_digit(char *str);
 // 
 void	replace_s1_with_s2(char **str1, char *str2);
+void	remove_tmp_files(t_cmd *head);
 
 //BUILTIN
 void	builtin_echo(t_data *d, t_cmd *node);
@@ -223,6 +225,7 @@ void	builtin_unset(t_data *d, t_cmd *node);
 char	**remove_entry_from_env(char **env, char *entry);
 void	builtin_cd(t_data *d, t_cmd *node);
 void	builtin_pwd(t_data *d, t_cmd *node);
+void	write_echo(char **argument, int fd, bool new_line);
 
 //TEST PIPE
 void	TEST_add_node(char *path, char *cmd_arg, char *file_in, char *file_out, t_data *d);

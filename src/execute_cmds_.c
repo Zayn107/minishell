@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/27 16:23:44 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 11:13:25 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,27 +49,28 @@ void	execute_cmds(t_data *d)
 	cmd_node = d->list_cmd;
 	while (cmd_node)
 	{
-		create_pipes(d, cmd_node);
-		if (cmd_node->process_child != shell_cmd)
-			cmd_node = process_builtin(d, cmd_node);
+		if (NULL == cmd_node->cmd_arg[0])
+			cmd_node = cmd_node->next;
 		else
 		{
-			cmd_node->pid = fork();
-			if (CHILD_PROCESS == cmd_node->pid)
-				cmd_node->process_child(d, cmd_node);
+			create_pipes(d, cmd_node);
+			if (cmd_node->process_child != shell_cmd)
+				cmd_node = process_builtin(d, cmd_node);
 			else
-				cmd_node = process_parent(d, cmd_node);
+			{
+				cmd_node->pid = fork();
+				if (CHILD_PROCESS == cmd_node->pid)
+					cmd_node->process_child(d, cmd_node);
+				else
+					cmd_node = process_parent(d, cmd_node);
+			}
 		}
 		if (NULL == cmd_node)
 			close(d->pip_out[READ]);
 	}
 	while(true)
-	{
-		// write_fd1_to_fd2(d->pip_out[READ],false, WRITE, false);
-		// printf("is sleeping\n");
 		if (nobody_is_sleeping(d->list_cmd))
 			break;
-	}
 }
 
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)

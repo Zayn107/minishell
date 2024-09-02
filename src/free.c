@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 12:55:25 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/23 11:29:46 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 12:31:25 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	free_list_sub_word(t_sub_list *head)
 
 void	free_all_except_env(t_data *d)
 {
+	remove_tmp_files(d->list_cmd);
 	free(d->user_input);
 	d->user_input = NULL;
 	free_list_token_and_subword(d->list_token);

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/08/27 16:20:09 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/02 12:51:05 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ char	*create_heredoc_fname(bool *is_tmp_file_in)
 	while(NULL == fname)
 	{
 		serial = ft_itoa(n++);
-		fname = ft_strjoin("tmp_heredoc_", serial);
+		fname = ft_strjoin(".tmp_heredoc_", serial);
 		free(serial);
 		if (0 == access(fname, F_OK))
 		{

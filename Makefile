@@ -18,7 +18,8 @@ SRC				= $(addprefix $(SRC_DIR), \
 				execute_cmds_fun_ptr.c \
 				execute_cmds_pipes.c \
 				TEST_func.c \
-				help_str.c )
+				help_str.c \
+				help_1.c )
 # OBJECTS
 OBJ_DIR			= obj/
 OBJ				= $(SRC:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
