@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 15:58:53 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 15:31:29 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 	{
 		wait(&status);
 		d->exit_status = WEXITSTATUS(status);
+		//printf("cmd: %s, stat: %d exit stat: %d\n", cmd_node->cmd_arg[0], WEXITSTATUS(status), d->exit_status);
 	}
 	else
 		close(d->pip_out[READ]);
@@ -64,7 +65,7 @@ void	shell_cmd(t_data *d, t_cmd *node)
 	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
 	{
 		dup2(STDERR_FILENO, STDOUT_FILENO);
-		bash_msg2(node->cmd_arg[0], ": command not found");
+		e_msg2(d, node->cmd_arg[0], ": command not found");
 	}
 	exit(127);
 }
@@ -79,6 +80,7 @@ void	wait_while_process_is_sleeping(t_cmd *head)
 		if (cmd_node->sleep)
 		{
 			cmd_node->sleep = are_you_sleeping(cmd_node->pid);
+			// printf("%s is still sleeping, pid: %d\n", cmd_node->cmd_arg[0], cmd_node->pid);
 			cmd_node = head;
 			continue ;
 		}

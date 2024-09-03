@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 14:12:43 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 14:50:22 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 09:48:29 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	copy_env(t_data *d, char *arge[])
 
 	len = 0;
 	idx = 0;
+	d->exit_status = 0;
 	while (arge[len])
 		len++;
 	d->env = (char **) malloc(sizeof(char *) * (len + 1));

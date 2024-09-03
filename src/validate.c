@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:56:21 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 15:45:24 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 10:04:06 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ bool	invalid_token(t_data *d)
 		if (PIPE == current->id && \
 		(NULL == current->prev || NULL == current->next->word))
 		{
-			bash_msg1("`|'", "syntax error near unexpected token ");
+			e_vali_msg(d, "`|'", "syntax error near unexpected token ");
 			free_all_except_env(d);
 			return (true);
 		}
 		else if (PIPE != current->id && NULL == current->word)
 		{
 			e_word = next_direction_character_or_new_line(current);
-			bash_msg1(e_word, "syntax error near unexpected token ");
+			e_vali_msg(d, e_word, "syntax error near unexpected token ");
 			free(e_word);
 			free_all_except_env(d);
 			return (true);

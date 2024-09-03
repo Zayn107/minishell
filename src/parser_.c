@@ -6,20 +6,20 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:43:15 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 15:49:44 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 15:57:24 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	parser(t_data *d, bool success)
+bool	parser(t_data *d, bool valid_file)
 {
 	t_token	*cur_tok;
 	t_cmd	*cur_cmd;
 
 	cur_cmd = add_node_cmd(d);
 	cur_tok = d->list_token;
-	while (cur_tok && success)
+	while (cur_tok && valid_file)
 	{
 		if (PIPE == cur_tok->id)
 			cur_cmd = add_node_cmd(d);
@@ -28,16 +28,16 @@ bool	parser(t_data *d, bool success)
 		else if (ARGUMENT == cur_tok->id)
 			assign_arg(&(cur_cmd->cmd_arg), cur_tok->word);
 		else if (FILE_IN == cur_tok->id)
-			success = get_file_in(cur_cmd, cur_tok);
+			valid_file = get_file_in(d, cur_cmd, cur_tok);
 		else if (HEREDOC == cur_tok->id)
-			success = get_heredoc_input(cur_cmd, cur_tok, cur_tok->word);
+			get_heredoc_input(cur_cmd, cur_tok, cur_tok->word);
 		else if (FILE_APPEND == cur_tok->id)
-			success = get_append(cur_cmd, cur_tok);
+			get_append(d, cur_cmd, cur_tok);
 		else if (FILE_OUT == cur_tok->id)
-			success = get_file_out(cur_cmd, cur_tok);
+			get_file_out(d, cur_cmd, cur_tok);
 		cur_tok = cur_tok->next;
 	}
-	return (success);
+	return (valid_file);
 }
 
 /*assign command to structure*/

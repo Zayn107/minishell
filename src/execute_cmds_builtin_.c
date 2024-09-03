@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 18:02:48 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 16:08:10 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 13:06:46 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,12 @@ t_cmd	*process_builtin(t_data *d, t_cmd *node)
 {
 	node->process_child(d, node);
 	return (node->next);
+}
+
+bool	is_single_cmd(t_cmd *node)
+{
+	if (NULL == node->prev && NULL == node->next)
+		return (true);
+	else
+		return (false);
 }

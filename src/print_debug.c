@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:51:37 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 16:51:41 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 09:33:35 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ void	print_user_input(char *input)
 	int	width = 180;
 	const char *TITLE = "= user input ==";
 
-	p_color(3, false, 8, TITLE);
-	p_color(0,true,1, input);
+	e_p_color(3, false, 8, TITLE);
+	e_p_color(0,true,1, input);
 	while (width-- - ft_strlen(TITLE) - ft_strlen(input))
-		p_color(0, false, 8, "=");
+		e_p_color(0, false, 8, "=");
 	printf("\n");
 }
 
@@ -43,11 +43,11 @@ void	print_token_list(t_token *start, bool subword)
 	t_sub_list 	*cur_sub;
 
 	current = start;
-	p_color(3,false,8, TITLE);
+	e_p_color(3,false,8, TITLE);
 	len_title = ft_strlen(TITLE);
 	if (subword)
 	{
-		p_color(3,false,8, TITLE_EXTENT);
+		e_p_color(3,false,8, TITLE_EXTENT);
 		len_title += ft_strlen(TITLE_EXTENT);
 	}
 	while (width-- - len_title)
@@ -124,25 +124,25 @@ void	print_cmd_list(t_cmd *head)
 	int		idx;
 
 	node = head;
-	p_color(3,false,8, TITLE);
+	e_p_color(3,false,8, TITLE);
 	print_line(180 - ft_strlen(TITLE), '#');
 	while (node)
 	{
-		p_color(3,0,5, "PATH|");
-		p_color(1,1,5, node->cmd_path);
-		p_color(3,0,6, " CMD|");
-		p_color(1,1,6, node->cmd_arg[0]);
-		p_color(3,0,4, " ARG|");
+		e_p_color(3,0,5, "PATH|");
+		e_p_color(1,1,5, node->cmd_path);
+		e_p_color(3,0,6, " CMD|");
+		e_p_color(1,1,6, node->cmd_arg[0]);
+		e_p_color(3,0,4, " ARG|");
 		idx = 0;
 		while (NULL != node->cmd_arg[++idx])
 		{
-			p_color(1,1,4, node->cmd_arg[idx]);
+			e_p_color(1,1,4, node->cmd_arg[idx]);
 			printf(" ");
 		}
-		p_color(3,0,3, " FILE_IN|");
-		p_color(1,1,3, node->file_in);
-		p_color(3,0,2, " FILE_OUT|");
-		p_color(1,1,2, node->file_out);
+		e_p_color(3,0,3, " FILE_IN|");
+		e_p_color(1,1,3, node->file_in);
+		e_p_color(3,0,2, " FILE_OUT|");
+		e_p_color(1,1,2, node->file_out);
 		printf("\n");
 		print_line(180, '-');
 		node = node->next;

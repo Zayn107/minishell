@@ -20,6 +20,7 @@ SRC				= $(addprefix $(SRC_DIR), \
 				execute_cmds_.c \
 				execute_cmds_builtin_.c \
 				execute_cmds_builtin_env.c \
+				execute_cmds_builtin_exit.c \
 				execute_cmds_builtin_rest.c \
 				execute_cmds_pipes.c \
 				help_str.c \

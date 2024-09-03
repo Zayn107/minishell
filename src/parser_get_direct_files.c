@@ -6,24 +6,24 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 15:56:20 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 15:26:44 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	get_file_in(t_cmd *c_node, t_token *t_node)
+bool	get_file_in(t_data *d, t_cmd *c_node, t_token *t_node)
 {
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
-	c_node->file_in = ft_strdup(t_node->word);
-	if (-1 == access(c_node->file_in, F_OK))
-		return (bash_msg(c_node->file_in, ": No such file or directory"));
-	else if (-1 == access(c_node->file_in, R_OK))
-		return (bash_msg(c_node->file_in, ": Permission denied"));
+	if (-1 == access(t_node->word, F_OK))
+		return (e_msg1(d, t_node->word, ": No such file or directory"));
+	else if (-1 == access(t_node->word, R_OK))
+		return (e_msg1(d, t_node->word, ": Permission denied"));
 	c_node->fd_in = open(t_node->word, O_RDONLY);
 	if (-1 == errno)
 		return (e_msg("Failed to open file in 'get_file_in'"));
+	c_node->file_in = ft_strdup(t_node->word);
 	return (true);
 }
 
@@ -80,7 +80,7 @@ char	*create_heredoc_fname(bool *is_tmp_file_in)
 
 /*if file exist, check if read and write ok and open with fd flag "append",
 otherwise return false, else if not exist, create file with fd "append" flag*/
-bool	get_append(t_cmd *c_node, t_token *t_node)
+bool	get_append(t_data *d, t_cmd *c_node, t_token *t_node)
 {
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
@@ -89,10 +89,10 @@ bool	get_append(t_cmd *c_node, t_token *t_node)
 	if (0 == access(c_node->file_out, F_OK))
 	{
 		if (-1 == access(c_node->file_out, W_OK | R_OK))
-			return (bash_msg(c_node->file_out, ": Permission denied"));
+			return (e_msg1(d, c_node->file_out, ": Permission denied"));
 	}
 	else
-		return (bash_msg(c_node->file_out, ": No such file or directory"));
+		return (e_msg1(d, c_node->file_out, ": No such file or directory"));
 	if (-1 == errno)
 		return (e_msg("Failed to open file in 'get_append'"));
 	return (true);
@@ -101,7 +101,7 @@ bool	get_append(t_cmd *c_node, t_token *t_node)
 /*if file exist, check if read ok and open with fd flag 'read only', otherwise
 return false, else if not exist, create file with fd 'read only' flag. Unless
 directory in the path dose not exist.*/
-bool	get_file_out(t_cmd *c_node, t_token *t_node)
+bool	get_file_out(t_data *d, t_cmd *c_node, t_token *t_node)
 {
 	errno = 0;
 	free_old_direction(c_node, t_node->id);
@@ -110,10 +110,10 @@ bool	get_file_out(t_cmd *c_node, t_token *t_node)
 	if (0 == access(c_node->file_out, F_OK))
 	{
 		if (-1 == access(c_node->file_out, W_OK))
-			return (bash_msg(c_node->file_out, ": Permission denied"));
+			return (e_msg1(d, c_node->file_out, ": Permission denied"));
 	}
 	else
-		return (bash_msg(c_node->file_out, ": No such file or directory"));
+		return (e_msg1(d, c_node->file_out, ": No such file or directory"));
 	if (-1 == errno)
 		return (e_msg("Failed to open file in 'get_file_out'"));
 	return (true);

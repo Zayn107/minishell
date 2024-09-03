@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:16:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 16:06:28 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 13:31:01 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ void	builtin_export(t_data *d, t_cmd *node)
 	{
 		identifier = get_identifier_name(node->cmd_arg[arg]);
 		if (identifier_is_invalid(node->cmd_arg[arg]))
-			bash_msg3(\
+			e_msg3(d, \
 			"bash: export: `", node->cmd_arg[arg], "': not a valid identifier");
-		else if (identifier)
+		else if (identifier && is_single_cmd(node))
 		{
 			pos_env_tab = get_env_tab_pos(identifier, d->env);
 			if (NULL != pos_env_tab)
@@ -74,6 +74,8 @@ void	builtin_unset(t_data *d, t_cmd *node)
 
 	close(d->pip_in[READ]);
 	close(d->pip_out[WRITE]);
+	if (!is_single_cmd(node))
+		return;
 	arg = 1;
 	while (node->cmd_arg[arg])
 	{

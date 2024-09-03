@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:49:21 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 15:59:59 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 15:09:17 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,15 @@ void	dup_close_fd_child(t_data *d, t_cmd *node)
 {
 	close(d->pip_out[READ]);
 	if (node->fd_in != FD_NONE)
+	{
+		// printf("%s There is a fd_in, INPUT fd_in\n", node->cmd_arg[0]);
 		dup2(node->fd_in, STDIN_FILENO);
+	}
 	else if (node->prev && !(node->prev->sleep))
+	{
+		// printf("%s There is a cmd before, and it is not sleeping, INPUT pipe_in[READ]\n", node->cmd_arg[0]);
 		dup2(d->pip_in[READ], STDIN_FILENO);
+	}
 	if (node->fd_out != FD_NONE)
 		dup2(node->fd_out, STDOUT_FILENO);
 	else if (node->next)

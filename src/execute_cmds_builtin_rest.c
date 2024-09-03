@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:22:38 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 16:14:52 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 13:09:49 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,16 @@ void	builtin_cd(t_data *d, t_cmd *node)
 			free(path_home);
 		}
 		else
-			bash_msg(node->cmd_arg[0], ": missing argument");
+			e_msg1(d, node->cmd_arg[0], ": missing argument");
 	}
 	else if (NULL != node->cmd_arg[2])
-		bash_msg(node->cmd_arg[0], ": too many arguments");
+		e_msg1(d, node->cmd_arg[0], ": too many arguments");
 	else if (chdir(node->cmd_arg[1]))
 	{
 		if (EACCES == errno)
-			bash_msg3("bash: cd: ", node->cmd_arg[1], ": Permission denied");
+			e_msg3(d, "bash: cd: ", node->cmd_arg[1], ": Permission denied");
 		else if (ENOENT == errno)
-			bash_msg3(\
+			e_msg3(d, \
 			"bash: cd: ", node->cmd_arg[1], ": No such file or directory");
 	}
 }
@@ -68,27 +68,6 @@ void	builtin_pwd(t_data *d, t_cmd *node)
 	else
 		perror("getcwd() error");
 	close(d->pip_out[WRITE]);
-}
-
-void	builtin_exit(t_data *d, t_cmd *node)
-{
-	int	exit_code;
-
-	exit_code = 0;
-	if (node->cmd_arg[1])
-	{
-		if (is_digit(node->cmd_arg[1]))
-			exit_code = ft_atoi(node->cmd_arg[1]);
-		else
-		{
-			bash_msg3("bash: exit: ", node->cmd_arg[1], \
-				": numeric argument required");
-			exit_code = 255;
-		}
-	}
-	free_all_except_env(d);
-	free_tab(d->env);
-	exit(exit_code);
 }
 
 void	builtin_echo(t_data *d, t_cmd *node)

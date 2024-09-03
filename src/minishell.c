@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 16:49:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/03 16:01:47 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ bool	prompt_user(t_data *d)
 	lexer(d);
 	if (invalid_token(d))
 		return (true);
-	parser(d, true);
+	if (!parser(d, true))
+		return (free_all_except_env(d));
+
+	// print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	assign_builtin(d->list_cmd);
 	execute_cmds(d);
 	free_all_except_env(d);
@@ -46,7 +49,6 @@ void	init_data(t_data *d)
 	d->user_input = NULL;
 	d->list_token = NULL;
 	d->list_cmd = NULL;
-	d->exit_status = 0;
 	errno = 0;
 }
 

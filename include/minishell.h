@@ -5,7 +5,7 @@
 # define COLOR_PROMPT "\033[36;1m"
 # define C_ERROR "\033[36;1m"
 # define C_STOP "\033[0m"
-//colors for p_color
+//colors for e_p_color
 # define BLACK 0
 # define RED 1
 # define GREEN 2
@@ -15,7 +15,7 @@
 # define CYAN 6
 # define WHITE 8
 # define STOP "\033[0m"
-//style for p_color
+//style for e_p_color
 # define NORMALE 0
 # define BOLD 1
 # define ITALIC 3
@@ -158,15 +158,19 @@ char	*find_cmd_path(t_data *d, char *cmd);
 void	assign_arg(char ***cmd_arg, char *new_arg);
 bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token, char *delimiter);
 char	*create_heredoc_fname(bool *is_tmp_file_in);
-bool	get_append(t_cmd *c_node, t_token *t_node);
-bool	get_file_in(t_cmd *cur_cmd, t_token *cur_tok);
-bool	get_file_out(t_cmd *c_node, t_token *t_node);
+bool	get_append(t_data *d, t_cmd *c_node, t_token *t_node);
+bool	get_file_in(t_data *d, t_cmd *cur_cmd, t_token *cur_tok);
+bool	get_file_out(t_data *d, t_cmd *c_node, t_token *t_node);
 void	free_old_direction(t_cmd *node, int id);
 void	assign_builtin(t_cmd *node);
 char	*validate_env_path(char **env_tab, char *cmd);
 
 //BUILTIN
 void	builtin_exit(t_data *d, t_cmd *node);
+void	exit_program(t_data *d, t_cmd *node, int e_code, char *msg);
+int		atoi_real_n(const char *str, bool *is_digit);
+int		calculate_exit_status(int num);
+bool	is_single_cmd(t_cmd *node);
 
 //PRINT
 void	print_user_input(char *input);
@@ -174,25 +178,25 @@ void	print_token_list(t_token *start, bool subword);
 void	print_cmd_list(t_cmd *head);
 void	print_line(int width, char line_char);
 void	print_tab(char **tab);
-void	p_color(int weight, bool background, int color, const char *str);
-char	*style_str(int weight, bool background, int color);
+void	e_p_color(int weight, bool background, int color, const char *str);
 
 //FREE
 void	free_tab(char **tab);
 void	free_list_token_and_subword(t_token *head);
 void	free_list_sub_word(t_sub_list *head);
 void	free_cmd_list(t_cmd *head);
-void	free_all_except_env(t_data *d);
+bool	free_all_except_env(t_data *d);
 
 //ERROR
-bool	bash_msg(const char *word, const char *e_msg);
-bool	bash_msg1(const char *word, const char *e_msg);
-bool	bash_msg2(const char *word, const char *e_msg);
-bool 	bash_msg3(const char *s_start, const char *word, const char *s_end);
+bool	e_msg1(t_data *d, const char *word, const char *e_msg);
+bool	e_vali_msg(t_data *d, const char *word, const char *e_msg);
+bool	e_msg2(t_data *d, const char *word, const char *e_msg);
+bool	e_msg3(t_data *d, char *s_start, char *word, char *s_end);
 bool	e_msg(const char *e_message);
 bool	invalid_user_input(t_data *d, char *user_input);
 bool	invalid_token(t_data *d);
 char	*next_direction_character_or_new_line(t_token *current);
+void	e_bexit(t_data *d, char *msg, int error_code);
 
 //STRUCTURE
 void	add_node_token(t_data *d, int id, char *word);
