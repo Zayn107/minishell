@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 17:13:55 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/02 16:02:38 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/04 12:31:14 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	init_new_node_cmd(t_cmd *new_node)
 	new_node->cmd_path = NULL;
 	new_node->cmd_arg[0] = NULL;
 	new_node->cmd_arg[1] = NULL;
+	new_node->valid = true;
 	new_node->fd_in = FD_NONE;
 	new_node->fd_out = FD_NONE;
 	new_node->is_tmp_file_in = false;

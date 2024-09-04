@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_cmds_builtin_rest.c                        :+:      :+:    :+:   */
+/*   execute_builtin_rest.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:22:38 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 13:09:49 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/04 14:07:31 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void	builtin_cd(t_data *d, t_cmd *node)
 			free(path_home);
 		}
 		else
-			e_msg1(d, node->cmd_arg[0], ": missing argument");
+			e_fd_msg1(d, node->cmd_arg[0], ": missing argument");
 	}
 	else if (NULL != node->cmd_arg[2])
-		e_msg1(d, node->cmd_arg[0], ": too many arguments");
+		e_fd_msg1(d, node->cmd_arg[0], ": too many arguments");
 	else if (chdir(node->cmd_arg[1]))
 	{
 		if (EACCES == errno)
@@ -95,6 +95,7 @@ void	builtin_echo(t_data *d, t_cmd *node)
 			new_line = false;
 	write_echo(&(node->cmd_arg[arg]), fd, new_line);
 	close(d->pip_out[WRITE]);
+	d->exit_status = 0;
 }
 
 void	write_echo(char **argument, int fd, bool new_line)

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 16:01:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/04 13:44:22 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,11 @@ bool	prompt_user(t_data *d)
 	lexer(d);
 	if (invalid_token(d))
 		return (true);
-	if (!parser(d, true))
-		return (free_all_except_env(d));
+	parser(d);
 
 	// print_cmd_list(d->list_cmd); //print cmd list ///////////////////////////
 	assign_builtin(d->list_cmd);
-	execute_cmds(d);
+	execute(d);
 	free_all_except_env(d);
 	return (true);
 }
@@ -109,7 +108,7 @@ void	init_data(t_data *d)
 // 		return true;  //set to false for testing
 // 	parser(d, true);
 // 	assign_builtin(d->list_cmd);
-// 	execute_cmds(d);
+// 	execute(d);
 	
 // 	// PRINT STATEMENTS FOR DEBUGGING //////////////////////////////////////////
 // 	// print_tab(d->env); //print (at start) copied environment table //////////

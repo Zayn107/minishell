@@ -6,38 +6,38 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:43:15 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 15:57:24 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/04 13:39:11 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-bool	parser(t_data *d, bool valid_file)
+//c_node is the current cmd node which is created when there is a new pipe
+void	parser(t_data *d)
 {
-	t_token	*cur_tok;
-	t_cmd	*cur_cmd;
+	t_token	*t_node;
+	t_cmd	*c_node;
 
-	cur_cmd = add_node_cmd(d);
-	cur_tok = d->list_token;
-	while (cur_tok && valid_file)
+	c_node = add_node_cmd(d);
+	t_node = d->list_token;
+	while (t_node)
 	{
-		if (PIPE == cur_tok->id)
-			cur_cmd = add_node_cmd(d);
-		else if (COMMAND == cur_tok->id)
-			assign_cmd(d, cur_cmd, cur_tok->word);
-		else if (ARGUMENT == cur_tok->id)
-			assign_arg(&(cur_cmd->cmd_arg), cur_tok->word);
-		else if (FILE_IN == cur_tok->id)
-			valid_file = get_file_in(d, cur_cmd, cur_tok);
-		else if (HEREDOC == cur_tok->id)
-			get_heredoc_input(cur_cmd, cur_tok, cur_tok->word);
-		else if (FILE_APPEND == cur_tok->id)
-			get_append(d, cur_cmd, cur_tok);
-		else if (FILE_OUT == cur_tok->id)
-			get_file_out(d, cur_cmd, cur_tok);
-		cur_tok = cur_tok->next;
+		if (PIPE == t_node->id)
+			c_node = add_node_cmd(d);
+		else if (c_node->valid && COMMAND == t_node->id)
+			assign_cmd(d, c_node, t_node->word);
+		else if (c_node->valid && ARGUMENT == t_node->id)
+			assign_arg(&(c_node->cmd_arg), t_node->word);
+		else if (c_node->valid && FILE_IN == t_node->id)
+			get_file_in(d, c_node, t_node);
+		else if (HEREDOC == t_node->id)
+			get_heredoc_input(c_node, t_node, t_node->word);
+		else if (c_node->valid && FILE_APPEND == t_node->id)
+			get_append(d, c_node, t_node);
+		else if (c_node->valid && FILE_OUT == t_node->id)
+			get_file_out(d, c_node, t_node);
+		t_node = t_node->next;
 	}
-	return (valid_file);
 }
 
 /*assign command to structure*/
@@ -47,6 +47,7 @@ void	assign_cmd(t_data *d, t_cmd *node, char *cmd)
 	node->cmd_path = find_cmd_path(d, cmd);
 }
 
+//there can be only one in or out direction in cmd, replace previous one
 void	free_old_direction(t_cmd *node, int id)
 {
 	if (HEREDOC == id || FILE_IN == id)

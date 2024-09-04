@@ -14,6 +14,19 @@ All **out-direction** files are created, if they not already exist.
 All **heredoc**s are executed (*user needs to type input*) but only the last one gets used.  
 No information is passed to the **pipe** if there is an **out-direction** before it (*but pipe is executed*).
 
+### 2.1 In-direction file not valid!
+- The "command chain" in which the invalid in-file is present is not executed.
+- Heredocs are executed regardless, but new files are only created before "invalid in-file" not after.
+- All commands before and after the invalid chain are executed.  
+- They are piped up to the point of the invalid command chain and from after but there is no connection through the invalid chain.  
+- The exit-status is set accordant to the last command.  
+- A valid in-file need to have read permission.  
+
+### 2.2 Out-direction file without write permission
+- Heredocs are executed regardless, but new files are only created before not after out-file with missing write permission  
+- Command in is not executed, error msg logged: "`bash: FILE: Permission denied`"
+- Commands before and after are executed but no information is passed trough the chain with missing permission  
+- This also applies for append (out-direction), read direction is not needed for append.  
 
 ### Example:
 ![example command structure rule](./img/cmd_rule_structure_bash.png)  
@@ -31,6 +44,7 @@ There are 3 files with the following content: `file1` -> "`txt1`" , `file2` -> "
 	- Is not a existing file nor a valid argument, but it is passed as augment to the command. When executing the command **later**, the cat command will throw an error, but still continue with the rest of the execution / command (`file3`).  
 	`cat: fffff: No such file or directory`  
 - `file3` : **4th ARGUMENT**
+
 
 ## 3. Variables
 There are 3 types of variables:

@@ -67,6 +67,7 @@
 #include <sys/wait.h>
 #include <limits.h>
 #include <sys/ioctl.h>
+#include <dirent.h>
 #include <fcntl.h>						// for open()
 
 typedef struct s_token
@@ -97,6 +98,7 @@ typedef struct s_cmd
 	// cmd[0] => path + cmd, cmd[1] => arg, cmd[2] => NULL
 	char			*cmd_path;		// MALLOC!! path + /cmd (one string)
 	char			**cmd_arg;		// MALLOC!! tab[0]=cmd; tab[1]=args; tab[2]=NULL
+	bool			valid;			//is valid command?
 	int				fd_in;
 	int				fd_out;
 	bool			is_tmp_file_in;	// true, remove file after use
@@ -152,15 +154,15 @@ bool	mark_word_cmd_arg(t_token *current, bool found_cmd);
 void	find_variable(t_sub_list *cur);
 
 //PARSER
-bool	parser(t_data *d, bool success);
+void	parser(t_data *d);
 void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
 char	*find_cmd_path(t_data *d, char *cmd);
 void	assign_arg(char ***cmd_arg, char *new_arg);
-bool	get_heredoc_input(t_cmd *n_cmd, t_token *n_token, char *delimiter);
+void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter);
 char	*create_heredoc_fname(bool *is_tmp_file_in);
-bool	get_append(t_data *d, t_cmd *c_node, t_token *t_node);
-bool	get_file_in(t_data *d, t_cmd *cur_cmd, t_token *cur_tok);
-bool	get_file_out(t_data *d, t_cmd *c_node, t_token *t_node);
+void	get_append(t_data *d, t_cmd *c_node, t_token *t_node);
+void	get_file_in(t_data *d, t_cmd *c_node, t_token *t_node);
+void	get_file_out(t_data *d, t_cmd *c_node, t_token *t_node);
 void	free_old_direction(t_cmd *node, int id);
 void	assign_builtin(t_cmd *node);
 char	*validate_env_path(char **env_tab, char *cmd);
@@ -188,11 +190,12 @@ void	free_cmd_list(t_cmd *head);
 bool	free_all_except_env(t_data *d);
 
 //ERROR
-bool	e_msg1(t_data *d, const char *word, const char *e_msg);
+bool	e_fd_msg1(t_data *d, const char *word, const char *e_msg);
 bool	e_vali_msg(t_data *d, const char *word, const char *e_msg);
+bool	e_msg1(const char *word, const char *e_msg);
 bool	e_msg2(t_data *d, const char *word, const char *e_msg);
 bool	e_msg3(t_data *d, char *s_start, char *word, char *s_end);
-bool	e_msg(const char *e_message);
+void	e_msg(const char *e_message);
 bool	invalid_user_input(t_data *d, char *user_input);
 bool	invalid_token(t_data *d);
 char	*next_direction_character_or_new_line(t_token *current);
@@ -231,9 +234,11 @@ void	builtin_pwd(t_data *d, t_cmd *node);
 void	write_echo(char **argument, int fd, bool new_line);
 void	wait_while_process_is_sleeping(t_cmd *head);
 
+t_cmd	*skip_invalid_cmd(t_data *d, t_cmd *node, bool valid_cmd);
+
 //PIPING
 void	shell_cmd(t_data *d, t_cmd *node);
-void	execute_cmds(t_data *d);
+void	execute(t_data *d);
 bool	are_you_sleeping(pid_t pid);
 void	write_fd1_to_fd2(int fd_1, bool close_1, int fd_2, bool close_2);
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node);

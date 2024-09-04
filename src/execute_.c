@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_cmds_.c                                    :+:      :+:    :+:   */
+/*   execute_.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 15:31:29 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/04 16:41:25 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	execute_cmds(t_data *d)
+void	execute(t_data *d)
 {
 	t_cmd	*cmd_node;
 
 	cmd_node = d->list_cmd;
 	while (cmd_node)
 	{
-		if (NULL == cmd_node->cmd_arg[0])
-			cmd_node = cmd_node->next;
+		if (NULL == cmd_node->cmd_arg[0] || !cmd_node->valid)
+			cmd_node = skip_invalid_cmd(d, cmd_node, cmd_node->valid);
 		else
 		{
 			create_pipes(d, cmd_node);
@@ -39,6 +39,13 @@ void	execute_cmds(t_data *d)
 			close(d->pip_out[READ]);
 	}
 	wait_while_process_is_sleeping(d->list_cmd);
+}
+
+t_cmd	*skip_invalid_cmd(t_data *d, t_cmd *node, bool valid_cmd)
+{
+	if (!valid_cmd)
+		d->exit_status = 1;
+	return (node->next);
 }
 
 t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
@@ -61,13 +68,63 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 
 void	shell_cmd(t_data *d, t_cmd *node)
 {
+	// char	*msg;
+
 	dup_close_fd_child(d, node);
 	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
 	{
-		dup2(STDERR_FILENO, STDOUT_FILENO);
-		e_msg2(d, node->cmd_arg[0], ": command not found");
+			// dup2(STDERR_FILENO, STDOUT_FILENO);
+		//file does not exist
+		printf("errno: %d\n", errno);
+		if (-1 == access(node->cmd_arg[0], F_OK))
+		{
+			e_msg1(node->cmd_arg[0], ": command not found");
+			exit(127);
+		}
+		else
+		{
+			if (EISDIR == errno)
+			{
+				e_msg1(node->cmd_arg[0], ": Is a directory");
+				exit(126);
+			}
+			else if (ENOEXEC == errno)
+			{
+				e_msg1(node->cmd_arg[0], ": command not found");
+				exit(127);
+			}
+			else if (EACCES == errno)
+			{
+				e_msg1(node->cmd_arg[0], ": Permission denied");
+				exit(126);
+			}
+		}
+		//is a directory
+		// else if (NULL != opendir(node->cmd_arg[0]))
+		// {
+		// 	e_msg1(node->cmd_arg[0], ": Is a directory");
+		// 	exit(126);
+		// }
+		// else if (0 == access(node->cmd_arg[0], F_OK))
+		// //no execute permission
+		// else if (-1 == access(node->cmd_arg[0], X_OK))
+		// {
+		// 	e_msg1(node->cmd_arg[0], ": Permission denied");
+		// 	exit(126);
+		// }
+		perror("");
+		exit(errno);
+		// if (22 == errno)
+		// strerror(errno);
+		// msg = ft_strjoin("bash: ", node->cmd_arg[0]);
+		// perror(msg);
+		// // write(2, msg, ft_strlen(msg));
+		// // perror("something went wrong");
+		// free(msg);
+		// // e_msg2(d, node->cmd_arg[0], ": command not found");
 	}
-	exit(127);
+	// exit(127);
+	// exit(errno);
 }
 
 void	wait_while_process_is_sleeping(t_cmd *head)

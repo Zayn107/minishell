@@ -17,12 +17,12 @@ SRC				= $(addprefix $(SRC_DIR), \
 				parser_.c \
 				parser_get_direct_files.c \
 				parser_path.c \
-				execute_cmds_.c \
-				execute_cmds_builtin_.c \
-				execute_cmds_builtin_env.c \
-				execute_cmds_builtin_exit.c \
-				execute_cmds_builtin_rest.c \
-				execute_cmds_pipes.c \
+				execute_.c \
+				execute_builtin_.c \
+				execute_builtin_env.c \
+				execute_builtin_exit.c \
+				execute_builtin_rest.c \
+				execute_pipes.c \
 				help_str.c \
 				help_.c )
 # OBJECTS
