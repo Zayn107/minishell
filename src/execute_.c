@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 16:41:25 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/06 10:08:53 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,9 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 
 void	shell_cmd(t_data *d, t_cmd *node)
 {
-	// char	*msg;
-
 	dup_close_fd_child(d, node);
 	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
 	{
-			// dup2(STDERR_FILENO, STDOUT_FILENO);
-		//file does not exist
-		printf("errno: %d\n", errno);
 		if (-1 == access(node->cmd_arg[0], F_OK))
 		{
 			e_msg1(node->cmd_arg[0], ": command not found");
@@ -99,32 +94,9 @@ void	shell_cmd(t_data *d, t_cmd *node)
 				exit(126);
 			}
 		}
-		//is a directory
-		// else if (NULL != opendir(node->cmd_arg[0]))
-		// {
-		// 	e_msg1(node->cmd_arg[0], ": Is a directory");
-		// 	exit(126);
-		// }
-		// else if (0 == access(node->cmd_arg[0], F_OK))
-		// //no execute permission
-		// else if (-1 == access(node->cmd_arg[0], X_OK))
-		// {
-		// 	e_msg1(node->cmd_arg[0], ": Permission denied");
-		// 	exit(126);
-		// }
 		perror("");
 		exit(errno);
-		// if (22 == errno)
-		// strerror(errno);
-		// msg = ft_strjoin("bash: ", node->cmd_arg[0]);
-		// perror(msg);
-		// // write(2, msg, ft_strlen(msg));
-		// // perror("something went wrong");
-		// free(msg);
-		// // e_msg2(d, node->cmd_arg[0], ": command not found");
 	}
-	// exit(127);
-	// exit(errno);
 }
 
 void	wait_while_process_is_sleeping(t_cmd *head)
