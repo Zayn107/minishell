@@ -1,6 +1,6 @@
 EXE		=	add_history chdir dir fstat getcwd getenv rl_on_new_line \
 			rl_replace_line stat unlink init_env open_dir substr execev \
-			passing_str append write atoi access
+			passing_str append write atoi access signalhandler ctrl_d readline
 FLAG	=	-Werror -Wextra -Wall
 LIB		= -L./../libft -lft
 

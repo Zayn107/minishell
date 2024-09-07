@@ -61,7 +61,7 @@ fclean: clean
 re: fclean $(NAME)
 
 val:
-	valgrind -s --suppressions=readline.supp ./minishell
+	valgrind -s --leak-check=full --suppressions=readline.supp ./minishell
 
 norm:
 	clear && norminette main src

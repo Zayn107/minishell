@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:56:21 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 10:04:06 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 20:12:52 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,21 @@ bool	invalid_user_input(t_data *d, char *user_input)
 	int	idx;
 
 	idx = 0;
-	while (user_input[idx])
+	if (NULL == user_input)
 	{
-		if (' ' != user_input[idx])
-			return (false);
-		idx++;
+		free_all_except_env(d);
+		free_tab(d->env);
+		exit(0);
+	}
+	if (user_input)
+	{
+		printf("|%s|len: %ld\n", user_input, ft_strlen(user_input));
+		while (user_input[idx])
+		{
+			if (' ' != user_input[idx])
+				return (false);
+			idx++;
+		}
 	}
 	free_all_except_env(d);
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 12:52:16 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 16:46:34 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,26 @@ void	shell_cmd(t_data *d, t_cmd *node)
 		{
 			e_msg1(node->cmd_arg[0], ": command not found");
 			exit(127);
+		}
+		else if (EISDIR == errno)
+		{
+			e_msg1(node->cmd_arg[0], ": Is a directory");
+			exit(126);
+		}
+		else if (node->cmd_arg[0][0] != '.' && node->cmd_arg[0][1] != '/')
+		{
+			DIR *dir = opendir(node->cmd_arg[0]);
+			if (NULL != dir)
+			{
+				e_msg1(node->cmd_arg[0], ": Is a directory");
+				closedir(dir);
+				exit(126);
+			}
+			else
+			{
+				e_msg1(node->cmd_arg[0], ": command not found");
+				exit(127);
+			}
 		}
 		else
 		{

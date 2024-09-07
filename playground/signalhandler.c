@@ -1,22 +1,35 @@
-#include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <unistd.h>
+#include <stdio.h>
 
-void sighandler(int);
-
-int main () {
-	signal(SIGINT, sighandler);
-
-	while(1) {
-	printf("Going to sleep for a second...\n");
-	   sleep(1); 
-	}
-	return(0);
+void handle_signal(int signum) {
+    printf("Caught signal %d\n", signum);
+    // Here you can implement custom behavior
 }
 
-void sighandler(int signum)
-{
-	printf("Caught signal %d, coming out...\n", signum);
-	exit(1);
+int main() {
+    struct sigaction sa;
+
+    // Set up the structure to specify the new action.
+    sa.sa_handler = handle_signal;
+    sa.sa_flags = 0; // Or SA_RESTART
+
+    // Block every signal during the handler
+    sigemptyset(&sa.sa_mask);
+
+    // Set up the signal handler for SIGINT
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
+        perror("Error in sigaction");
+        exit(EXIT_FAILURE);
+    }
+
+    // Infinite loop to keep the program running to test signal handling
+    int counter = 20;
+    while (counter--) {
+        printf("Running...\n");
+        sleep(2);
+    }
+
+    return 0;
 }
