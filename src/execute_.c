@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/06 10:08:53 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 12:52:16 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	execute(t_data *d)
 					cmd_node = process_parent(d, cmd_node);
 			}
 		}
-		if (NULL == cmd_node)
+		if (NULL == cmd_node && d->is_pip_out)
 			close(d->pip_out[READ]);
 	}
 	wait_while_process_is_sleeping(d->list_cmd);

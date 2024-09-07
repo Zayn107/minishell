@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:16:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 13:45:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 11:29:02 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,17 @@ void	builtin_env(t_data *d, t_cmd *node)
 {
 	int		idx;
 	int		fd;
-	bool	close_pipe_out;
+	// bool	close_pipe_out;
 
 	idx = 0;
-	close_pipe_out = true;
+	// close_pipe_out = true;
 	close(d->pip_in[READ]);
 	if (node->fd_out != FD_NONE)
 		fd = node->fd_out;
 	else if (node->next)
 	{
 		fd = d->pip_out[WRITE];
-		close_pipe_out = false;
+		// close_pipe_out = false;
 	}
 	else
 		fd = STDOUT_FILENO;

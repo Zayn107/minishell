@@ -60,10 +60,13 @@ fclean: clean
 
 re: fclean $(NAME)
 
+val:
+	valgrind -s --suppressions=readline.supp ./minishell
+
 norm:
 	clear && norminette main src
 
-.PHONY: all clean fclean re norm
+.PHONY: all clean fclean re norm val
 
 # YOU NEED to compile with the "-lreadline" flag which needs to be last!!
 # e.g. cc readline.c -o main -lreadline

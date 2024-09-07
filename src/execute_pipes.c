@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:49:21 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 13:46:56 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 12:47:56 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,14 @@
 void	create_pipes(t_data *d, t_cmd *cmd_node)
 {
 	pipe(d->pip_in);
-	if (cmd_node->prev && cmd_node->prev->cmd_arg[0])
+	if (cmd_node->prev && cmd_node->prev->cmd_arg[0] && cmd_node->prev->valid)
 	{
 		if (!cmd_node->prev->sleep)
 			write_fd1_to_fd2(d->pip_out[READ], false, d->pip_in[WRITE], false);
 		close(d->pip_out[READ]);
 	}
 	close(d->pip_in[WRITE]);
+	d->is_pip_out = true;
 	pipe(d->pip_out);
 }
 

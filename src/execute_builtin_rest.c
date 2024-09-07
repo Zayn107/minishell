@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:22:38 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 14:07:31 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 11:32:47 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ void	builtin_pwd(t_data *d, t_cmd *node)
 {
 	int		fd;
 	char	*buffer;
-	bool	close_pipe_out;
+	// bool	close_pipe_out;
 
-	close_pipe_out = true;
+	// close_pipe_out = true;
 	close(d->pip_in[READ]);
 	if (node->fd_out != FD_NONE)
 		fd = node->fd_out;
 	else if (node->next)
 	{
 		fd = d->pip_out[WRITE];
-		close_pipe_out = false;
+		// close_pipe_out = false;
 	}
 	else
 		fd = STDOUT_FILENO;
@@ -74,11 +74,11 @@ void	builtin_echo(t_data *d, t_cmd *node)
 {
 	int		fd;
 	int		arg;
-	bool	close_pipe_out;
+	// bool	close_pipe_out;
 	bool	new_line;
 
 	arg = 1;
-	close_pipe_out = true;
+	// close_pipe_out = true;
 	new_line = true;
 	close(d->pip_in[READ]);
 	if (node->fd_out != FD_NONE)
@@ -86,7 +86,7 @@ void	builtin_echo(t_data *d, t_cmd *node)
 	else if (node->next)
 	{
 		fd = d->pip_out[WRITE];
-		close_pipe_out = false;
+		// close_pipe_out = false;
 	}
 	else
 		fd = STDOUT_FILENO;

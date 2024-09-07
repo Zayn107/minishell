@@ -117,8 +117,9 @@ typedef struct s_data
 	int				exit_status;	// replace with the last, do not reset
 	struct s_cmd	*list_cmd;		// MALLOC!! list of commands
 	struct s_token	*list_token;	// MALLOC!! list of tokens
-	int				pip_out[2];		// fd for pipe to be used for child output
 	int				pip_in[2];		// fd for pipe to be used for child input
+	int				pip_out[2];		// fd for pipe to be used for child output
+	bool			is_pip_out;		// true if there is a pipe out
 	struct s_env	*list_env;		// MALLOC!! list of env variables
 } t_data;
 

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/06 10:17:00 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 12:34:28 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool	prompt_user(t_data *d)
 {
 	init_data(d);
 	d->user_input = readline("MINISHELL=> ");
-	// d->user_input = ft_strdup("echo hello | wc");
+	// d->user_input = ft_strdup("cat < ljjlllklk");
 	if (invalid_user_input(d, d->user_input))
 		return (true);
 	add_history(d->user_input);
@@ -49,6 +49,7 @@ void	init_data(t_data *d)
 	d->user_input = NULL;
 	d->list_token = NULL;
 	d->list_cmd = NULL;
+	d->is_pip_out = false;
 	errno = 0;
 }
 
