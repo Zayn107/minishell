@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 12:34:28 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/07 22:20:25 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	main(const int argc, char *argv[], char *arge[])
 
 	(void) argc;
 	(void) argv;
+	init_signal();
 	copy_env(&data, arge);
 	while (prompt_user(&data))
 		;

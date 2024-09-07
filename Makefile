@@ -13,6 +13,7 @@ SRC				= $(addprefix $(SRC_DIR), \
 				lexer_cut_variable_subwords.c \
 				lexer_cut_variable_subwords_more.c \
 				struct.c \
+				signal.c \
 				validate.c \
 				parser_.c \
 				parser_get_direct_files.c \

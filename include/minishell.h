@@ -246,4 +246,8 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node);
 void	create_pipes(t_data *d, t_cmd *cmd_node);
 void	dup_close_fd_child(t_data *d, t_cmd *node);
 
+//SIGNAL
+void	init_signal(void);
+void	handle_signal(int signum);
+
 #endif
