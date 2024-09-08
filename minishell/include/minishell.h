@@ -205,4 +205,10 @@ char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 void	TEST_add_node(char *path, char *cmd_arg, char *f_in, char *f_out, t_data *d);
 void	execute_node_from_cmd_list(t_cmd *node);
 void	free_cmd_list(t_cmd *head);
+
+// Signals
+void	signals_to_default(void);
+void	sigint_handler(int sig);
+void	init_signals(void);
+typedef struct sigaction        t_sigaction;
 #endif
