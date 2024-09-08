@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 16:46:34 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/08 14:39:10 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,7 @@ void	wait_while_process_is_sleeping(t_cmd *head)
 	cmd_node = head;
 	while (cmd_node)
 	{
+		signal_all_children(head);
 		if (cmd_node->sleep)
 		{
 			cmd_node->sleep = are_you_sleeping(cmd_node->pid);

@@ -1,6 +1,9 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+// GLOBAL VARIABLE
+extern int		sig_to_children;
+
 # define STR_PROMPT "<MINISHELL>"
 # define COLOR_PROMPT "\033[36;1m"
 # define C_ERROR "\033[36;1m"
@@ -247,7 +250,9 @@ void	create_pipes(t_data *d, t_cmd *cmd_node);
 void	dup_close_fd_child(t_data *d, t_cmd *node);
 
 //SIGNAL
-void	init_signal(void);
-void	handle_signal(int signum);
+void	switch_signals(int sig_num);
+// void	new_prompt(int signum);
+void	new_prompt(int signum);
+void	signal_all_children(t_cmd *head);
 
 #endif

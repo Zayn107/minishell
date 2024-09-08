@@ -6,15 +6,16 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 19:16:32 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 22:19:10 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/08 16:25:54 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	handle_signal(int signum)
+// void	new_prompt(int signum)
+void	new_prompt(int sig_num)
 {
-	(void) signum;
+	(void) sig_num;
 
 	write(2, "\n", 1);
 	rl_on_new_line();
@@ -22,27 +23,43 @@ void	handle_signal(int signum)
 	rl_redisplay();
 }
 
-void	init_signal(void)
+void	signal_children(int sig_num)
 {
-	struct sigaction sa;
+	(void) sig_num;
+	sig_to_children = sig_num;
+	write(1, "\n", 1);
+}
 
-	// Set up the structure to specify the new action.
-	sa.sa_handler = handle_signal;
-	sa.sa_flags = 0; // Or SA_RESTART
-
-	// Block every signal during the handler
-	sigemptyset(&sa.sa_mask);
-
-	// Set up the signal handler for SIGINT
-	if (sigaction(SIGINT, &sa, NULL) == -1) {
-		perror("Error in sigaction");
-		exit(EXIT_FAILURE);
+void	switch_signals(int sig_mum)
+{
+	if (1 == sig_mum)
+	{
+		// signal(SIGINT ,new_prompt);
+		signal(SIGINT ,new_prompt);
+		signal(SIGQUIT, SIG_IGN);
 	}
+	else if (2 == sig_mum)
+	{
+		signal(SIGINT ,signal_children);
+		signal(SIGQUIT, SIG_IGN);
+	}
+}
 
-	// Infinite loop to keep the program running to test signal handling
-	// int counter = 20;
-	// while (counter--) {
-	//     printf("Running...\n");
-	//     sleep(2);
-	// }
+void	signal_all_children(t_cmd *head)
+{
+	t_cmd	*node;
+
+	node = head;
+	if (sig_to_children)
+	{
+		// rl_replace_line("", 0);
+		// rl_redisplay();
+		while (node)
+		{
+			kill(node->pid, sig_to_children);
+			node->sleep = false;
+			node = node->next;
+		}
+	}
+	sig_to_children = 0;
 }

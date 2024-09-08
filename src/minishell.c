@@ -6,11 +6,14 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 22:20:25 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/08 16:57:32 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+// GLOBAL VARIABLE
+int		sig_to_children;
 
 int	main(const int argc, char *argv[], char *arge[])
 {
@@ -18,7 +21,6 @@ int	main(const int argc, char *argv[], char *arge[])
 
 	(void) argc;
 	(void) argv;
-	init_signal();
 	copy_env(&data, arge);
 	while (prompt_user(&data))
 		;
@@ -30,6 +32,7 @@ bool	prompt_user(t_data *d)
 	init_data(d);
 	d->user_input = readline("MINISHELL=> ");
 	// d->user_input = ft_strdup("cat < ljjlllklk");
+	switch_signals(2);
 	if (invalid_user_input(d, d->user_input))
 		return (true);
 	add_history(d->user_input);
@@ -51,8 +54,15 @@ void	init_data(t_data *d)
 	d->list_token = NULL;
 	d->list_cmd = NULL;
 	d->is_pip_out = false;
+	sig_to_children = 0;
+	switch_signals(1);
 	errno = 0;
 }
+
+//TODO:
+/*
+-> TAB input displays the files and directories, is not coming from history
+*/
 
 //for debugging only, NOT for submit
 // bool	prompt_user(t_data *d)
