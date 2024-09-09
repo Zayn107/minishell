@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 12:22:47 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 13:46:12 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 10:47:34 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	builtin_exit(t_data *d, t_cmd *node)
 
 void	exit_program(t_data *d, t_cmd *node, int e_code, char *msg)
 {
+	write(1, "exit\n", 5);
 	if (msg)
 	{
 		e_p_color(E_STY, E_BAC, E_COL, "bash: exit: ");

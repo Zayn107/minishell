@@ -4,7 +4,7 @@
 // GLOBAL VARIABLE
 extern int		sig_to_children;
 
-# define STR_PROMPT "<MINISHELL>"
+# define STR_PROMPT "\033[36;1mMINISHELL=>\033[0m"
 # define COLOR_PROMPT "\033[36;1m"
 # define C_ERROR "\033[36;1m"
 # define C_STOP "\033[0m"

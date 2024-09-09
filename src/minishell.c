@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/08 16:57:32 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 11:05:01 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,7 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
-	d->user_input = readline("MINISHELL=> ");
-	// d->user_input = ft_strdup("cat < ljjlllklk");
+	d->user_input = readline(STR_PROMPT);
 	switch_signals(2);
 	if (invalid_user_input(d, d->user_input))
 		return (true);

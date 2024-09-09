@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 14:12:43 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 09:48:29 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 14:06:54 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,27 @@ char	**remove_entry_from_env(char **env, char *entry)
 	free(entry);
 	return (new_env_tab);
 }
+
+// char	*get_env_tab_pos(char *identifier, char **env)
+// {
+// 	int		row;
+// 	char	*varname;
+// 	char	*var;
+
+// 	row = 0;
+// 	while (env[row])
+// 	{
+// 		var = env[row];
+// 		varname = ft_substr(var, 0, ft_strchr(var, '=') - &(var[0]));
+// 		printf("varname %s, identifier %s\n", varname, identifier);
+// 		if (varname && ft_strlen(varname) == ft_strlen(identifier))
+// 			if ((0 == ft_strncmp(env[row], identifier, ft_strlen(identifier))))
+// 				return (env[row]);
+// 		free(varname);
+// 		row++;
+// 	}
+// 	return (NULL);
+// }
 
 char	*get_env_tab_pos(char *identifier, char **env)
 {

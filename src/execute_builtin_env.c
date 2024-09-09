@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:16:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 11:29:02 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 13:51:10 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,25 @@
 
 void	builtin_env(t_data *d, t_cmd *node)
 {
-	int		idx;
+	int		row;
 	int		fd;
-	// bool	close_pipe_out;
 
-	idx = 0;
-	// close_pipe_out = true;
+	row = 0;
 	close(d->pip_in[READ]);
 	if (node->fd_out != FD_NONE)
 		fd = node->fd_out;
 	else if (node->next)
-	{
 		fd = d->pip_out[WRITE];
-		// close_pipe_out = false;
-	}
 	else
 		fd = STDOUT_FILENO;
-	while (d->env[idx])
+	while (d->env[row])
 	{
-		write(fd, d->env[idx], ft_strlen(d->env[idx]));
+		write(fd, d->env[row], ft_strlen(d->env[row]));
 		write(fd, "\n", 1);
-		idx++;
+		row++;
 	}
 	close(d->pip_out[WRITE]);
+	d->exit_status = 0;
 }
 
 void	builtin_export(t_data *d, t_cmd *node)
@@ -45,6 +41,7 @@ void	builtin_export(t_data *d, t_cmd *node)
 	char	*identifier;
 	char	*pos_env_tab;
 
+	d->exit_status = 0;
 	close(d->pip_in[READ]);
 	close(d->pip_out[WRITE]);
 	arg = 1;
@@ -67,6 +64,7 @@ void	builtin_export(t_data *d, t_cmd *node)
 	}
 }
 
+//exit status is 0 even if it is not removing var, does nothing in a pipe
 void	builtin_unset(t_data *d, t_cmd *node)
 {
 	int		arg;
@@ -74,6 +72,7 @@ void	builtin_unset(t_data *d, t_cmd *node)
 
 	close(d->pip_in[READ]);
 	close(d->pip_out[WRITE]);
+	d->exit_status = 0;
 	if (!is_single_cmd(node))
 		return;
 	arg = 1;

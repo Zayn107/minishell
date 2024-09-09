@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:22:38 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 11:32:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 12:13:11 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	builtin_cd(t_data *d, t_cmd *node)
 		{
 			chdir(path_home);
 			free(path_home);
+			d->exit_status = 0;
 		}
 		else
 			e_fd_msg1(d, node->cmd_arg[0], ": missing argument");
@@ -68,6 +69,7 @@ void	builtin_pwd(t_data *d, t_cmd *node)
 	else
 		perror("getcwd() error");
 	close(d->pip_out[WRITE]);
+	d->exit_status = 0;
 }
 
 void	builtin_echo(t_data *d, t_cmd *node)
@@ -108,8 +110,8 @@ void	write_echo(char **argument, int fd, bool new_line)
 		write(fd, argument[num], ft_strlen(argument[num]));
 		if (argument[num + 1])
 			write(fd, " ", 1);
-		else if (new_line)
-			write(fd, "\n", 1);
 		num++;
 	}
+	if (new_line)
+		write(fd, "\n", 1);
 }

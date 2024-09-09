@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 19:16:32 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/08 16:25:54 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 11:23:23 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,21 +27,21 @@ void	signal_children(int sig_num)
 {
 	(void) sig_num;
 	sig_to_children = sig_num;
-	write(1, "\n", 1);
+	if (SIGINT == sig_num)
+		write(1, "\n", 1);
 }
 
 void	switch_signals(int sig_mum)
 {
 	if (1 == sig_mum)
 	{
-		// signal(SIGINT ,new_prompt);
 		signal(SIGINT ,new_prompt);
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (2 == sig_mum)
 	{
 		signal(SIGINT ,signal_children);
-		signal(SIGQUIT, SIG_IGN);
+		signal(SIGQUIT, signal_children);
 	}
 }
 
