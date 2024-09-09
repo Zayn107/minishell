@@ -4,7 +4,7 @@ HEADER			= include/minishell.h
 # SOURCE
 SRC_DIR			= src/
 SRC				= $(addprefix $(SRC_DIR), \
-				minishell.c free.c error.c env.c \
+				minishell.c free.c error_1.c error_2.c env.c \
 				print_.c \
 				print_debug.c \
 				lexer_.c \
@@ -23,6 +23,7 @@ SRC				= $(addprefix $(SRC_DIR), \
 				execute_builtin_env.c \
 				execute_builtin_exit.c \
 				execute_builtin_rest.c \
+				execute_helper.c \
 				execute_pipes.c \
 				help_str.c \
 				help_.c )

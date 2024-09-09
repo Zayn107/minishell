@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error.c                                            :+:      :+:    :+:   */
+/*   error_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 16:01:41 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 13:56:47 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 20:43:54 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,23 +59,4 @@ bool	e_msg3(t_data *d, char *s_start, char *word, char *s_end)
 	write(2, "\n", 1);
 	d->exit_status = 1;
 	return (false);
-}
-
-/*return: 'false' "bash: " + e_msg + word + '\n'*/
-bool	e_vali_msg(t_data *d, const char *word, const char *e_msg)
-{
-	e_p_color(E_STY, E_BAC, E_COL, "bash: ");
-	e_p_color(E_STY, E_BAC, E_COL, e_msg);
-	e_p_color(E_STY, E_BAC, E_COL, word);
-	write(2, "\n", 1);
-	d->exit_status = 2;
-	return (false);
-}
-
-void	e_bexit(t_data *d, char *msg, int error_code)
-{
-	e_p_color(E_STY, E_BAC, E_COL, "bash: exit: ");
-	e_p_color(E_STY, E_BAC, E_COL, msg);
-	write(2, "\n", 1);
-	d->exit_status = error_code;
 }

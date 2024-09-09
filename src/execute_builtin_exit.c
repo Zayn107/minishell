@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 12:22:47 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 10:47:34 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 21:34:00 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	exit_program(t_data *d, t_cmd *node, int e_code, char *msg)
 	{
 		close(d->pip_in[READ]);
 		close(d->pip_out[WRITE]);
-		return;
+		return ;
 	}
 	free_all_except_env(d);
 	free_tab(d->env);
@@ -101,5 +101,4 @@ int	calculate_exit_status(int num)
 		rest = num % 255;
 		return (256 - rest);
 	}
-
 }

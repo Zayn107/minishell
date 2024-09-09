@@ -205,6 +205,8 @@ bool	invalid_user_input(t_data *d, char *user_input);
 bool	invalid_token(t_data *d);
 char	*next_direction_character_or_new_line(t_token *current);
 void	e_bexit(t_data *d, char *msg, int error_code);
+void	e_msg_and_exit(char *cmd, char *e_msg, int e_code);
+void	exit_if_directory_or_not_cmd(char *cmd);
 
 //STRUCTURE
 void	add_node_token(t_data *d, int id, char *word);
@@ -218,9 +220,6 @@ void	trim_str(char **str, char *cut_str);
 char	*cut_str(char *str, int start);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 bool	is_digit(char *str);
-// 
-// void	replace_s1_with_s2(char **str1, char *str2);
-void	replace_s1_with_s2(char *str1, char *str2);
 void	remove_tmp_files(t_cmd *head);
 
 //BUILTIN

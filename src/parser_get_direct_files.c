@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 20:05:57 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 21:29:00 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter)
 		write(1, "> ", 2);
 		buffer = get_next_line(STDIN_FILENO);
 		if (NULL == buffer)
-			break;
+			break ;
 		if (0 == ft_strncmp(buffer, delimiter, ft_strlen(delimiter)))
 			break ;
 		write(c_node->fd_in, buffer, ft_strlen(buffer));
@@ -91,13 +91,15 @@ otherwise return false, else if not exist, create file with fd "append" flag*/
 void	get_append(t_data *d, t_cmd *c_node, t_token *t_node)
 {
 	if (0 == access(t_node->word, F_OK))
+	{
 		if (-1 == access(t_node->word, W_OK))
 		{
 			d->exit_status = 1;
 			c_node->valid = false;
 			e_msg1(t_node->word, ": Permission denied");
-			return;
+			return ;
 		}
+	}
 	free_old_direction(c_node, t_node->id);
 	c_node->file_out = ft_strdup(t_node->word);
 	c_node->fd_out = open(t_node->word, O_CREAT | O_APPEND | O_RDWR, 0664);
@@ -109,13 +111,15 @@ directory in the path dose not exist.*/
 void	get_file_out(t_data *d, t_cmd *c_node, t_token *t_node)
 {
 	if (0 == access(t_node->word, F_OK))
+	{
 		if (-1 == access(t_node->word, W_OK))
 		{
 			d->exit_status = 1;
 			c_node->valid = false;
 			e_msg1(t_node->word, ": Permission denied");
-			return;
+			return ;
 		}
+	}
 	free_old_direction(c_node, t_node->id);
 	c_node->file_out = ft_strdup(t_node->word);
 	c_node->fd_out = open(t_node->word, O_CREAT | O_WRONLY | O_TRUNC, 0664);

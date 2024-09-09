@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/08 14:39:10 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 21:25:11 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ t_cmd	*process_parent(t_data *d, t_cmd *cmd_node)
 	{
 		wait(&status);
 		d->exit_status = WEXITSTATUS(status);
-		//printf("cmd: %s, stat: %d exit stat: %d\n", cmd_node->cmd_arg[0], WEXITSTATUS(status), d->exit_status);
 	}
 	else
 		close(d->pip_out[READ]);
@@ -72,96 +71,21 @@ void	shell_cmd(t_data *d, t_cmd *node)
 	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
 	{
 		if (-1 == access(node->cmd_arg[0], F_OK))
-		{
-			e_msg1(node->cmd_arg[0], ": command not found");
-			exit(127);
-		}
+			e_msg_and_exit(node->cmd_arg[0], ": command not found", 127);
 		else if (EISDIR == errno)
-		{
-			e_msg1(node->cmd_arg[0], ": Is a directory");
-			exit(126);
-		}
+			e_msg_and_exit(node->cmd_arg[0], ": Is a directory", 126);
 		else if (node->cmd_arg[0][0] != '.' && node->cmd_arg[0][1] != '/')
-		{
-			DIR *dir = opendir(node->cmd_arg[0]);
-			if (NULL != dir)
-			{
-				e_msg1(node->cmd_arg[0], ": Is a directory");
-				closedir(dir);
-				exit(126);
-			}
-			else
-			{
-				e_msg1(node->cmd_arg[0], ": command not found");
-				exit(127);
-			}
-		}
+			exit_if_directory_or_not_cmd(node->cmd_arg[0]);
 		else
 		{
 			if (EISDIR == errno)
-			{
-				e_msg1(node->cmd_arg[0], ": Is a directory");
-				exit(126);
-			}
+				e_msg_and_exit(node->cmd_arg[0], ": Is a directory", 126);
 			else if (ENOEXEC == errno)
-			{
-				e_msg1(node->cmd_arg[0], ": command not found");
-				exit(127);
-			}
+				e_msg_and_exit(node->cmd_arg[0], ": command not found", 127);
 			else if (EACCES == errno)
-			{
-				e_msg1(node->cmd_arg[0], ": Permission denied");
-				exit(126);
-			}
+				e_msg_and_exit(node->cmd_arg[0], ": Permission denied", 126);
 		}
 		perror("");
 		exit(errno);
 	}
-}
-
-void	wait_while_process_is_sleeping(t_cmd *head)
-{
-	t_cmd	*cmd_node;
-
-	cmd_node = head;
-	while (cmd_node)
-	{
-		signal_all_children(head);
-		if (cmd_node->sleep)
-		{
-			cmd_node->sleep = are_you_sleeping(cmd_node->pid);
-			// printf("%s is still sleeping, pid: %d\n", cmd_node->cmd_arg[0], cmd_node->pid);
-			cmd_node = head;
-			continue ;
-		}
-		cmd_node = cmd_node->next;
-	}
-}
-
-bool	are_you_sleeping(pid_t pid)
-{
-	char	*path;
-	char	*str_pid;
-	char	*buffer;
-	int		fd;
-	bool	is_sleeping;
-
-	is_sleeping = false;
-	str_pid = ft_itoa(pid);
-	buffer = ft_strdup("/proc/");
-	path = join_free(&buffer, true, &str_pid, true);
-	buffer = ft_strdup("/status");
-	path = join_free(&path, true, &buffer, true);
-	fd = open(path, O_RDONLY);
-	free(path);
-	buffer = get_next_line(fd);
-	while (buffer)
-	{
-		if (ft_strnstr(buffer, "S (sleeping)", ft_strlen(buffer)))
-			is_sleeping = true;
-		free(buffer);
-		buffer = get_next_line(fd);
-	}
-	close(fd);
-	return (is_sleeping);
 }
