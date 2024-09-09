@@ -5,6 +5,7 @@
 extern int		sig_to_children;
 
 # define STR_PROMPT "\033[36;1mMINISHELL=>\033[0m"
+// # define STR_PROMPT "\033[36;3mz\033[0m\033[46;1mSHELL\033[0m\033[36;1m=>\033[0m"
 # define COLOR_PROMPT "\033[36;1m"
 # define C_ERROR "\033[36;1m"
 # define C_STOP "\033[0m"

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 14:05:12 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 20:05:57 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter)
 	{
 		write(1, "> ", 2);
 		buffer = get_next_line(STDIN_FILENO);
+		if (NULL == buffer)
+			break;
 		if (0 == ft_strncmp(buffer, delimiter, ft_strlen(delimiter)))
 			break ;
 		write(c_node->fd_in, buffer, ft_strlen(buffer));
