@@ -218,7 +218,8 @@ char	*cut_str(char *str, int start);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 bool	is_digit(char *str);
 // 
-void	replace_s1_with_s2(char **str1, char *str2);
+// void	replace_s1_with_s2(char **str1, char *str2);
+void	replace_s1_with_s2(char *str1, char *str2);
 void	remove_tmp_files(t_cmd *head);
 
 //BUILTIN
@@ -228,9 +229,10 @@ void	assign_builtin(t_cmd *head);
 t_cmd	*process_builtin(t_data *d, t_cmd *node);
 void	builtin_export(t_data *d, t_cmd *node);
 char	*get_env_tab_pos(char *identifier, char **env);
+bool	found_replace_var_env(char *var, char *identifier, t_data *d);
 char	*get_identifier_name(char *str);
 bool	identifier_is_invalid(const char *str);
-void	add_to_env(t_data *d, char *var);
+void	add_var_to_env(t_data *d, char *var);
 void	builtin_unset(t_data *d, t_cmd *node);
 char	**remove_entry_from_env(char **env, char *entry);
 void	builtin_cd(t_data *d, t_cmd *node);

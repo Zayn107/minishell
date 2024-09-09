@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:16:31 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 13:51:10 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/09 18:49:26 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	builtin_export(t_data *d, t_cmd *node)
 {
 	int		arg;
 	char	*identifier;
-	char	*pos_env_tab;
 
 	d->exit_status = 0;
 	close(d->pip_in[READ]);
@@ -53,15 +52,30 @@ void	builtin_export(t_data *d, t_cmd *node)
 			"bash: export: `", node->cmd_arg[arg], "': not a valid identifier");
 		else if (identifier && is_single_cmd(node))
 		{
-			pos_env_tab = get_env_tab_pos(identifier, d->env);
-			if (NULL != pos_env_tab)
-				replace_s1_with_s2(&pos_env_tab, node->cmd_arg[arg]);
-			else
-				add_to_env(d, node->cmd_arg[arg]);
+			if (!found_replace_var_env(node->cmd_arg[arg], identifier, d))
+				add_var_to_env(d, node->cmd_arg[arg]);
 		}
 		free(identifier);
 		arg++;
 	}
+}
+
+bool	found_replace_var_env(char *var, char *identifier, t_data *d)
+{
+	int	row;
+
+	row = 0;
+	while (d->env[row])
+	{
+		if ((0 == ft_strncmp(d->env[row], identifier, ft_strlen(identifier))))
+		{
+			free(d->env[row]);
+			d->env[row] = ft_strdup(var);
+			return (true);
+		}
+		row++;
+	}
+	return (false);
 }
 
 //exit status is 0 even if it is not removing var, does nothing in a pipe
