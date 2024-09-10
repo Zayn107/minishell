@@ -2,7 +2,7 @@
 # define MINISHELL_H
 
 // GLOBAL VARIABLE
-extern int		sig_to_children;
+extern int		g_sig_to_children;
 
 # define STR_PROMPT "\033[36;1mMINISHELL=>\033[0m"
 // # define STR_PROMPT "\033[36;3mz\033[0m\033[46;1mSHELL\033[0m\033[36;1m=>\033[0m"
@@ -180,11 +180,6 @@ int		calculate_exit_status(int num);
 bool	is_single_cmd(t_cmd *node);
 
 //PRINT
-void	print_user_input(char *input);
-void	print_token_list(t_token *start, bool subword);
-void	print_cmd_list(t_cmd *head);
-void	print_line(int width, char line_char);
-void	print_tab(char **tab);
 void	e_p_color(int weight, bool background, int color, const char *str);
 
 //FREE
@@ -221,6 +216,7 @@ char	*cut_str(char *str, int start);
 char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 bool	is_digit(char *str);
 void	remove_tmp_files(t_cmd *head);
+bool	entry_match_var_name(char *entry, char *var_name);
 
 //BUILTIN
 void	builtin_echo(t_data *d, t_cmd *node);
@@ -234,13 +230,17 @@ char	*get_identifier_name(char *str);
 bool	identifier_is_invalid(const char *str);
 void	add_var_to_env(t_data *d, char *var);
 void	builtin_unset(t_data *d, t_cmd *node);
-char	**remove_entry_from_env(char **env, char *entry);
+char	**remove_entry_env(char **env, char *var_name);
 void	builtin_cd(t_data *d, t_cmd *node);
 void	builtin_pwd(t_data *d, t_cmd *node);
 void	write_echo(char **argument, int fd, bool new_line);
 void	wait_while_process_is_sleeping(t_cmd *head);
-
+void	close_pipes(int pip1, int pip2);
 t_cmd	*skip_invalid_cmd(t_data *d, t_cmd *node, bool valid_cmd);
+void	if_env_cd_home(t_data *d, t_cmd *node);
+void	update_pwd_and_oldpwd(t_data *d, char *path);
+bool	has_var_name(char **env, char *var_name);
+void	handle_chdir_errors(t_data *d, char *path, int e_code);
 
 //PIPING
 void	shell_cmd(t_data *d, t_cmd *node);

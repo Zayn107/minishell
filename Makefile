@@ -4,9 +4,9 @@ HEADER			= include/minishell.h
 # SOURCE
 SRC_DIR			= src/
 SRC				= $(addprefix $(SRC_DIR), \
-				minishell.c free.c error_1.c error_2.c env.c \
+				minishell.c free.c error_1.c error_2.c \
+				env_.c env_help\
 				print_.c \
-				print_debug.c \
 				lexer_.c \
 				lexer_cut_quotes_subwords.c \
 				lexer_cut_user_input_into_token.c \
@@ -21,6 +21,8 @@ SRC				= $(addprefix $(SRC_DIR), \
 				execute_.c \
 				execute_builtin_.c \
 				execute_builtin_env.c \
+				execute_builtin_env_help.c \
+				execute_builtin_dir.c \
 				execute_builtin_exit.c \
 				execute_builtin_rest.c \
 				execute_helper.c \

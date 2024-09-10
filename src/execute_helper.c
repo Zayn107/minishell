@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 21:23:58 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 21:25:08 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/10 09:53:31 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,10 @@ bool	are_you_sleeping(pid_t pid)
 	}
 	close(fd);
 	return (is_sleeping);
+}
+
+void	close_pipes(int pip1, int pip2)
+{
+	close(pip1);
+	close(pip2);
 }

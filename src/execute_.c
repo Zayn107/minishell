@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/24 17:46:18 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 21:25:11 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/10 11:10:17 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,22 +70,23 @@ void	shell_cmd(t_data *d, t_cmd *node)
 	dup_close_fd_child(d, node);
 	if ((execve(node->cmd_path, node->cmd_arg, d->env) == -1))
 	{
-		if (-1 == access(node->cmd_arg[0], F_OK))
-			e_msg_and_exit(node->cmd_arg[0], ": command not found", 127);
-		else if (EISDIR == errno)
-			e_msg_and_exit(node->cmd_arg[0], ": Is a directory", 126);
-		else if (node->cmd_arg[0][0] != '.' && node->cmd_arg[0][1] != '/')
-			exit_if_directory_or_not_cmd(node->cmd_arg[0]);
-		else
+		if ((node->cmd_arg[0][0] == '.' && node->cmd_arg[0][1] == '/')
+			|| (node->cmd_arg[0][0] == '/'))
 		{
-			if (EISDIR == errno)
-				e_msg_and_exit(node->cmd_arg[0], ": Is a directory", 126);
-			else if (ENOEXEC == errno)
-				e_msg_and_exit(node->cmd_arg[0], ": command not found", 127);
-			else if (EACCES == errno)
-				e_msg_and_exit(node->cmd_arg[0], ": Permission denied", 126);
+			if (opendir(node->cmd_arg[0]))
+				e_msg_and_exit(node->cmd_arg[0], \
+					": Is a directory", 126);
+			else if (0 == access(node->cmd_arg[0], F_OK))
+			{
+				if (-1 == access(node->cmd_arg[0], X_OK))
+					e_msg_and_exit(node->cmd_arg[0], \
+						": Permission denied", 126);
+			}
+			else
+				e_msg_and_exit(node->cmd_arg[0], \
+					": No such file or directory", 127);
 		}
-		perror("");
-		exit(errno);
+		else
+			e_msg_and_exit(node->cmd_arg[0], ": command not found", 127);
 	}
 }

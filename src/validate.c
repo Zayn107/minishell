@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 13:56:21 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/07 20:30:04 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/10 09:30:06 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@ bool	invalid_user_input(t_data *d, char *user_input)
 		exit(0);
 	}
 	if (user_input)
+	{
 		while (user_input[idx])
 		{
 			if (' ' != user_input[idx])
 				return (false);
 			idx++;
 		}
+	}
 	free_all_except_env(d);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 19:16:32 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 11:23:23 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/10 09:33:15 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void	new_prompt(int sig_num)
 {
 	(void) sig_num;
-
 	write(2, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -26,7 +25,7 @@ void	new_prompt(int sig_num)
 void	signal_children(int sig_num)
 {
 	(void) sig_num;
-	sig_to_children = sig_num;
+	g_sig_to_children = sig_num;
 	if (SIGINT == sig_num)
 		write(1, "\n", 1);
 }
@@ -35,12 +34,12 @@ void	switch_signals(int sig_mum)
 {
 	if (1 == sig_mum)
 	{
-		signal(SIGINT ,new_prompt);
+		signal(SIGINT, new_prompt);
 		signal(SIGQUIT, SIG_IGN);
 	}
 	else if (2 == sig_mum)
 	{
-		signal(SIGINT ,signal_children);
+		signal(SIGINT, signal_children);
 		signal(SIGQUIT, signal_children);
 	}
 }
@@ -50,16 +49,14 @@ void	signal_all_children(t_cmd *head)
 	t_cmd	*node;
 
 	node = head;
-	if (sig_to_children)
+	if (g_sig_to_children)
 	{
-		// rl_replace_line("", 0);
-		// rl_redisplay();
 		while (node)
 		{
-			kill(node->pid, sig_to_children);
+			kill(node->pid, g_sig_to_children);
 			node->sleep = false;
 			node = node->next;
 		}
 	}
-	sig_to_children = 0;
+	g_sig_to_children = 0;
 }

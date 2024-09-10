@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env_.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 14:12:43 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 18:52:01 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/10 15:41:43 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,20 @@ char	*env_value(t_data *d, char *var_name)
 	return (NULL);
 }
 
+bool	has_var_name(char **env, char *var_name)
+{
+	int	row;
+
+	row = 0;
+	while (env[row])
+	{
+		if (entry_match_var_name(env[row], var_name))
+			return (true);
+		row++;
+	}
+	return (false);
+}
+
 //malloc var and add to d->env
 void	add_var_to_env(t_data *d, char *var)
 {
@@ -75,7 +89,7 @@ void	add_var_to_env(t_data *d, char *var)
 	d->env = new_env;
 }
 
-char	**remove_entry_from_env(char **env, char *entry)
+char	**remove_entry_env(char **env, char *var_name)
 {
 	int		len;
 	int		idx;
@@ -90,28 +104,15 @@ char	**remove_entry_from_env(char **env, char *entry)
 	new_env_tab = (char **) malloc(sizeof(char *) * len);
 	while (env[idx])
 	{
-		if ((0 == ft_strncmp(env[idx], entry, ft_strlen(entry))) && idx++)
+		if (entry_match_var_name(env[idx], var_name))
+		{
+			free(env[idx]);
+			idx++;
 			continue ;
-		new_env_tab[idx_new] = env[idx];
-		idx++;
-		idx_new++;
+		}
+		new_env_tab[idx_new++] = env[idx++];
 	}
 	new_env_tab[len - 1] = NULL;
 	free(env);
-	free(entry);
 	return (new_env_tab);
-}
-
-char	*get_env_tab_pos(char *identifier, char **env)
-{
-	int	row;
-
-	row = 0;
-	while (env[row])
-	{
-		if ((0 == ft_strncmp(env[row], identifier, ft_strlen(identifier))))
-			return (env[row]);
-		row++;
-	}
-	return (NULL);
 }
