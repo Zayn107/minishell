@@ -4,8 +4,9 @@ HEADER			= include/minishell.h
 # SOURCE
 SRC_DIR			= src/
 SRC				= $(addprefix $(SRC_DIR), \
+				heredoc_var.c \
 				minishell.c free.c error_1.c error_2.c \
-				env_.c env_help\
+				env_.c env_help.c\
 				print_.c \
 				lexer_.c \
 				lexer_cut_quotes_subwords.c \
