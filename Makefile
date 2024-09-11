@@ -4,7 +4,8 @@ HEADER			= include/minishell.h
 # SOURCE
 SRC_DIR			= src/
 SRC				= $(addprefix $(SRC_DIR), \
-				heredoc_var.c \
+				heredoc_var_.c \
+				heredoc_var_cut_str_doc_list.c \
 				minishell.c free.c error_1.c error_2.c \
 				env_.c env_help.c\
 				print_.c \

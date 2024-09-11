@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 14:37:11 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/03 09:33:35 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/11 16:32:12 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,26 @@ void	e_p_color(int weight, bool background, int color, const char *str)
 		write(2, "NULL", 4);
 	write(2, stop_style, ft_strlen(stop_style));
 	free(style);
+}
+
+void	print_doc_list(t_doc **head)
+{
+	t_doc	*node;
+
+	node = *head;
+	printf("print doc list:\n");
+	while (node)
+	{
+		printf("word: %s ", node->word);
+		if (node->id == WORD)
+			printf("WORD");
+		else if (node->id == VAR)
+			printf("VAR");
+		else if (node->id == VAR_EXIT)
+			printf("VAR_EXIT");
+		else if (node->id == INV_VAR)
+			printf("INV_VAR");
+		printf("\n");
+		node = node->next;
+	}
 }

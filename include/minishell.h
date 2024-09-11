@@ -269,9 +269,13 @@ void	signal_all_children(t_cmd *head);
 bool	delimiter_stop_writing(t_data *d, char *buffer, char *delimiter, int fd);
 void	free_doc_list(t_doc **head);
 char	*join_doc_list(char *buffer, t_doc **head);
-void	cut_str_into_doc_list(char *str, t_doc **head);
+void	cut_str_into_doc_list(char *str, t_doc **head, int sta_str, int sta_var);
 void	evaluate_var_doc_list(t_data *d, t_doc **head);
 void	add_node_doc(t_doc **head, int id, char *word);
 void	print_doc_list(t_doc **head);
+int		add_var_to_doc_list(t_doc **head, char *str, int idx, int start_var);
+void	add_word_to_doc_list(t_doc **head, char *str, int idx, int start_str);
+int		add_var_exit_to_doc_list(t_doc **head, char *str, int idx, int start_var);
+int		add_inv_var_to_doc_list(t_doc **head, char *str, int idx, int start_var);
 
 #endif
