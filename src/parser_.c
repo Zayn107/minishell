@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:43:15 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/04 13:39:11 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/11 13:20:14 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	parser(t_data *d)
 		else if (c_node->valid && FILE_IN == t_node->id)
 			get_file_in(d, c_node, t_node);
 		else if (HEREDOC == t_node->id)
-			get_heredoc_input(c_node, t_node, t_node->word);
+			get_heredoc_input(d, c_node, t_node, t_node->word);
 		else if (c_node->valid && FILE_APPEND == t_node->id)
 			get_append(d, c_node, t_node);
 		else if (c_node->valid && FILE_OUT == t_node->id)

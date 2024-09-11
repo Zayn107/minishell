@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 21:29:00 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/11 14:42:50 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	get_file_in(t_data *d, t_cmd *c_node, t_token *t_node)
 	}
 }
 
-void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter)
+void	get_heredoc_input(t_data *d, t_cmd *c_node, t_token *t_node, char *deli)
 {
 	char	*buffer;
 
@@ -51,12 +51,14 @@ void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter)
 		buffer = get_next_line(STDIN_FILENO);
 		if (NULL == buffer)
 			break ;
-		if (0 == ft_strncmp(buffer, delimiter, ft_strlen(delimiter)))
+		// if (0 == ft_strncmp(buffer, deli, ft_strlen(deli)))
+		// 	break ;
+		// write(node->fd_in, buffer, ft_strlen(buffer));
+		// free(buffer);
+		if (delimiter_stop_writing(d, buffer, deli, c_node->fd_in))
 			break ;
-		write(c_node->fd_in, buffer, ft_strlen(buffer));
-		free(buffer);
 	}
-	free(buffer);
+	// free(buffer);
 	close(c_node->fd_in);
 	c_node->fd_in = open(c_node->file_in, O_RDONLY, 0777);
 	if (-1 == errno)

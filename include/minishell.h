@@ -66,7 +66,7 @@ extern int		g_sig_to_children;
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <unistd.h>
-#include <stdbool.h>
+#include <stdbool.h>	
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <limits.h>
@@ -127,6 +127,13 @@ typedef struct s_data
 	struct s_env	*list_env;		// MALLOC!! list of env variables
 } t_data;
 
+typedef struct s_doc
+{
+	char			*word;
+	int				id;
+	struct s_doc	*prev;
+	struct s_doc	*next;
+} t_doc;
 
 
 bool	prompt_user(t_data *data);
@@ -163,7 +170,8 @@ void	parser(t_data *d);
 void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
 char	*find_cmd_path(t_data *d, char *cmd);
 void	assign_arg(char ***cmd_arg, char *new_arg);
-void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter);
+// void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter);
+void	get_heredoc_input(t_data *d, t_cmd *c_node, t_token *t_node, char *deli);
 char	*create_heredoc_fname(bool *is_tmp_file_in);
 void	get_append(t_data *d, t_cmd *c_node, t_token *t_node);
 void	get_file_in(t_data *d, t_cmd *c_node, t_token *t_node);
@@ -256,5 +264,14 @@ void	switch_signals(int sig_num);
 // void	new_prompt(int signum);
 void	new_prompt(int signum);
 void	signal_all_children(t_cmd *head);
+
+//HEREDOC get input, evaluate var
+bool	delimiter_stop_writing(t_data *d, char *buffer, char *delimiter, int fd);
+void	free_doc_list(t_doc **head);
+char	*join_doc_list(char *buffer, t_doc **head);
+void	cut_str_into_doc_list(char *str, t_doc **head);
+void	evaluate_var_doc_list(t_data *d, t_doc **head);
+void	add_node_doc(t_doc **head, int id, char *word);
+void	print_doc_list(t_doc **head);
 
 #endif
