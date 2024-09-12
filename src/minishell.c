@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 13:33:10 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/10 09:37:10 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:58:24 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	main(const int argc, char *argv[], char *arge[])
 bool	prompt_user(t_data *d)
 {
 	init_data(d);
+	switch_signals(1);
 	d->user_input = readline(STR_PROMPT);
 	switch_signals(2);
 	if (invalid_user_input(d, d->user_input))
@@ -52,7 +53,6 @@ void	init_data(t_data *d)
 	d->list_cmd = NULL;
 	d->is_pip_out = false;
 	g_sig_to_children = 0;
-	switch_signals(1);
 	errno = 0;
 }
 

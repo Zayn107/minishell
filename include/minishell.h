@@ -1,11 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/12 12:18:54 by zkepes            #+#    #+#             */
+/*   Updated: 2024/09/12 13:27:23 by zkepes           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "../libft/libft.h"
+# include <stdio.h>
+# include <stdlib.h>
+# include <signal.h>
+# include <errno.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <unistd.h>
+# include <stdbool.h>	
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <limits.h>
+# include <sys/ioctl.h>
+# include <dirent.h>
+# include <fcntl.h>						// for open()
+
 // GLOBAL VARIABLE
-extern int		g_sig_to_children;
+extern int				g_sig_to_children;
 
 # define STR_PROMPT "\033[36;1mMINISHELL=>\033[0m"
-// # define STR_PROMPT "\033[36;3mz\033[0m\033[46;1mSHELL\033[0m\033[36;1m=>\033[0m"
 # define COLOR_PROMPT "\033[36;1m"
 # define C_ERROR "\033[36;1m"
 # define C_STOP "\033[0m"
@@ -58,22 +85,6 @@ extern int		g_sig_to_children;
 # define WRITE 1
 # define _GNU_SOURCE					// is needed for "struct sigaction"
 
-#include "../libft/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <errno.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <unistd.h>
-#include <stdbool.h>	
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <limits.h>
-#include <sys/ioctl.h>
-#include <dirent.h>
-#include <fcntl.h>						// for open()
-
 typedef struct s_token
 {
 	int					id;				// use Macros to identify type
@@ -91,23 +102,23 @@ typedef struct s_sub_list
 	struct s_sub_list	*next;
 }	t_sub_list;
 
-
-typedef struct s_data t_data;
-typedef struct s_cmd t_cmd;
-typedef void (*ptr_process_f)(t_data *d, t_cmd *node);	// definition for function pointer, builtin
+typedef struct s_cmd	t_cmd;
+typedef struct s_data	t_data;
+// definition for function pointer, builtin
+typedef void			*t_ptr_process_f(t_data *d, t_cmd *node);
 
 typedef struct s_cmd
 {
-	ptr_process_f	process_child;	// function pointer for builtin
+	t_ptr_process_f	process_child;	// function pointer for builtin
 	// cmd[0] => path + cmd, cmd[1] => arg, cmd[2] => NULL
-	char			*cmd_path;		// MALLOC!! path + /cmd (one string)
-	char			**cmd_arg;		// MALLOC!! tab[0]=cmd; tab[1]=args; tab[2]=NULL
+	char			*cmd_path;		// MAL! path + /cmd (one string)
+	char			**cmd_arg;		// MAL! tab[0]=cmd; tab[1]=args; tab[2]=NULL
 	bool			valid;			//is valid command?
 	int				fd_in;
 	int				fd_out;
 	bool			is_tmp_file_in;	// true, remove file after use
-	char			*file_in;		// MALLOC!! for debugging only
-	char			*file_out;		// MALLOC!! for debugging only
+	char			*file_in;		// MAL! for debugging only
+	char			*file_out;		// MAL! for debugging only
 	pid_t			pid;			// process id
 	bool			sleep;
 	struct s_cmd	*prev;			// previous node in the list
@@ -116,16 +127,16 @@ typedef struct s_cmd
 
 typedef struct s_data
 {
-	char			**env;			// MALLOC!! list of env variables
-	char			*user_input;	// MALLOC!! user input string
+	char			**env;			// MAL! list of env variables
+	char			*user_input;	// MAL! user input string
 	int				exit_status;	// replace with the last, do not reset
-	struct s_cmd	*list_cmd;		// MALLOC!! list of commands
-	struct s_token	*list_token;	// MALLOC!! list of tokens
+	struct s_cmd	*list_cmd;		// MAL! list of commands
+	struct s_token	*list_token;	// MAL! list of tokens
 	int				pip_in[2];		// fd for pipe to be used for child input
 	int				pip_out[2];		// fd for pipe to be used for child output
 	bool			is_pip_out;		// true if there is a pipe out
-	struct s_env	*list_env;		// MALLOC!! list of env variables
-} t_data;
+	struct s_env	*list_env;		// MAL! list of env variables
+}	t_data;
 
 typedef struct s_doc
 {
@@ -133,8 +144,7 @@ typedef struct s_doc
 	int				id;
 	struct s_doc	*prev;
 	struct s_doc	*next;
-} t_doc;
-
+}	t_doc;
 
 bool	prompt_user(t_data *data);
 void	init_data(t_data *data);
@@ -149,13 +159,13 @@ void	prompt_if_pipe_last(t_data *d);
 void	cut_user_input_into_token(t_data *d);
 void	cut_quotes_subwords(t_sub_list **node, char *word);
 void	cut_input_add_list_token(t_data *d, int token, int skip);
-void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int len);
-void	add_quo_node_s_word(char *word, t_sub_list **node_s, int start, int len);
+void	add_str_node_s_word(char *word, t_sub_list **node_s, int start, int le);
+void	add_quo_node_s_word(char *word, t_sub_list **node_s, int start, int le);
 void	cut_var_exit(t_sub_list **cur, char **tmp);
 void	cut_variable_subwords(t_sub_list **head, int id_token);
 void	join_subwords(t_sub_list **head, t_token **node);
-void	cut_invalid_var(t_sub_list **cur, char **tmp,  char *idx_var);
-void	cut_var(t_sub_list **cur, char **tmp,  char *idx_var);
+void	cut_invalid_var(t_sub_list **cur, char **tmp, char *idx_var);
+void	cut_var(t_sub_list **cur, char **tmp, char *idx_var);
 void	cut_string_before_var(t_sub_list **cur, char **tmp, char *idx_var);
 void	insert_node_sub_word(t_sub_list *node, int sub_id, char *sub_word);
 void	add_remaining_string(t_sub_list **cur, char **tmp);
@@ -171,7 +181,7 @@ void	assign_cmd(t_data *d, t_cmd *node, char *cmd);
 char	*find_cmd_path(t_data *d, char *cmd);
 void	assign_arg(char ***cmd_arg, char *new_arg);
 // void	get_heredoc_input(t_cmd *c_node, t_token *t_node, char *delimiter);
-void	get_heredoc_input(t_data *d, t_cmd *c_node, t_token *t_node, char *deli);
+void	get_heredoc_input(t_data *d, t_cmd *c_node, t_token *t_node, char *del);
 char	*create_heredoc_fname(bool *is_tmp_file_in);
 void	get_append(t_data *d, t_cmd *c_node, t_token *t_node);
 void	get_file_in(t_data *d, t_cmd *c_node, t_token *t_node);
@@ -261,21 +271,20 @@ void	dup_close_fd_child(t_data *d, t_cmd *node);
 
 //SIGNAL
 void	switch_signals(int sig_num);
-// void	new_prompt(int signum);
 void	new_prompt(int signum);
 void	signal_all_children(t_cmd *head);
 
 //HEREDOC get input, evaluate var
-bool	delimiter_stop_writing(t_data *d, char *buffer, char *delimiter, int fd);
+bool	delimiter_stop_writing(t_data *d, char *buffer, char *del, int fd);
 void	free_doc_list(t_doc **head);
 char	*join_doc_list(char *buffer, t_doc **head);
-void	cut_str_into_doc_list(char *str, t_doc **head, int sta_str, int sta_var);
+void	cut_str_into_doc_list(char *str, t_doc **head, int st_str, int st_var);
 void	evaluate_var_doc_list(t_data *d, t_doc **head);
 void	add_node_doc(t_doc **head, int id, char *word);
 void	print_doc_list(t_doc **head);
 int		add_var_to_doc_list(t_doc **head, char *str, int idx, int start_var);
 void	add_word_to_doc_list(t_doc **head, char *str, int idx, int start_str);
-int		add_var_exit_to_doc_list(t_doc **head, char *str, int idx, int start_var);
-int		add_inv_var_to_doc_list(t_doc **head, char *str, int idx, int start_var);
+int		add_var_exit_to_doc_list(t_doc **head, char *str, int i, int start_var);
+int		add_inv_var_to_doc_list(t_doc **head, char *str, int i, int start_var);
 
 #endif
