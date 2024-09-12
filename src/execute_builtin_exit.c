@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 12:22:47 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 21:34:00 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/12 16:11:27 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,20 @@ void	builtin_exit(t_data *d, t_cmd *node)
 	int		num;
 	bool	is_digit;
 
-	if (node->cmd_arg[1] && node->cmd_arg[2])
-		exit_program(d, node, 1, "too many arguments");
-	else if (node->cmd_arg[1])
+	if (node->cmd_arg[1])
 	{
 		num = atoi_real_n(node->cmd_arg[1], &is_digit);
-		if (is_digit)
+		if (is_digit && NULL == node->cmd_arg[2])
 		{
 			num = calculate_exit_status(num);
 			exit_program(d, node, num, NULL);
+		}
+		else if (is_digit && NULL != node->cmd_arg[2])
+		{
+			write(1, "exit\n", 5);
+			e_msg2(d, "bash: exit : ", "too many arguments");
+			close(d->pip_in[READ]);
+			close(d->pip_out[WRITE]);
 		}
 		else
 			exit_program(d, node, 2, "numeric argument required");
