@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 19:16:32 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/10 09:33:15 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/12 11:41:50 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	signal_children(int sig_num)
 	g_sig_to_children = sig_num;
 	if (SIGINT == sig_num)
 		write(1, "\n", 1);
+	else if (SIGQUIT == sig_num)
+		write(1, "Quit (core dumped)\n", 19);
 }
 
 void	switch_signals(int sig_mum)
