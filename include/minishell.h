@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:18:54 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/12 13:27:23 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/12 13:55:09 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ extern int				g_sig_to_children;
 # define FD_NONE INT_MIN
 
 # define DELIMITER " <>|\0"
-# define META_CHAR "<>|"
+// # define META_CHAR "<>|"
 
 # define CHILD_PROCESS 0
 # define READ 0
@@ -105,7 +105,7 @@ typedef struct s_sub_list
 typedef struct s_cmd	t_cmd;
 typedef struct s_data	t_data;
 // definition for function pointer, builtin
-typedef void			*t_ptr_process_f(t_data *d, t_cmd *node);
+typedef void			(*t_ptr_process_f)(t_data *d, t_cmd *node);
 
 typedef struct s_cmd
 {
