@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:45:17 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/11 16:23:33 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/13 11:54:19 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ void	get_append(t_data *d, t_cmd *c_node, t_token *t_node)
 			e_msg1(t_node->word, ": Permission denied");
 			return ;
 		}
+		else if (is_directory(d, c_node, t_node->word))
+			return ;
 	}
 	free_old_direction(c_node, t_node->id);
 	c_node->file_out = ft_strdup(t_node->word);
@@ -116,6 +118,8 @@ void	get_file_out(t_data *d, t_cmd *c_node, t_token *t_node)
 			e_msg1(t_node->word, ": Permission denied");
 			return ;
 		}
+		else if (is_directory(d, c_node, t_node->word))
+			return ;
 	}
 	free_old_direction(c_node, t_node->id);
 	c_node->file_out = ft_strdup(t_node->word);

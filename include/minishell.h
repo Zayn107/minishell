@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:18:54 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/12 13:55:09 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/13 11:47:49 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,6 +235,7 @@ char	*join_free(char **str1, bool free_s1, char **str2, bool free_s2);
 bool	is_digit(char *str);
 void	remove_tmp_files(t_cmd *head);
 bool	entry_match_var_name(char *entry, char *var_name);
+bool	is_directory(t_data *d, t_cmd *node, char *dir_name);
 
 //BUILTIN
 void	builtin_echo(t_data *d, t_cmd *node);

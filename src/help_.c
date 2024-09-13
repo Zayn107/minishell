@@ -6,7 +6,7 @@
 /*   By: zkepes <zkepes@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 12:17:25 by zkepes            #+#    #+#             */
-/*   Updated: 2024/09/09 21:31:19 by zkepes           ###   ########.fr       */
+/*   Updated: 2024/09/13 11:54:27 by zkepes           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,20 @@ void	remove_tmp_files(t_cmd *head)
 		}
 		current = current->next;
 	}
+}
+
+bool	is_directory(t_data *d, t_cmd *node, char *dir_name)
+{
+	DIR	*fd;
+
+	fd = opendir(dir_name);
+	if (fd)
+	{
+		closedir(fd);
+		d->exit_status = 1;
+		node->valid = false;
+		e_msg1(dir_name, ": Is a directory");
+		return (true);
+	}
+	return (false);
 }
