@@ -1,6 +1,6 @@
 # minishell
 
 
-- [subject](doc/subject.md)
-- [allowed functions](doc/allowed_functions.md)
-- [implementation](doc/implementation.md)
+- [subject](minishell/doc/subject.md)
+- [allowed functions](minishell/doc/allowed_functions.md)
+- [implementation](minishell/doc/implementation.md)
